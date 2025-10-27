@@ -103,19 +103,32 @@
       "left middle right";
     align-items:flex-start;
     column-gap:8px;
-    padding:8px 0;
-    border-bottom:1px solid #e4e4e7;
     font-size:.8rem;
     line-height:1.4;
     word-break:break-word;
   }
 
+  /* prettier header bar */
   .spend-header-row{
+    background:#f5f5f7;
+    border:1px solid #d9d9de;
+    border-radius:10px;
+    padding:10px 12px;
     font-weight:600;
     color:#111;
-    border-bottom:2px solid #1d1d1f;
-    padding-bottom:8px;
-    margin-bottom:4px;
+    margin-bottom:8px;
+  }
+
+  .spend-row{
+    padding:8px 0;
+    border-bottom:1px solid #e4e4e7;
+  }
+
+  .spend-total-row{
+    border-bottom:none;
+    font-weight:600;
+    color:#c00000;
+    padding-top:12px;
   }
 
   .spend-left    { grid-area:left; }
@@ -133,7 +146,7 @@
     max-width:100%;
   }
   .chip-shop{
-    background:#fff8d6;        /* warm pale yellow for shop */
+    background:#fff8d6;        /* warm pale yellow */
     border-radius:4px;
     padding:2px 4px;
     color:#4a3b00;
@@ -142,7 +155,7 @@
     margin-top:2px;
   }
   .chip-type{
-    background:#d5efff;        /* soft blue for type */
+    background:#d5efff;        /* soft blue */
     border-radius:4px;
     padding:2px 4px;
     color:#003049;
@@ -151,7 +164,7 @@
     margin-top:2px;
   }
   .chip-payer{
-    background:#f2d9f6;        /* soft purple for payer */
+    background:#f2d9f6;        /* soft purple */
     border-radius:4px;
     padding:2px 4px;
     color:#4a125c;
@@ -172,11 +185,6 @@
     color:#1a1a1a;
   }
 
-  .spend-total-row{
-    border-bottom:none;
-    font-weight:600;
-    color:#c00000;
-  }
   .spend-total-row .spend-right{
     color:#c00000;
   }
@@ -274,29 +282,20 @@
   .summary-row{
     display:flex;
     justify-content:space-between;
-    padding:4px 0;
     border-radius:8px;
     align-items:flex-start;
+    padding:4px 8px;
+    margin-bottom:4px;
   }
 
   /* colored summary rows */
   .sum-type {
     background:#d5efff;
     color:#003049;
-    padding:4px 8px;
-    margin-bottom:4px;
   }
   .sum-payer {
     background:#f2d9f6;
     color:#4a125c;
-    padding:4px 8px;
-    margin-bottom:4px;
-  }
-  .sum-shop {
-    background:#fff8d6;
-    color:#4a3b00;
-    padding:4px 8px;
-    margin-bottom:4px;
   }
 
   .sum-left{
@@ -312,6 +311,10 @@
     color:#c00000;
     font-weight:600;
     padding:4px 0;
+    margin-top:8px;
+  }
+  .summary-total .sum-right{
+    color:#c00000;
   }
 </style>
 </head>
@@ -323,7 +326,7 @@
 </header>
 
 <div class="build-banner">
-  Task Pulse Money · offline v2 · Powered by Daryl G
+  Task Pulse Money · offline v3 · Powered by Daryl G
 </div>
 
 <main>
@@ -335,10 +338,10 @@
       <div class="section-sub" id="dayTotalLine">R 0.00</div>
     </div>
 
-    <!-- table header row -->
+    <!-- prettier table header row -->
     <div class="spend-header-row">
-      <div class="spend-left">item / shop / type / payer</div>
-      <div class="spend-middle">date / time</div>
+      <div class="spend-left">item · shop · type · payer</div>
+      <div class="spend-middle">date · time</div>
       <div class="spend-right">amount</div>
     </div>
 
@@ -546,7 +549,7 @@ function addSpend(){
   const amtVal   = amtEl.value.trim();
 
   if(!itemVal || !amtVal){
-    return; // item + amount are the minimum required
+    return;
   }
 
   const all = loadSpends();
@@ -564,7 +567,6 @@ function addSpend(){
   shopEl.value="";
   amtEl.value="";
 
-  // snap back to today
   viewingDate = todayISO();
   renderAll();
 }
@@ -601,7 +603,7 @@ function get7DaySummary(baseIso){
   // We compute totals for:
   // - byType
   // - byPayer
-  // - byShop
+  // (NOTE: shop totals removed from summary UI per request)
   // plus grand total
   const all = loadSpends();
   const last7 = getLast7Days(baseIso);
@@ -609,7 +611,6 @@ function get7DaySummary(baseIso){
 
   let byType = {};
   let byPayer = {};
-  let byShop = {};
   let totalAll = 0;
 
   for(const s of all){
@@ -622,17 +623,12 @@ function get7DaySummary(baseIso){
 
       if(!byPayer[s.payer]) byPayer[s.payer]=0;
       byPayer[s.payer]+=amt;
-
-      const shopKey = s.shop || "(no shop)";
-      if(!byShop[shopKey]) byShop[shopKey]=0;
-      byShop[shopKey]+=amt;
     }
   }
 
   return {
     byType,
     byPayer,
-    byShop,
     totalAll
   };
 }
@@ -690,7 +686,6 @@ function renderViewingCard(){
   const dayTotal = sumAmounts(dayList);
 
   vDateLabel.textContent = formatISOasDMY(viewingDate);
-
   statsEl.textContent =
     `${dayList.length} entr${dayList.length===1?"y":"ies"} · ${formatCurrencyR(dayTotal)}`;
 }
@@ -702,15 +697,9 @@ function renderSummaryCard(){
 
   rangeDateEl.textContent = formatISOasDMY(viewingDate);
 
-  // We output in blocks:
-  // 1) byType  (blue style)
-  // 2) byPayer (purple style)
-  // 3) byShop  (yellow style)
-  // 4) total   (red text, not colored bg)
-
   const rows = [];
 
-  // types
+  // types (blue rows)
   Object.keys(sumData.byType).forEach(typeKey=>{
     const val = sumData.byType[typeKey];
     if(val>0){
@@ -722,7 +711,7 @@ function renderSummaryCard(){
     }
   });
 
-  // payers
+  // payers (purple rows)
   Object.keys(sumData.byPayer).forEach(payerKey=>{
     const val = sumData.byPayer[payerKey];
     if(val>0){
@@ -734,19 +723,7 @@ function renderSummaryCard(){
     }
   });
 
-  // shops
-  Object.keys(sumData.byShop).forEach(shopKey=>{
-    const val = sumData.byShop[shopKey];
-    if(val>0){
-      rows.push({
-        kind:"shop",
-        label:shopKey,
-        amount:val
-      });
-    }
-  });
-
-  // total
+  // grand total row (red)
   rows.push({
     kind:"total",
     label:"",
@@ -756,19 +733,14 @@ function renderSummaryCard(){
   gridEl.innerHTML = rows.map(r=>{
     if(r.kind==="total"){
       return `
-        <div class="summary-row summary-total"
-             style="background:transparent;">
+        <div class="summary-row summary-total" style="background:transparent;">
           <div class="sum-left"></div>
           <div class="sum-right">${formatCurrencyR(r.amount)}</div>
         </div>
       `;
     }
 
-    // choose class by kind
-    const cls =
-      r.kind==="type"  ? "sum-type"  :
-      r.kind==="payer" ? "sum-payer" :
-                         "sum-shop";
+    const cls = r.kind==="type" ? "sum-type" : "sum-payer";
 
     return `
       <div class="summary-row ${cls}">
