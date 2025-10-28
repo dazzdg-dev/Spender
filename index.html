@@ -569,6 +569,18 @@ header .credit{
   min-width:32px;
   min-height:32px;
 }
+.grocery-edit{
+  background:#fff;
+  border:1px solid #a9c8ff;
+  border-radius:8px;
+  color:#0050c9;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1;
+  min-width:32px;
+  min-height:32px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
 .grocery-hint{
   font-size:.7rem;
   color:#666;
@@ -815,7 +827,8 @@ header .credit{
 
       <div class="grocery-hint">
         • Tick when bought.<br/>
-        • × deletes from list.<br/>
+        • ✎ edits name.<br/>
+        • × deletes.<br/>
         • Saved offline.
       </div>
     </section>
@@ -947,18 +960,15 @@ function editSpend(id){
   const item=all.find(s=>s.id===id);
   if(!item){return;}
 
-  // simple prompts for now
+  // basic prompt flow
   const newItem   = prompt("Edit item:", item.item);
-  if(newItem===null) return; // cancelled any step cancels all
+  if(newItem===null) return;
   const newShop   = prompt("Edit shop:", item.shop||"");
   if(newShop===null) return;
-
   const newType   = prompt("Edit type (food/fuel/...):", item.type);
   if(newType===null) return;
-
   const newPayer  = prompt("Edit payer (presh/daryl):", item.payer);
   if(newPayer===null) return;
-
   const newAmount = prompt("Edit amount (number):", item.amount);
   if(newAmount===null) return;
 
@@ -1009,6 +1019,22 @@ function deleteGroceryItem(id){
   saveGroceries(list);
   renderGroceries();
   updateTabBadges();
+}
+function editGroceryItem(id){
+  const list=loadGroceries();
+  const row=list.find(g=>g.id===id);
+  if(!row) return;
+
+  const updated = prompt("Edit grocery item:", row.name);
+  if(updated === null) return; // user cancelled
+
+  const clean = updated.trim();
+  if(clean){
+    row.name = clean;
+    saveGroceries(list);
+    renderGroceries();
+    updateTabBadges();
+  }
 }
 
 /* ===== Analysis ===== */
@@ -1108,11 +1134,11 @@ function updateTabBadges(){
 /* ===== Color helpers for summaries ===== */
 function classForType(t){
   if(!t) return "";
-  return "type-"+t; // maps to .type-food etc
+  return "type-"+t;
 }
 function classForPayer(p){
   if(!p) return "";
-  return "payer-"+p; // maps to .payer-daryl etc
+  return "payer-"+p;
 }
 
 /* ===== Render UI ===== */
@@ -1430,7 +1456,11 @@ function renderGroceries(){
               ${escapeHTML(item.name)}
             </span>
           </label>
-          <button class="grocery-del" onclick="deleteGroceryItem('${item.id}')">×</button>
+
+          <div style="display:flex;gap:6px;">
+            <button class="grocery-edit" onclick="editGroceryItem('${item.id}')">✎</button>
+            <button class="grocery-del" onclick="deleteGroceryItem('${item.id}')">×</button>
+          </div>
         </div>
       `;
     }).join("");
@@ -1550,7 +1580,7 @@ function init(){
   bindUI();
   renderAll();
   showSpendScreen(); // default
-  // splash stays longer now (1.8s)
+  // splash stays visible ~1.8s
   setTimeout(hideSplash, 1800);
 }
 init();
