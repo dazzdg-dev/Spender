@@ -4,7 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Task Pulse Money</title>
-<link rel="icon" href="favicon.png" type="image/png" />
+
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#0f111a" />
 
 <style>
@@ -27,7 +30,7 @@ body{
   position:relative;
 }
 main{
-  padding:16px 16px 180px;
+  padding:16px 16px 200px;
 }
 
 /* ======= splash screen ======= */
@@ -91,10 +94,10 @@ main{
   visibility:hidden;
 }
 
-/* ======= header / brand ======= */
+/* ======= header ======= */
 header{
   text-align:center;
-  padding:20px 12px;
+  padding:20px 12px 16px;
   background:linear-gradient(180deg,#1b1d2e 0%,#0f111a 100%);
   border-radius:0 0 20px 20px;
   box-shadow:0 10px 40px rgba(0,0,0,.6);
@@ -110,11 +113,6 @@ header .date{
   font-size:.9rem;
   color:#bdbdfd;
   margin-top:6px;
-}
-header .credit{
-  font-size:.7rem;
-  color:#8a8aff;
-  margin-top:8px;
 }
 
 /* ======= tab bar ======= */
@@ -184,6 +182,9 @@ header .credit{
   font-size:1rem;
   font-weight:600;
   color:#111;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 .section-sub{
   font-size:.8rem;
@@ -208,11 +209,11 @@ header .credit{
   font-size:.8rem;
   line-height:1.4;
   word-break:break-word;
+  position:relative;
 }
 .spend-row{
   padding:8px 0;
   border-bottom:1px solid #e4e4e7;
-  position:relative;
 }
 .spend-total-row{
   font-weight:600;
@@ -264,44 +265,80 @@ header .credit{
   border-color:#ffbfc1;
 }
 
-/* chips in daily list */
-.chip-item{
-  background:#e8f8d8;
-  border-radius:4px;
-  padding:2px 4px;
+/* chips */
+.inline-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  border-radius:6px;
+  padding:2px 6px;
+  font-size:.7rem;
   font-weight:600;
-  color:#1a1a1a;
-  display:inline-block;
+  line-height:1.2;
+  box-shadow:0 3px 6px rgba(0,0,0,.08);
+  max-width:100%;
+  white-space:nowrap;
 }
-.chip-shop{
-  background:#fff8d6;
-  border-radius:4px;
-  padding:2px 4px;
-  color:#4a3b00;
-  display:inline-block;
-  margin-top:4px;
+.chip-icon{
+  font-size:.8rem;
+  line-height:1;
 }
-.chip-type{
-  background:#d5efff;
-  border-radius:4px;
-  padding:2px 4px;
-  color:#003049;
-  display:inline-block;
-  margin-top:4px;
-}
-.chip-payer{
-  background:#f2d9f6;
-  border-radius:4px;
-  padding:2px 4px;
-  color:#4a125c;
-  display:inline-block;
-  margin-top:4px;
-}
+
+/* per-type background colors (emoji style) */
+.type-food        { background:#e8f8d8; color:#1a1a1a; }
+.type-fuel        { background:#fff8d6; color:#4a3b00; }
+.type-clothing    { background:#f2d9f6; color:#4a125c; }
+.type-Medicine    { background:#eae4ff; color:#2c1160; }
+.type-electricity { background:#d5efff; color:#003049; }
+
+/* per-payer colors */
+.payer-presh      { background:#ffe5ef; color:#5a0021; }
+.payer-daryl      { background:#e2f2ff; color:#002a4f; }
+
+/* shop chip base */
+.shop-chip        { background:#fff0dc; color:#3a2600; }
+
+/* subtext */
 .spend-meta{
   font-size:.7rem;
   color:#444;
   line-height:1.3;
   margin-top:4px;
+}
+
+/* search bar */
+.search-row{
+  width:100%;
+  margin-bottom:12px;
+}
+.search-input{
+  width:100%;
+  border:1px solid #cfcfd3;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:.8rem;
+  background:#fff;
+  color:#1a1a1a;
+}
+.search-hint{
+  font-size:.7rem;
+  color:#666;
+  margin-top:4px;
+}
+
+/* over-limit warning */
+.limit-warning{
+  font-size:.75rem;
+  color:#c00000;
+  font-weight:600;
+  margin-top:8px;
+  line-height:1.3;
+  display:none;
 }
 
 /* ======= input rows (add spend) ======= */
@@ -404,20 +441,6 @@ header .credit{
   margin-bottom:4px;
   font-weight:500;
 }
-.sum-type{background:#d5efff;color:#003049;}
-.sum-payer{background:#f2d9f6;color:#4a125c;}
-
-/* type-based colors */
-.type-food        { background:#e8f8d8; color:#1a1a1a; }
-.type-fuel        { background:#fff8d6; color:#4a3b00; }
-.type-clothing    { background:#f2d9f6; color:#4a125c; }
-.type-Medicine    { background:#eae4ff; color:#2c1160; }
-.type-electricity { background:#d5efff; color:#003049; }
-
-/* payer-based colors */
-.payer-presh{ background:#ffe5ef; color:#5a0021; }
-.payer-daryl{ background:#e2f2ff; color:#002a4f; }
-
 .sum-left{}
 .sum-right{
   min-width:90px;
@@ -436,46 +459,17 @@ header .credit{
   color:#c00000;
 }
 
-/* report headers */
-.report-header{
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  row-gap:8px;
-  margin-bottom:12px;
-  align-items:flex-start;
-}
-.report-left{
-  display:flex;
-  flex-direction:column;
-  line-height:1.3;
-}
-.report-title{
-  color:#111;
-  font-size:1rem;
-  font-weight:600;
-}
-.report-range{
-  color:#666;
-  font-size:.75rem;
-}
-.report-right{
-  text-align:right;
-  min-width:max-content;
-  color:#111;
-  font-size:.8rem;
-}
-.report-input{
-  border:1px solid #cfcfd3;
-  border-radius:8px;
-  padding:6px 8px;
-  font-size:.8rem;
-  background:#fff;
-  color:#1a1a1a;
-}
+/* summary color reuse */
+.summary-row.type-food        { background:#e8f8d8; color:#1a1a1a; }
+.summary-row.type-fuel        { background:#fff8d6; color:#4a3b00; }
+.summary-row.type-clothing    { background:#f2d9f6; color:#4a125c; }
+.summary-row.type-Medicine    { background:#eae4ff; color:#2c1160; }
+.summary-row.type-electricity { background:#d5efff; color:#003049; }
 
-/* sub-block titles */
-.summary-block-title,
+.summary-row.payer-presh      { background:#ffe5ef; color:#5a0021; }
+.summary-row.payer-daryl      { background:#e2f2ff; color:#002a4f; }
+
+/* highlights / trends */
 .report-block-title{
   font-size:.75rem;
   font-weight:600;
@@ -485,18 +479,14 @@ header .credit{
   display:flex;
   justify-content:space-between;
 }
-.summary-block-title:first-child,
 .report-block-title:first-child{
   margin-top:0;
 }
-.summary-block-title span,
 .report-block-title span{
   font-weight:400;
   font-size:.7rem;
   color:#666;
 }
-
-/* highlights */
 .highlight-block{
   background:#f5f5f7;
   border:1px solid #d9d9de;
@@ -523,6 +513,30 @@ header .credit{
   color:#111;
 }
 
+/* weekly trend mini card */
+.trend-block{
+  background:#f5f5f7;
+  border:1px solid #d9d9de;
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:.75rem;
+  line-height:1.4;
+  color:#1a1a1a;
+  margin-top:12px;
+}
+.trend-row{
+  margin-bottom:4px;
+}
+.trend-label{
+  font-weight:500;
+  color:#111;
+}
+.trend-value{
+  font-weight:500;
+  color:#111;
+  text-align:right;
+}
+
 /* ======= groceries ======= */
 .grocery-list-area{
   border-top:1px solid #e4e4e7;
@@ -531,63 +545,88 @@ header .credit{
 }
 .grocery-row{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:space-between;
   border-bottom:1px solid #e4e4e7;
   padding:8px 0;
-  font-size:.9rem;
+  font-size:.85rem;
   line-height:1.4;
+  flex-wrap:wrap;
+  row-gap:6px;
 }
 .grocery-left{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   gap:8px;
   color:#111;
-  max-width:80%;
+  flex:1;
+  min-width:0;
 }
-.grocery-left input[type="checkbox"]{
-  flex-shrink:0;
-  margin-top:3px;
+.grocery-left-mainline{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  min-width:0;
+  font-size:.8rem;
+  line-height:1.3;
+  color:#111;
+  font-weight:500;
+  white-space:nowrap;
 }
-.grocery-name{
+.grocery-name-inline{
   font-weight:500;
   color:#111;
-  word-break:break-word;
+  max-width:120px;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
 }
-.grocery-name.grocery-done{
+.grocery-name-inline.grocery-done{
   color:#888;
   text-decoration:line-through;
 }
-.grocery-del{
-  background:#fff;
-  border:1px solid #cfcfd3;
-  border-radius:8px;
-  color:#c00000;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1;
-  min-width:32px;
-  min-height:32px;
+.grocery-timestamp{
+  font-size:.7rem;
+  color:#666;
+  white-space:nowrap;
 }
-.grocery-edit{
+.grocery-actions{
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
+}
+.grocery-edit,
+.grocery-del,
+.grocery-move{
   background:#fff;
-  border:1px solid #a9c8ff;
   border-radius:8px;
-  color:#0050c9;
   font-size:.8rem;
   font-weight:600;
   line-height:1;
   min-width:32px;
   min-height:32px;
   box-shadow:0 4px 10px rgba(0,0,0,.15);
+  border:1px solid #cfcfd3;
+  color:#1a1a1a;
 }
-.grocery-hint{
-  font-size:.7rem;
-  color:#666;
-  margin-top:8px;
+.grocery-edit{
+  border-color:#a9c8ff;
+  color:#0050c9;
+}
+.grocery-del{
+  border-color:#ffbfc1;
+  color:#c00000;
+}
+.grocery-move{
+  border-color:#cfcfd3;
+  color:#111;
+}
+.grocery-row.done{
+  background:#f2f2f5;
 }
 
-/* ======= export card ======= */
+/* ======= export card / settings ======= */
 .export-note{
   font-size:.7rem;
   color:#555;
@@ -620,6 +659,48 @@ header .credit{
   border:1px solid #cfcfd3;
   box-shadow:0 12px 30px rgba(0,0,0,.15);
 }
+
+.settings-line{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  font-size:.8rem;
+  line-height:1.3;
+  margin-bottom:8px;
+  color:#1a1a1a;
+}
+.settings-line label{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.settings-input{
+  width:90px;
+  border-radius:6px;
+  border:1px solid #cfcfd3;
+  padding:4px 6px;
+  font-size:.8rem;
+  line-height:1.2;
+  background:#fff;
+  color:#1a1a1a;
+  text-align:center;
+}
+.settings-footnote{
+  font-size:.7rem;
+  color:#777;
+  text-align:center;
+  line-height:1.4;
+}
+.power-line{
+  font-size:.7rem;
+  color:#444;
+  text-align:center;
+  font-weight:500;
+  margin-top:8px;
+}
 </style>
 </head>
 
@@ -638,7 +719,6 @@ header .credit{
 <header>
   <div class="title">Task Pulse</div>
   <div class="date" id="headerToday">--</div>
-  <div class="credit">Powered by Daryl G</div>
 </header>
 
 <nav class="tab-bar">
@@ -657,11 +737,20 @@ header .credit{
   <!-- SCREEN: SPEND -->
   <div id="spendScreen">
 
-    <!-- CARD 1: Day Spending -->
+    <!-- CARD: Day Spending with search + warning -->
     <section class="card" id="dayCard">
       <div class="section-headline">
-        <div class="section-title">Spending (this day)</div>
+        <div class="section-title">
+          <span>Spending (this day)</span>
+          <span id="overLimitIcon" style="display:none;color:#c00000;font-size:.8rem;">⚠</span>
+        </div>
         <div class="section-sub" id="dayTotalLine">R 0.00</div>
+      </div>
+
+      <!-- search/filter -->
+      <div class="search-row">
+        <input id="searchInput" class="search-input" placeholder="filter by item / shop / payer / type…" />
+        <div class="search-hint" id="searchHint">0 matches · R 0.00</div>
       </div>
 
       <div id="spendList"></div>
@@ -669,11 +758,13 @@ header .credit{
       <div class="spend-total-row">
         <div class="spend-left"></div>
         <div class="spend-middle"></div>
-        <div class="spend-right" id="spendTotalRed">R 0.00</div>
+        <div class="spend-right spend-amount" id="spendTotalRed">R 0.00</div>
       </div>
+
+      <div class="limit-warning" id="limitWarning">Over daily limit</div>
     </section>
 
-    <!-- CARD 2: Add purchase -->
+    <!-- CARD: Add purchase -->
     <section class="card">
       <div class="section-headline" style="margin-bottom:8px;">
         <div class="section-title">Add new purchase</div>
@@ -683,25 +774,20 @@ header .credit{
       </div>
 
       <div class="input-row">
-        <input id="newItem"  class="input-field" placeholder="item (what was bought?)" />
-        <input id="newShop"  class="input-field" placeholder="shop (bp / food lovers…)" />
+        <select id="newItem" class="input-select"></select>
+        <select id="newShop" class="input-select"></select>
       </div>
 
       <div class="input-row">
-        <select id="newType" class="input-select">
-          <option value="food">food</option>
-          <option value="fuel">fuel</option>
-          <option value="clothing">clothing</option>
-          <option value="Medicine">Medicine</option>
-          <option value="electricity">electricity</option>
-        </select>
+        <select id="newType" class="input-select"></select>
 
         <select id="newPayer" class="input-select">
           <option value="presh">presh</option>
           <option value="daryl">daryl</option>
         </select>
 
-        <input id="newAmount" class="input-field input-small" type="number" min="0" step="0.01" placeholder="R" />
+        <input id="newAmount" class="input-field input-small"
+               type="number" min="0" step="0.01" placeholder="R" />
       </div>
 
       <div class="input-row" style="align-items:flex-start;">
@@ -710,15 +796,13 @@ header .credit{
       </div>
 
       <div class="small" style="color:#666;">
-        • Amount is in Rand (R).<br/>
         • Payer = who paid.<br/>
-        • Type = fuel / food / etc.<br/>
-        • Shop = place you bought.<br/>
-        • Saved offline on this device.
+        • Shop & Type are tracked so reports match.<br/>
+        • Saved offline + synced to your account.
       </div>
     </section>
 
-    <!-- CARD 3: Day navigation -->
+    <!-- CARD: Day navigation -->
     <section class="card">
       <div class="history-headline">
         <div class="history-left">
@@ -739,7 +823,7 @@ header .credit{
       </div>
     </section>
 
-    <!-- CARD 4: 7-day summary from viewing date -->
+    <!-- CARD: 7-day summary from viewing date -->
     <section class="card">
       <div class="section-headline">
         <div class="section-title">Summary</div>
@@ -750,49 +834,56 @@ header .credit{
       </div>
 
       <div class="summary-grid" id="summaryGrid"></div>
+
+      <!-- Weekly trend card -->
+      <div class="trend-block" id="trendBlock">
+        <div class="trend-row">
+          <span class="trend-label">Highest spend day:</span><br/>
+          <span class="trend-value" id="trendHighDay">--</span>
+        </div>
+        <div class="trend-row">
+          <span class="trend-label">Top payer:</span><br/>
+          <span class="trend-value" id="trendTopPayer">--</span>
+        </div>
+        <div class="trend-row">
+          <span class="trend-label">Top shop:</span><br/>
+          <span class="trend-value" id="trendTopShop">--</span>
+        </div>
+      </div>
     </section>
 
-    <!-- CARD 5: Custom 7-day report -->
+    <!-- CARD: Custom 7-day report -->
     <section class="card">
-      <div class="report-header">
-        <div class="report-left">
-          <div class="report-title">7 Day Report</div>
-          <div class="report-range">Custom 7-day window</div>
-        </div>
-        <div class="report-right">
-          <input id="weekPicker" class="report-input" type="date" />
+      <div class="section-headline">
+        <div class="section-title">7 Day Report</div>
+        <div class="section-sub" style="line-height:1.3;text-align:right;">
+          <input id="weekPicker" class="input-field"
+                 type="date" style="padding:6px 8px;font-size:.8rem;min-width:120px;" />
         </div>
       </div>
 
       <div class="summary-grid" id="weekReportGrid"></div>
     </section>
 
-    <!-- CARD 6: Monthly report -->
+    <!-- CARD: Monthly report -->
     <section class="card">
-      <div class="report-header">
-        <div class="report-left">
-          <div class="report-title">Monthly Report</div>
-          <div class="report-range">Full month totals</div>
-        </div>
-        <div class="report-right">
-          <input id="monthPicker" class="report-input" type="month" />
+      <div class="section-headline">
+        <div class="section-title">Monthly Report</div>
+        <div class="section-sub" style="line-height:1.3;text-align:right;">
+          <input id="monthPicker" class="input-field"
+                 type="month" style="padding:6px 8px;font-size:.8rem;min-width:120px;" />
         </div>
       </div>
 
       <div class="summary-grid" id="monthReportGrid"></div>
     </section>
 
-    <!-- CARD 7: Export -->
-    <section class="card">
+    <!-- CARD: Export + Settings -->
+    <section class="card" style="text-align:center;">
       <div class="section-headline" style="margin-bottom:4px;">
-        <div class="section-title">Backup & Export</div>
-        <div class="section-sub" style="font-size:.7rem;line-height:1.3;color:#666;">
-          Offline export
+        <div class="section-title" style="justify-content:center;width:100%;">
+          Backup / Settings
         </div>
-      </div>
-
-      <div class="small" style="color:#444;">
-        Download data as CSV for backup or review.
       </div>
 
       <div class="export-buttons">
@@ -801,7 +892,25 @@ header .credit{
       </div>
 
       <div class="export-note">
-        Tip: Store it somewhere safe (Drive, etc).
+        Tip: Save CSV to Drive or mail it to yourself.
+      </div>
+
+      <div style="border-top:1px solid #d9d9de; margin-top:16px; padding-top:16px;">
+        <div class="settings-line">
+          <label>
+            Daily Limit (R):
+            <input id="limitInput" class="settings-input" type="number" min="0" step="50" />
+          </label>
+        </div>
+        <div class="settings-footnote">
+          We'll warn you if daily spend > this limit.<br/>
+          Limit syncs across your signed-in devices.
+        </div>
+
+        <div class="power-line">
+          Task Pulse Money • build v1.5<br/>
+          Powered by Daryl G
+        </div>
       </div>
     </section>
 
@@ -814,22 +923,22 @@ header .credit{
       <div class="section-headline" style="margin-bottom:8px;">
         <div class="section-title">Groceries</div>
         <div class="section-sub" style="font-size:.7rem;line-height:1.3;">
-          Offline list
+          Offline list<br/>syncs when online
         </div>
       </div>
 
       <div class="input-row">
-        <input id="newGroceryItem" class="input-field" placeholder="Add grocery item..." />
+        <select id="newGroceryItem" class="input-select"></select>
         <button id="addGroceryBtn" class="add-btn" style="min-width:60px;">Add</button>
       </div>
 
       <div id="groceryList" class="grocery-list-area"></div>
 
-      <div class="grocery-hint">
-        • Tick when bought.<br/>
-        • ✎ edits name.<br/>
-        • × deletes.<br/>
-        • Saved offline.
+      <div class="small" style="color:#666;margin-top:8px;">
+        • ✓ marks bought.<br/>
+        • ✎ rename.<br/>
+        • × delete.<br/>
+        • ➕ move to Spend.
       </div>
     </section>
   </div><!-- /groceryScreen -->
@@ -837,7 +946,7 @@ header .credit{
 </main>
 
 <script>
-/* ===== Helpers ===== */
+/* ===== Date/time helpers ===== */
 function pad2(n){return String(n).padStart(2,"0");}
 function todayISO(){
   const d=new Date();
@@ -846,13 +955,6 @@ function todayISO(){
 function formatISOasDMY(iso){
   const [y,m,d]=iso.split("-");
   return d+"-"+m+"-"+y;
-}
-function formatCurrencyR(amount){
-  const n = Number(amount||0);
-  return "R " + n.toLocaleString("en-ZA", {
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  });
 }
 function nowTime12h(){
   const d=new Date();
@@ -870,6 +972,8 @@ function shiftISO(iso, delta){
 function getISODateNDaysBefore(iso, n){
   return shiftISO(iso, -n);
 }
+
+/* ===== String helpers ===== */
 function escapeHTML(str){
   return String(str).replace(/[&<>"]/g, c=>{
     const map={"&":"&amp;","<":"&lt;",">":"&gt;"};
@@ -877,13 +981,71 @@ function escapeHTML(str){
   });
 }
 
-/* ===== Storage ===== */
+/* ===== Storage: spends, groceries ===== */
 function loadSpends(){return JSON.parse(localStorage.getItem("tp_spends")||"[]");}
 function saveSpends(list){localStorage.setItem("tp_spends",JSON.stringify(list));}
 
 function loadGroceries(){return JSON.parse(localStorage.getItem("tp_groceries")||"[]");}
 function saveGroceries(list){localStorage.setItem("tp_groceries",JSON.stringify(list));}
 
+/* ===== Storage: dropdown vocab ===== */
+function loadItems(){return JSON.parse(localStorage.getItem("tp_items")||"[]");}
+function saveItems(list){localStorage.setItem("tp_items",JSON.stringify(list));}
+
+function loadShops(){return JSON.parse(localStorage.getItem("tp_shops")||"[]");}
+function saveShops(list){localStorage.setItem("tp_shops",JSON.stringify(list));}
+
+function loadTypes(){return JSON.parse(localStorage.getItem("tp_types")||"[]");}
+function saveTypes(list){localStorage.setItem("tp_types",JSON.stringify(list));}
+
+function loadGroceriesOptions(){return JSON.parse(localStorage.getItem("tp_grocery_names")||"[]");}
+function saveGroceriesOptions(list){localStorage.setItem("tp_grocery_names",JSON.stringify(list));}
+
+/* ===== App Settings (daily limit, etc.) ===== */
+function loadSettings(){
+  return JSON.parse(localStorage.getItem("tp_settings") || "{}");
+}
+function saveSettings(settings){
+  localStorage.setItem("tp_settings", JSON.stringify(settings));
+}
+function getDailyLimit(){
+  const s=loadSettings();
+  return s.dailyLimit || 800; // default
+}
+function setDailyLimit(v){
+  const s=loadSettings();
+  s.dailyLimit = Number(v)||0;
+  saveSettings(s);
+  renderAll();
+  // also push settings up to sync
+  syncPush();
+}
+
+/* ===== Last tab memory ===== */
+function saveLastTab(tabName){
+  localStorage.setItem("tp_lastTab",tabName);
+}
+function loadLastTab(){
+  return localStorage.getItem("tp_lastTab") || "spend";
+}
+
+/* ===== Ensure defaults ===== */
+function ensureDefaultLists(){
+  if(!loadItems().length){
+    saveItems(["milk","bread","fuel","coffee"]);
+  }
+  if(!loadShops().length){
+    saveShops(["bp","engen","food lovers","Checkers","Pick n Pay"]);
+  }
+  if(!loadTypes().length){
+    saveTypes(["food","fuel","clothing","Medicine","electricity"]);
+  }
+  if(!loadGroceriesOptions().length){
+    saveGroceriesOptions(["bread","milk","eggs","butter"]);
+  }
+}
+
+/* ===== Data model creators ===== */
 function newSpend({item,shop,type,payer,amount}){
   return {
     id:"s_"+Math.random().toString(36).slice(2,9),
@@ -900,12 +1062,152 @@ function newGroceryItem(name){
   return {
     id:"g_"+Math.random().toString(36).slice(2,9),
     name:name,
-    done:false
+    done:false,
+    date: todayISO(),
+    time: nowTime12h()
   };
 }
 
-/* ===== App State ===== */
+/* ===== State ===== */
 let viewingDate = todayISO();
+let searchFilter = ""; // live filter text for spend list
+let pendingSpendDraft = null; // {item, shop, type, payer} from grocery ➕
+
+/* ===== Chip builders (emoji icons) ===== */
+function emojiForType(t){
+  switch(t){
+    case "fuel": return "⛽";
+    case "food": return "🍔";
+    case "clothing": return "👕";
+    case "Medicine": return "💊";
+    case "electricity": return "🔌";
+    default: return "🛒";
+  }
+}
+function emojiForShop(shop){
+  if(!shop) return "🏬";
+  const s=shop.toLowerCase();
+  if(s.includes("bp")||s.includes("engen")) return "⛽";
+  if(s.includes("checkers")||s.includes("pick")) return "🛒";
+  if(s.includes("food")) return "🥕";
+  return "🏬";
+}
+
+/* ===== Dropdown rendering ===== */
+function optionListHTML(arr){
+  return arr.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("");
+}
+function renderItemSelect(){
+  ensureDefaultLists();
+  const el=document.getElementById("newItem");
+  const arr=loadItems();
+  el.innerHTML=`
+    <option value="">(choose item)</option>
+    ${optionListHTML(arr)}
+    <option value="__add_new__">+ Add new item…</option>
+  `;
+  if(pendingSpendDraft && pendingSpendDraft.item){
+    el.value=pendingSpendDraft.item;
+  }
+}
+function renderShopSelect(){
+  ensureDefaultLists();
+  const el=document.getElementById("newShop");
+  const arr=loadShops();
+  el.innerHTML=`
+    <option value="">(choose shop)</option>
+    ${optionListHTML(arr)}
+    <option value="__add_new__">+ Add new shop…</option>
+  `;
+  if(pendingSpendDraft && pendingSpendDraft.shop){
+    el.value=pendingSpendDraft.shop;
+  }
+}
+function renderTypeSelect(){
+  ensureDefaultLists();
+  const el=document.getElementById("newType");
+  const arr=loadTypes();
+  el.innerHTML=`
+    <option value="">(choose type)</option>
+    ${optionListHTML(arr)}
+    <option value="__add_new__">+ Add new type…</option>
+  `;
+  if(pendingSpendDraft && pendingSpendDraft.type){
+    el.value=pendingSpendDraft.type;
+  }
+}
+function renderGroceryNameSelect(){
+  ensureDefaultLists();
+  const el=document.getElementById("newGroceryItem");
+  const arr=loadGroceriesOptions();
+  el.innerHTML=`
+    <option value="">(choose item)</option>
+    ${optionListHTML(arr)}
+    <option value="__add_new__">+ Add new grocery…</option>
+  `;
+}
+
+/* ===== onChange handlers for adding new vocab ===== */
+function onItemChange(){
+  const sel=document.getElementById("newItem");
+  if(sel.value==="__add_new__"){
+    const fresh=prompt("New item name?");
+    if(fresh && fresh.trim()){
+      const arr=loadItems();
+      const clean=fresh.trim();
+      if(!arr.includes(clean)){
+        arr.push(clean);
+        saveItems(arr);
+      }
+    }
+    renderItemSelect();
+  }
+}
+function onShopChange(){
+  const sel=document.getElementById("newShop");
+  if(sel.value==="__add_new__"){
+    const fresh=prompt("New shop / place name?");
+    if(fresh && fresh.trim()){
+      const arr=loadShops();
+      const clean=fresh.trim();
+      if(!arr.includes(clean)){
+        arr.push(clean);
+        saveShops(arr);
+      }
+    }
+    renderShopSelect();
+  }
+}
+function onTypeChange(){
+  const sel=document.getElementById("newType");
+  if(sel.value==="__add_new__"){
+    const fresh=prompt("New type?");
+    if(fresh && fresh.trim()){
+      const arr=loadTypes();
+      const clean=fresh.trim();
+      if(!arr.includes(clean)){
+        arr.push(clean);
+        saveTypes(arr);
+      }
+    }
+    renderTypeSelect();
+  }
+}
+function onGroceryNameChange(){
+  const sel=document.getElementById("newGroceryItem");
+  if(sel.value==="__add_new__"){
+    const fresh=prompt("New grocery item?");
+    if(fresh && fresh.trim()){
+      const arr=loadGroceriesOptions();
+      const clean=fresh.trim();
+      if(!arr.includes(clean)){
+        arr.push(clean);
+        saveGroceriesOptions(arr);
+      }
+    }
+    renderGroceryNameSelect();
+  }
+}
 
 /* ===== Spend CRUD ===== */
 function addSpend(){
@@ -915,11 +1217,16 @@ function addSpend(){
   const payerEl  = document.getElementById("newPayer");
   const amtEl    = document.getElementById("newAmount");
 
-  const itemVal  = itemEl.value.trim();
-  const shopVal  = shopEl.value.trim();
-  const typeVal  = typeEl.value;
-  const payerVal = payerEl.value;
+  const rawItem  = itemEl.value;
+  const rawShop  = shopEl.value;
+  const rawType  = typeEl.value;
+  const rawPayer = payerEl.value;
   const amtVal   = amtEl.value.trim();
+
+  // convert special __add_new__ (shouldn't really persist)
+  const itemVal = (rawItem==="__add_new__")?"":rawItem.trim();
+  const shopVal = (rawShop==="__add_new__")?"":rawShop.trim();
+  const typeVal = (rawType==="__add_new__")?"":rawType.trim();
 
   if(!itemVal || !amtVal){return;}
 
@@ -928,15 +1235,20 @@ function addSpend(){
     item:itemVal,
     shop:shopVal,
     type:typeVal,
-    payer:payerVal,
+    payer:rawPayer,
     amount:amtVal
   }));
   saveSpends(all);
 
-  itemEl.value="";
-  shopEl.value="";
+  // clear amount, keep last payer/type/shop as memory,
+  // but drop pending draft (we used it)
   amtEl.value="";
+  pendingSpendDraft=null;
 
+  // sync push
+  syncPush();
+
+  // jump to today's date view
   viewingDate = todayISO();
   renderAll();
 }
@@ -945,6 +1257,7 @@ function clearDay(){
   const all=loadSpends();
   const keep=all.filter(s=>s.date!==viewingDate);
   saveSpends(keep);
+  syncPush();
   renderAll();
 }
 
@@ -952,6 +1265,7 @@ function deleteSpend(id){
   let all=loadSpends();
   all=all.filter(s=>s.id!==id);
   saveSpends(all);
+  syncPush();
   renderAll();
 }
 
@@ -960,25 +1274,25 @@ function editSpend(id){
   const item=all.find(s=>s.id===id);
   if(!item){return;}
 
-  // basic prompt flow
-  const newItem   = prompt("Edit item:", item.item);
-  if(newItem===null) return;
-  const newShop   = prompt("Edit shop:", item.shop||"");
-  if(newShop===null) return;
-  const newType   = prompt("Edit type (food/fuel/...):", item.type);
-  if(newType===null) return;
-  const newPayer  = prompt("Edit payer (presh/daryl):", item.payer);
-  if(newPayer===null) return;
-  const newAmount = prompt("Edit amount (number):", item.amount);
-  if(newAmount===null) return;
+  const newItem = prompt("Edit item:", item.item);
+  if(newItem===null)return;
+  const newShop = prompt("Edit shop:", item.shop||"");
+  if(newShop===null)return;
+  const newType = prompt("Edit type:", item.type||"");
+  if(newType===null)return;
+  const newPayer= prompt("Edit payer (presh/daryl):", item.payer);
+  if(newPayer===null)return;
+  const newAmt  = prompt("Edit amount (number):", item.amount);
+  if(newAmt===null)return;
 
   item.item   = newItem.trim()   || item.item;
   item.shop   = newShop.trim();
   item.type   = newType.trim()   || item.type;
   item.payer  = newPayer.trim()  || item.payer;
-  item.amount = Number(newAmount)|| 0;
+  item.amount = Number(newAmt)||0;
 
   saveSpends(all);
+  syncPush();
   renderAll();
 }
 
@@ -993,51 +1307,96 @@ function goNextDay(){
 
 /* ===== Groceries CRUD ===== */
 function addGrocery(){
-  const input=document.getElementById("newGroceryItem");
-  const name=input.value.trim();
-  if(!name)return;
+  const sel=document.getElementById("newGroceryItem");
+  const val=sel.value;
+  if(!val || val==="__add_new__")return;
+
   const list=loadGroceries();
-  list.push(newGroceryItem(name));
+  list.push(newGroceryItem(val));
   saveGroceries(list);
-  input.value="";
+
+  syncPush();
+
   renderGroceries();
   updateTabBadges();
 }
+
 function toggleGroceryDone(id){
   const list=loadGroceries();
   const it=list.find(g=>g.id===id);
   if(it){
     it.done=!it.done;
     saveGroceries(list);
+    syncPush();
     renderGroceries();
     updateTabBadges();
   }
 }
+
 function deleteGroceryItem(id){
   let list=loadGroceries();
   list=list.filter(g=>g.id!==id);
   saveGroceries(list);
+  syncPush();
   renderGroceries();
   updateTabBadges();
 }
+
 function editGroceryItem(id){
   const list=loadGroceries();
   const row=list.find(g=>g.id===id);
-  if(!row) return;
+  if(!row)return;
 
   const updated = prompt("Edit grocery item:", row.name);
-  if(updated === null) return; // user cancelled
-
+  if(updated===null)return;
   const clean = updated.trim();
   if(clean){
-    row.name = clean;
+    row.name=clean;
     saveGroceries(list);
+    syncPush();
     renderGroceries();
     updateTabBadges();
   }
 }
 
-/* ===== Analysis ===== */
+/* ➕ Move grocery -> Spend draft */
+function moveGroceryToSpend(id){
+  const list=loadGroceries();
+  const row=list.find(g=>g.id===id);
+  if(!row)return;
+
+  // mark the grocery as done
+  row.done=true;
+  saveGroceries(list);
+
+  // create spend draft: guess type=food, payer=daryl by default
+  pendingSpendDraft={
+    item: row.name,
+    shop: "",           // you'll pick
+    type: "food",
+    payer: "daryl"
+  };
+
+  // show spend tab and re-render selects with draft values
+  showSpendScreen();
+  renderAll();
+  focusAmountField();
+
+  syncPush();
+}
+
+function focusAmountField(){
+  const amt=document.getElementById("newAmount");
+  if(amt){ amt.focus(); }
+}
+
+/* ===== Filtering / search ===== */
+function setSearchFilter(val){
+  searchFilter=val.trim().toLowerCase();
+  renderDayCard(); // re-render spend list with current filter
+}
+
+/* ===== Math / summaries ===== */
 function sumAmounts(list){
   return list.reduce((acc,s)=>acc+Number(s.amount||0),0);
 }
@@ -1049,7 +1408,7 @@ function inRange(dateIso,startIso,endIso){
 }
 function collectRangeData(startIso,endIso){
   const all=loadSpends();
-  const byType={},byPayer={},byShop={};
+  const byType={},byPayer={},byShop={},byDay={};
   let totalAll=0;
 
   for(const s of all){
@@ -1057,18 +1416,26 @@ function collectRangeData(startIso,endIso){
       const amt=Number(s.amount||0);
       totalAll+=amt;
 
-      if(!byType[s.type]) byType[s.type]=0;
+      // by type
+      if(!byType[s.type])byType[s.type]=0;
       byType[s.type]+=amt;
 
-      if(!byPayer[s.payer]) byPayer[s.payer]=0;
+      // by payer
+      if(!byPayer[s.payer])byPayer[s.payer]=0;
       byPayer[s.payer]+=amt;
 
-      const shopKey = s.shop && s.shop.trim() ? s.shop.trim() : "(no shop)";
-      if(!byShop[shopKey]) byShop[shopKey]=0;
+      // by shop
+      const shopKey=s.shop && s.shop.trim()?s.shop.trim():"(no shop)";
+      if(!byShop[shopKey])byShop[shopKey]=0;
       byShop[shopKey]+=amt;
+
+      // by day
+      if(!byDay[s.date])byDay[s.date]=0;
+      byDay[s.date]+=amt;
     }
   }
 
+  // top shop
   let topShopName="", topShopAmt=0;
   Object.keys(byShop).forEach(sh=>{
     if(byShop[sh]>topShopAmt){
@@ -1076,6 +1443,8 @@ function collectRangeData(startIso,endIso){
       topShopName=sh;
     }
   });
+
+  // top type
   let topTypeName="", topTypeAmt=0;
   Object.keys(byType).forEach(t=>{
     if(byType[t]>topTypeAmt){
@@ -1084,13 +1453,34 @@ function collectRangeData(startIso,endIso){
     }
   });
 
+  // top payer
+  let topPayerName="", topPayerAmt=0;
+  Object.keys(byPayer).forEach(p=>{
+    if(byPayer[p]>topPayerAmt){
+      topPayerAmt=byPayer[p];
+      topPayerName=p;
+    }
+  });
+
+  // highest-spend day
+  let highDayDate="", highDayAmt=0;
+  Object.keys(byDay).forEach(d=>{
+    if(byDay[d]>highDayAmt){
+      highDayAmt=byDay[d];
+      highDayDate=d;
+    }
+  });
+
   return {
     totalAll,
     byType,
     byPayer,
     byShop,
+    byDay,
     topShop:{name:topShopName,amount:topShopAmt},
     topType:{name:topTypeName,amount:topTypeAmt},
+    topPayer:{name:topPayerName,amount:topPayerAmt},
+    highDay:{date:highDayDate,amount:highDayAmt},
     startIso,
     endIso
   };
@@ -1131,60 +1521,142 @@ function updateTabBadges(){
     remaining+" item"+(remaining===1?"":"s");
 }
 
-/* ===== Color helpers for summaries ===== */
-function classForType(t){
-  if(!t) return "";
-  return "type-"+t;
-}
-function classForPayer(p){
-  if(!p) return "";
-  return "payer-"+p;
-}
-
-/* ===== Render UI ===== */
+/* ===== Render header ===== */
 function renderHeader(){
   document.getElementById("headerToday").textContent=formatISOasDMY(todayISO());
 }
 
+/* ===== Currency formatting ===== */
+function formatCurrencyR(amount){
+  const n = Number(amount||0);
+  return "R " + n.toLocaleString("en-ZA", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+/* ===== Spend row builders ===== */
+function buildSpendRowHTML(s){
+  // filter logic
+  if(searchFilter){
+    const hay = (
+      (s.item||"")+" "+
+      (s.shop||"")+" "+
+      (s.type||"")+" "+
+      (s.payer||"")
+    ).toLowerCase();
+    if(!hay.includes(searchFilter)){
+      return ""; // filtered out
+    }
+  }
+
+  // chips line
+  const chips = [];
+
+  if(s.shop){
+    chips.push(`
+      <span class="chip shop-chip">
+        <span class="chip-icon">${emojiForShop(s.shop)}</span>
+        <span>${escapeHTML(s.shop)}</span>
+      </span>
+    `);
+  }
+
+  if(s.type){
+    chips.push(`
+      <span class="chip type-${escapeHTML(s.type)}">
+        <span class="chip-icon">${emojiForType(s.type)}</span>
+        <span>${escapeHTML(s.type)}</span>
+      </span>
+    `);
+  }
+
+  if(s.payer){
+    chips.push(`
+      <span class="chip payer-${escapeHTML(s.payer)}">
+        <span>${escapeHTML(s.payer)}</span>
+      </span>
+    `);
+  }
+
+  return `
+    <div class="spend-row">
+      <div class="row-actions">
+        <button class="row-action-btn row-action-edit"
+          onclick="editSpend('${s.id}')">✎</button>
+        <button class="row-action-btn row-action-del"
+          onclick="deleteSpend('${s.id}')">×</button>
+      </div>
+
+      <div class="spend-left">
+        <div class="inline-chips">
+          <span class="chip" style="background:#e8f8d8;color:#1a1a1a;">
+            <span class="chip-icon">🛒</span>
+            <span>${escapeHTML(s.item)}</span>
+          </span>
+          ${chips.join("")}
+        </div>
+      </div>
+
+      <div class="spend-middle">
+        <div style="font-size:.9rem;font-weight:500;color:#111;">
+          ${formatISOasDMY(s.date)}
+        </div>
+        <div class="spend-meta">${escapeHTML(s.time)}</div>
+      </div>
+
+      <div class="spend-right spend-amount">${formatCurrencyR(s.amount)}</div>
+    </div>
+  `;
+}
+
+/* ===== Render DayCard (spend list + totals + warning + search stats) ===== */
 function renderDayCard(){
   const listEl=document.getElementById("spendList");
   const totalEl=document.getElementById("spendTotalRed");
   const lineEl=document.getElementById("dayTotalLine");
+  const overIcon=document.getElementById("overLimitIcon");
+  const warnEl=document.getElementById("limitWarning");
+  const searchHint=document.getElementById("searchHint");
 
   const dayList=getSpendsForDate(viewingDate);
-  const dayTotal=sumAmounts(dayList);
 
-  listEl.innerHTML=dayList.map(s=>{
-    return `
-      <div class="spend-row">
-        <div class="row-actions">
-          <button class="row-action-btn row-action-edit"
-            onclick="editSpend('${s.id}')">✎</button>
-          <button class="row-action-btn row-action-del"
-            onclick="deleteSpend('${s.id}')">×</button>
-        </div>
+  // Apply search filter
+  const visibleList = dayList.filter(s=>{
+    if(!searchFilter) return true;
+    const hay=( (s.item||"")+" "+(s.shop||"")+" "+(s.type||"")+" "+(s.payer||"") ).toLowerCase();
+    return hay.includes(searchFilter);
+  });
 
-        <div class="spend-left">
-          <div class="chip-item">${escapeHTML(s.item)}</div>
-          ${s.shop?`<div class="chip-shop">${escapeHTML(s.shop)}</div>`:""}
-          <div class="chip-type">${escapeHTML(s.type)}</div>
-          <div class="chip-payer">${escapeHTML(s.payer)}</div>
-        </div>
+  const dayTotal=sumAmounts(visibleList);
+  const fullDayTotal=sumAmounts(dayList);
 
-        <div class="spend-middle">
-          <div style="font-size:.9rem;font-weight:500;color:#111;">${formatISOasDMY(s.date)}</div>
-          <div class="spend-meta">${escapeHTML(s.time)}</div>
-        </div>
+  // Build row HTML
+  listEl.innerHTML=visibleList.map(buildSpendRowHTML).join("") || `
+    <div class="small" style="color:#444;">
+      No matches.
+    </div>
+  `;
 
-        <div class="spend-right spend-amount">${formatCurrencyR(s.amount)}</div>
-      </div>
-    `;
-  }).join("");
-
+  // totals
   totalEl.textContent=formatCurrencyR(dayTotal);
-  lineEl.textContent=formatCurrencyR(dayTotal);
+  lineEl.textContent=formatCurrencyR(fullDayTotal);
+
+  // search hint
+  searchHint.textContent =
+    visibleList.length+" match"+(visibleList.length===1?"":"es")+" · "+formatCurrencyR(dayTotal);
+
+  // over limit?
+  const limit=getDailyLimit();
+  const isOver = fullDayTotal>limit;
+  overIcon.style.display = isOver? "inline-block":"none";
+  warnEl.style.display   = isOver? "block":"none";
+  warnEl.textContent     = isOver
+    ? `Over daily limit (R ${limit})`
+    : ``;
 }
 
+/* ===== Render viewing card ===== */
 function renderViewingCard(){
   const vDateLabel=document.getElementById("viewingDateLabel");
   const statsEl=document.getElementById("viewingDayStats");
@@ -1196,6 +1668,7 @@ function renderViewingCard(){
   statsEl.textContent=`${dayList.length} entr${dayList.length===1?"y":"ies"} · ${formatCurrencyR(dayTotal)}`;
 }
 
+/* ===== Render summary card + weekly trend ===== */
 function renderSummaryCard(){
   const sumData=get7DaySummaryFromViewing(viewingDate);
   const rangeDateEl=document.getElementById("summaryRangeDate");
@@ -1204,9 +1677,10 @@ function renderSummaryCard(){
   rangeDateEl.textContent=formatISOasDMY(viewingDate);
 
   let html="";
+
   // by type
   html+=`
-    <div class="summary-block-title">
+    <div class="report-block-title">
       <div>By type</div>
       <span>last 7 days</span>
     </div>
@@ -1215,8 +1689,10 @@ function renderSummaryCard(){
     const val=sumData.byType[typeKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForType(typeKey)}">
-          <div class="sum-left">${escapeHTML(typeKey)}</div>
+        <div class="summary-row type-${escapeHTML(typeKey)}">
+          <div class="sum-left">
+            ${emojiForType(typeKey)} ${escapeHTML(typeKey)}
+          </div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
       `;
@@ -1225,7 +1701,7 @@ function renderSummaryCard(){
 
   // by payer
   html+=`
-    <div class="summary-block-title" style="margin-top:16px;">
+    <div class="report-block-title">
       <div>By payer</div>
       <span>last 7 days</span>
     </div>
@@ -1234,7 +1710,7 @@ function renderSummaryCard(){
     const val=sumData.byPayer[payerKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForPayer(payerKey)}">
+        <div class="summary-row payer-${escapeHTML(payerKey)}">
           <div class="sum-left">${escapeHTML(payerKey)}</div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
@@ -1250,8 +1726,24 @@ function renderSummaryCard(){
     </div>
   `;
   gridEl.innerHTML=html;
+
+  // weekly trend card
+  const highDayText = sumData.highDay.date
+    ? `${formatISOasDMY(sumData.highDay.date)} (${formatCurrencyR(sumData.highDay.amount)})`
+    : "--";
+  const topPayerText = sumData.topPayer.name
+    ? `${escapeHTML(sumData.topPayer.name)} (${formatCurrencyR(sumData.topPayer.amount)})`
+    : "--";
+  const topShopText = sumData.topShop.name
+    ? `${escapeHTML(sumData.topShop.name)} (${formatCurrencyR(sumData.topShop.amount)})`
+    : "--";
+
+  document.getElementById("trendHighDay").textContent = highDayText;
+  document.getElementById("trendTopPayer").textContent = topPayerText;
+  document.getElementById("trendTopShop").textContent = topShopText;
 }
 
+/* ===== Render week report card ===== */
 function renderWeekReportCard(){
   const picker=document.getElementById("weekPicker");
   let endIso=picker.value;
@@ -1289,8 +1781,10 @@ function renderWeekReportCard(){
     const val=data.byType[typeKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForType(typeKey)}">
-          <div class="sum-left">${escapeHTML(typeKey)}</div>
+        <div class="summary-row type-${escapeHTML(typeKey)}">
+          <div class="sum-left">
+            ${emojiForType(typeKey)} ${escapeHTML(typeKey)}
+          </div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
       `;
@@ -1308,7 +1802,7 @@ function renderWeekReportCard(){
     const val=data.byPayer[payerKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForPayer(payerKey)}">
+        <div class="summary-row payer-${escapeHTML(payerKey)}">
           <div class="sum-left">${escapeHTML(payerKey)}</div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
@@ -1316,7 +1810,7 @@ function renderWeekReportCard(){
     }
   });
 
-  // highlight
+  // highlights
   html+=`
     <div class="report-block-title">
       <div>Highlights</div>
@@ -1340,6 +1834,7 @@ function renderWeekReportCard(){
   gridEl.innerHTML=html;
 }
 
+/* ===== Render month report card ===== */
 function renderMonthReportCard(){
   const picker=document.getElementById("monthPicker");
   let monthVal=picker.value;
@@ -1384,8 +1879,10 @@ function renderMonthReportCard(){
     const val=data.byType[typeKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForType(typeKey)}">
-          <div class="sum-left">${escapeHTML(typeKey)}</div>
+        <div class="summary-row type-${escapeHTML(typeKey)}">
+          <div class="sum-left">
+            ${emojiForType(typeKey)} ${escapeHTML(typeKey)}
+          </div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
       `;
@@ -1403,7 +1900,7 @@ function renderMonthReportCard(){
     const val=data.byPayer[payerKey];
     if(val>0){
       html+=`
-        <div class="summary-row ${classForPayer(payerKey)}">
+        <div class="summary-row payer-${escapeHTML(payerKey)}">
           <div class="sum-left">${escapeHTML(payerKey)}</div>
           <div class="sum-right">${formatCurrencyR(val)}</div>
         </div>
@@ -1435,6 +1932,7 @@ function renderMonthReportCard(){
   gridEl.innerHTML=html;
 }
 
+/* ===== Render groceries ===== */
 function renderGroceries(){
   const listEl=document.getElementById("groceryList");
   const list=loadGroceries();
@@ -1446,18 +1944,30 @@ function renderGroceries(){
       </div>`;
   } else {
     listEl.innerHTML=list.map(item=>{
+      const prettyDate=item.date ? formatISOasDMY(item.date) : "";
+      const prettyTime=item.time ? item.time : "";
       return `
-        <div class="grocery-row">
-          <label class="grocery-left">
+        <div class="grocery-row ${item.done?"done":""}">
+          <div class="grocery-left">
             <input type="checkbox"
               ${item.done?"checked":""}
-              onclick="toggleGroceryDone('${item.id}')"/>
-            <span class="grocery-name ${item.done?"grocery-done":""}">
-              ${escapeHTML(item.name)}
-            </span>
-          </label>
+              onclick="toggleGroceryDone('${item.id}')" />
 
-          <div style="display:flex;gap:6px;">
+            <div class="grocery-left-mainline">
+              <span class="grocery-name-inline ${item.done?"grocery-done":""}">
+                ${escapeHTML(item.name)}
+              </span>
+
+              <span class="grocery-timestamp">
+                ${prettyDate && prettyTime
+                  ? `${prettyDate} · ${prettyTime}`
+                  : ""}
+              </span>
+            </div>
+          </div>
+
+          <div class="grocery-actions">
+            <button class="grocery-move" onclick="moveGroceryToSpend('${item.id}')">➕</button>
             <button class="grocery-edit" onclick="editGroceryItem('${item.id}')">✎</button>
             <button class="grocery-del" onclick="deleteGroceryItem('${item.id}')">×</button>
           </div>
@@ -1503,42 +2013,39 @@ function exportSpendingCSV(){
 }
 function exportGroceriesCSV(){
   const data=loadGroceries();
-  const rows=[["id","name","done"]];
+  const rows=[["id","name","done","date","time"]];
   data.forEach(g=>{
-    rows.push([g.id,g.name,g.done?"yes":"no"]);
+    rows.push([g.id,g.name,g.done?"yes":"no",g.date,g.time]);
   });
   const csv=arrayToCSV(rows);
   const stamp=todayISO();
   downloadCSV(`taskpulse_groceries_${stamp}.csv`,csv);
 }
 
-/* ===== Tab switching ===== */
+/* ===== Tab switching / remember last tab ===== */
+const tabSpendBtn=document.getElementById("tabSpend");
+const tabGroBtn=document.getElementById("tabGroceries");
+
 function showSpendScreen(){
   document.getElementById("spendScreen").style.display="block";
   document.getElementById("groceryScreen").style.display="none";
-  tabSpend.classList.add("tab-active");
-  tabGro.classList.remove("tab-active");
-  renderAll();
+  tabSpendBtn.classList.add("tab-active");
+  tabGroBtn.classList.remove("tab-active");
+  saveLastTab("spend");
+
+  // refresh selects if we came here from grocery ➕
+  renderItemSelect();
+  renderShopSelect();
+  renderTypeSelect();
   updateTabBadges();
 }
 function showGroceryScreen(){
   document.getElementById("spendScreen").style.display="none";
   document.getElementById("groceryScreen").style.display="block";
-  tabGro.classList.add("tab-active");
-  tabSpend.classList.remove("tab-active");
-  renderGroceries();
+  tabGroBtn.classList.add("tab-active");
+  tabSpendBtn.classList.remove("tab-active");
+  saveLastTab("groceries");
   updateTabBadges();
-}
-
-/* ===== Master render ===== */
-function renderAll(){
-  renderHeader();
-  renderDayCard();
-  renderViewingCard();
-  renderSummaryCard();
-  renderWeekReportCard();
-  renderMonthReportCard();
-  renderGroceries(); // also refreshes badges
 }
 
 /* ===== Splash control ===== */
@@ -1547,9 +2054,57 @@ function hideSplash(){
   splash.classList.add("hidden");
 }
 
+/* ===== Firebase sync stubs =====
+   - You already have firebaseConfig + init elsewhere.
+   - Hook your auth/session ID into syncPull()/syncPush().
+*/
+function syncPull(){
+  // pseudocode:
+  // 1. fetch user's cloud data blob {spends, groceries, settings, vocab}
+  // 2. merge into localStorage and call renderAll()
+  //
+  // We'll leave implementation to match your existing TaskPulse sync logic.
+}
+function syncPush(){
+  // pseudocode:
+  // read all local data and push to cloud for this user
+  //
+  // const payload = {
+  //   spends: loadSpends(),
+  //   groceries: loadGroceries(),
+  //   settings: loadSettings(),
+  //   vocab: {
+  //     items: loadItems(),
+  //     shops: loadShops(),
+  //     types: loadTypes(),
+  //     groceryNames: loadGroceriesOptions()
+  //   }
+  // };
+  //
+  // push payload to firebase under the same user node you already use
+}
+
+/* ===== Master render ===== */
+function renderAll(){
+  renderHeader();
+
+  // fill limit input from settings
+  const limitInput=document.getElementById("limitInput");
+  if(limitInput){
+    limitInput.value=getDailyLimit();
+  }
+
+  renderDayCard();
+  renderViewingCard();
+  renderSummaryCard();
+  renderWeekReportCard();
+  renderMonthReportCard();
+  renderGroceries(); // also refreshes badges
+}
+
 /* ===== Bind / Init ===== */
 function bindUI(){
-  // add / clear
+  // add / clear spend
   document.getElementById("addSpendBtn").onclick = addSpend;
   document.getElementById("clearDayBtn").onclick = clearDay;
 
@@ -1568,20 +2123,60 @@ function bindUI(){
   // groceries
   document.getElementById("addGroceryBtn").onclick = addGrocery;
 
-  // tabs
-  tabSpend.onclick = showSpendScreen;
-  tabGro.onclick    = showGroceryScreen;
-}
+  // dropdown change handlers
+  document.getElementById("newItem").onchange = onItemChange;
+  document.getElementById("newShop").onchange = onShopChange;
+  document.getElementById("newType").onchange = onTypeChange;
+  document.getElementById("newGroceryItem").onchange = onGroceryNameChange;
 
-const tabSpend=document.getElementById("tabSpend");
-const tabGro=document.getElementById("tabGroceries");
+  // payer select doesn't need a handler
+
+  // search
+  document.getElementById("searchInput").oninput = (e)=>{
+    setSearchFilter(e.target.value);
+  };
+
+  // settings daily limit
+  document.getElementById("limitInput").onchange = (e)=>{
+    setDailyLimit(e.target.value);
+  };
+
+  // tabs
+  tabSpendBtn.onclick = showSpendScreen;
+  tabGroBtn.onclick   = showGroceryScreen;
+}
 
 function init(){
   bindUI();
+
+  // ensure default dropdown lists
+  ensureDefaultLists();
+
+  // restore pending draft = none at start
+  pendingSpendDraft=null;
+
+  // Set last viewed tab
+  const lastTab=loadLastTab();
+  if(lastTab==="groceries"){
+    showGroceryScreen();
+  }else{
+    showSpendScreen();
+  }
+
+  // render selects (after showXScreen so DOM is visible)
+  renderItemSelect();
+  renderShopSelect();
+  renderTypeSelect();
+  renderGroceryNameSelect();
+
+  // pull sync (optional, if signed in)
+  syncPull();
+
+  // render UI
   renderAll();
-  showSpendScreen(); // default
-  // splash stays visible ~1.8s
-  setTimeout(hideSplash, 1800);
+
+  // splash timeout
+  setTimeout(hideSplash,1800);
 }
 init();
 </script>
