@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Task Pulse Money</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="theme-color" content="#0f111a" />
+<style>
+  :root{
+    --bg:#0f111a; --card:#141725; --muted:#a7b0c3; --ink:#e9ecf5;
+    --line:#262a3c; --accent:#6ad39a; --danger:#ff5a71; --warn:#ffd166;
+    --pill:#1b1e2f; --pill2:#20243a;
+    --blue:#bfe3ff; --cyan:#cce9ff; --pink:#eed3ff; --gold:#fff1bb;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+    color:var(--ink); background:radial-gradient(1100px 500px at 60% 10%, #2b2542 0%, rgba(15,17,26,0) 60%),
+                      radial-gradient(900px 500px at 10% 85%, #13233a 0%, rgba(15,17,26,0) 55%), var(--bg);
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:14px 14px 48px}
+  .topbar{position:sticky;top:0;z-index:5;background:linear-gradient(180deg, rgba(15,17,26,.98) 0%, rgba(15,17,26,.75) 80%, rgba(15,17,26,0) 100%); padding:18px 14px 6px}
+  h1{margin:0;font-size:26px}
+  .date{color:var(--muted);font-size:12px}
+  .tabs{display:flex;gap:10px;margin:12px 0 14px}
+  .tab{flex:1;text-align:center;background:var(--pill2);border:1px solid var(--line);padding:10px 12px;border-radius:14px;color:#cdd6e5;cursor:pointer}
+  .tab.active{background:#f1f3fb;color:#142033;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 6px 30px rgba(0,0,0,.25)}
+  .row{display:flex;gap:10px;align-items:center}
+  input,select,button,textarea{border-radius:12px;border:1px solid var(--line);background:#0f1220;color:var(--ink);padding:10px 12px;font-size:14px}
+  select{background:#0f1220}
+  button.primary{background:#f1f3fb;color:#111;border:1px solid #cfd5ea;font-weight:600}
+  button.ghost{background:#161a2b}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--pill);border:1px solid var(--line);font-size:12px;margin-right:6px}
+  .pill.food{background:var(--blue); color:#142033}
+  .pill.fuel{background:var(--cyan); color:#142033}
+  .pill.presh,.pill.daryl{background:var(--pink); color:#2a103a}
+  .list li{display:flex;justify-content:space-between;align-items:center;padding:10px 6px;border-bottom:1px dashed #22263a}
+  .muted{color:var(--muted)}
+  .right{margin-left:auto}
+  .sumrow{display:flex;justify-content:space-between;padding:8px 10px;margin:4px 0;border-radius:10px;background:#0f1220;border:1px solid var(--line)}
+  .sumrow.food{background:rgba(191,227,255,.55)} .sumrow.fuel{background:rgba(204,233,255,.55)}
+  .sumrow.presh{background:rgba(238,211,255,.55)} .sumrow.daryl{background:rgba(238,211,255,.55)}
+  .warn{color:var(--warn);font-weight:600}
+  .danger{color:var(--danger);font-weight:700}
+  .dot{width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:6px}
+  .dot.y{background:#ffd166}.dot.o{background:#ff9f1c}.dot.r{background:#ef476f}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  /* splash */
+  #splash{position:fixed;inset:0;background:#0d101c;display:flex;align-items:center;justify-content:center;z-index:10}
+  .splash-inner{padding:26px 34px;border:1px solid #232a44;border-radius:20px;background:linear-gradient(145deg,#161b2b,#0f1220);text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.45)}
+  .splash-inner h2{margin:0 0 6px 0}
+  .small{font-size:12px;color:#9aa4b8;margin-top:4px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .iconbtn{border-radius:10px;border:1px solid var(--line);background:#161a2b;color:var(--ink);padding:8px 10px;cursor:pointer}
+  .del{color:#ff7786;border-color:#3a1b28}
+  .edit{color:#b7c4ff;border-color:#25305a}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="splash-inner">
+    <h2>Task Pulse Money</h2>
+    <div class="small">Powered by Daryl G</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="topbar">
+    <h1>Task Pulse Money</h1>
+    <div class="date" id="todayLabel"></div>
+    <div class="tabs">
+      <div id="tabSpend" class="tab active" onclick="switchTab('spend')">Spend</div>
+      <div id="tabGroceries" class="tab" onclick="switchTab('groceries')">Groceries</div>
+      <div id="tabReports" class="tab" onclick="switchTab('reports')">Reports</div>
+      <div id="tabSettings" class="tab" onclick="switchTab('settings')">Settings</div>
+    </div>
+  </div>
+
+  <!-- Spend -->
+  <section id="screenSpend" class="card">
+    <h3 style="margin-top:0">Add spending</h3>
+    <div class="row" style="flex-wrap:wrap">
+      <input id="itemInput" placeholder="item (e.g. bread)" style="flex:1 1 180px">
+      <select id="typeInput">
+        <option value="food">food</option>
+        <option value="fuel">fuel</option>
+        <option value="clothing">clothing</option>
+        <option value="medicine">medicine</option>
+        <option value="electricity">electricity</option>
+      </select>
+      <select id="payerInput">
+        <option value="presh">presh</option>
+        <option value="daryl">daryl</option>
+      </select>
+      <input id="shopInput" placeholder="shop (optional)" style="flex:1 1 150px">
+      <input id="amountInput" type="number" step="0.01" min="0" placeholder="amount" style="width:140px">
+      <button class="primary" onclick="addSpend()">Add</button>
+    </div>
+    <div class="muted" id="todayTotal" style="margin-top:6px"></div>
+  </section>
+
+  <section class="card">
+    <h3 style="margin-top:0">Spending (this day)</h3>
+    <ul id="spendList" class="list" style="list-style:none;padding:0;margin:0"></ul>
+    <div class="sumrow" style="margin-top:8px"><div>Total</div><div id="dayTotal">R 0.00</div></div>
+  </section>
+
+  <!-- Groceries -->
+  <section id="screenGroceries" class="card" style="display:none">
+    <div class="row" style="justify-content:space-between">
+      <h3 style="margin:0">Groceries <span class="muted" id="groCount"></span></h3>
+      <div class="muted">Offline list</div>
+    </div>
+    <div class="row" style="flex-wrap:wrap;margin-top:6px">
+      <input id="groInput" placeholder="Add grocery item…" style="flex:1 1 220px">
+      <select id="groRating">
+        <option value="y">• low</option>
+        <option value="o">• med</option>
+        <option value="r">• high</option>
+      </select>
+      <button class="primary" onclick="addGro()">Add</button>
+    </div>
+    <ul id="groList" class="list" style="list-style:none;padding:0;margin:10px 0 0 0"></ul>
+  </section>
+
+  <!-- Reports -->
+  <section id="screenReports" style="display:none">
+    <div class="grid">
+      <div class="card">
+        <h3 style="margin-top:0">This week (7 days)</h3>
+        <div id="weeklyTrend" class="muted">—</div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Summary</h3>
+        <div id="summaryBox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="screenSettings" class="card" style="display:none">
+    <h3 style="margin-top:0">Settings</h3>
+    <div class="row" style="flex-wrap:wrap">
+      <label class="muted">Daily limit (ZAR):</label>
+      <input id="limitInput" type="number" step="0.01" min="0" placeholder="e.g. 600" style="width:140px;margin-left:8px">
+      <button class="ghost" onclick="saveLimit()">Save</button>
+      <span id="limitStatus" class="muted" style="margin-left:8px"></span>
+    </div>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+      <input id="searchInput" placeholder="Search history (item / shop / payer / type)" style="flex:1 1 260px">
+      <button class="ghost" onclick="searchHistory()">Search</button>
+      <button class="ghost" onclick="resetSearch()">Clear</button>
+    </div>
+    <ul id="searchResults" class="list" style="list-style:none;padding:0;margin-top:8px"></ul>
+  </section>
+</div>
+
+<script>
+const LS_KEY_SPEND='tpm_spends';
+const LS_KEY_GRO='tpm_groceries';
+const LS_KEY_LIMIT='tpm_daily_limit';
+const LS_KEY_LASTTAB='tpm_last_tab';
+
+const currency='R';
+
+const fmt = n => currency+' '+Number(n||0).toFixed(2);
+const todayISO = () => new Date().toISOString().slice(0,10);
+const fmtDate = d => {
+  const dt=new Date(d);
+  const dd = String(dt.getDate()).padStart(2,'0');
+  const mm = String(dt.getMonth()+1).padStart(2,'0');
+  const yyyy= dt.getFullYear();
+  return `${dd}-${mm}-${yyyy}`;
+};
+const fmtTime = d => new Date(d).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+function save(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+function load(k,def){ try{ return JSON.parse(localStorage.getItem(k)) ?? def; }catch(e){ return def; } }
+
+let spends=load(LS_KEY_SPEND,[]);
+let groceries=load(LS_KEY_GRO,[]);
+let dailyLimit=load(LS_KEY_LIMIT, null);
+
+function splash(){ setTimeout(()=>document.getElementById('splash').style.display='none', 1800); }
+splash();
+
+function renderHeader(){
+  const d=new Date();
+  document.getElementById('todayLabel').textContent = d.toLocaleDateString() + ' · '+ d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+renderHeader();
+setInterval(renderHeader, 60000);
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('section[id^="screen"]').forEach(s=>s.style.display='none');
+  document.getElementById('tab'+name[0].toUpperCase()+name.slice(1)).classList.add('active');
+  document.getElementById('screen'+name[0].toUpperCase()+name.slice(1)).style.display='block';
+  save(LS_KEY_LASTTAB, name);
+  if(name==='reports'){ renderReports(); }
+  if(name==='groceries'){ renderGro(); }
+  if(name==='spend'){ renderSpend(); }
+}
+(function initTab(){
+  const t=load(LS_KEY_LASTTAB,'spend'); switchTab(t);
+})();
+
+function addSpend(){
+  const item = document.getElementById('itemInput').value.trim();
+  const type = document.getElementById('typeInput').value;
+  const payer = document.getElementById('payerInput').value;
+  const shop = document.getElementById('shopInput').value.trim();
+  const amount = parseFloat(document.getElementById('amountInput').value || '0');
+  if(!item || !amount){ alert('Enter item and amount'); return; }
+  const now=new Date().toISOString();
+  spends.push({id: 's_'+Math.random().toString(36).slice(2,8), item, type, payer, shop, amount, date: now});
+  save(LS_KEY_SPEND, spends);
+  // daily limit warn
+  const daySum = sumForDate(todayISO());
+  if(dailyLimit && daySum > dailyLimit){
+    document.getElementById('todayTotal').innerHTML = `<span class="danger">⚠ Daily limit exceeded:</span> ${fmt(daySum)} / ${fmt(dailyLimit)}`;
+  }else if(dailyLimit){
+    document.getElementById('todayTotal').innerHTML = `Today: ${fmt(daySum)} / limit ${fmt(dailyLimit)}`;
+  }
+  clearSpendInputs(); renderSpend();
+}
+function clearSpendInputs(){
+  document.getElementById('itemInput').value='';
+  document.getElementById('shopInput').value='';
+  document.getElementById('amountInput').value='';
+}
+
+function renderSpend(){
+  const ul = document.getElementById('spendList'); ul.innerHTML='';
+  const today = todayISO();
+  const todays = spends.filter(s => (new Date(s.date)).toISOString().slice(0,10)===today);
+  todays.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  let total = 0;
+  todays.forEach(s=>{
+    total += Number(s.amount);
+    const li = document.createElement('li');
+    const left = document.createElement('div');
+    const right = document.createElement('div'); right.textContent = fmt(s.amount);
+    const pills = `<span class="pill ${s.type}">${s.type}</span><span class="pill ${s.payer}">${s.payer}</span>${s.shop?`<span class="pill">${s.shop}</span>`:''}`;
+    left.innerHTML = `<div><strong>${s.item}</strong></div>
+                      <div class="muted">${fmtDate(s.date)} · ${fmtTime(s.date)}</div>
+                      <div style="margin-top:4px">${pills}</div>`;
+    const actions = document.createElement('div'); actions.className='actions right';
+    const eb = document.createElement('button'); eb.className='iconbtn edit'; eb.textContent='✎'; eb.title='Edit';
+    eb.onclick = ()=> editSpend(s.id);
+    const db = document.createElement('button'); db.className='iconbtn del'; db.textContent='×'; db.title='Delete';
+    db.onclick = ()=> delSpend(s.id);
+    actions.appendChild(eb); actions.appendChild(db);
+    li.appendChild(left); li.appendChild(right); li.appendChild(actions);
+    ul.appendChild(li);
+  });
+  document.getElementById('dayTotal').textContent = fmt(total);
+  // status line
+  if(dailyLimit){
+    if(total>dailyLimit) document.getElementById('todayTotal').innerHTML = `<span class="danger">⚠ Over limit</span> ${fmt(total)} / ${fmt(dailyLimit)}`;
+    else document.getElementById('todayTotal').textContent = `Today: ${fmt(total)} / limit ${fmt(dailyLimit)}`;
+  } else {
+    document.getElementById('todayTotal').textContent = `Today: ${fmt(total)}`;
+  }
+}
+
+function editSpend(id){
+  const s = spends.find(x=>x.id===id); if(!s) return;
+  const item = prompt('Edit item', s.item); if(item===null) return;
+  const amount = parseFloat(prompt('Edit amount', s.amount) || s.amount);
+  const shop = prompt('Edit shop (optional)', s.shop || '') ?? s.shop;
+  s.item=item.trim(); s.amount=amount; s.shop=(shop||'').trim();
+  save(LS_KEY_SPEND, spends); renderSpend();
+}
+function delSpend(id){
+  if(!confirm('Delete this spend?')) return;
+  spends = spends.filter(x=>x.id!==id); save(LS_KEY_SPEND, spends); renderSpend();
+}
+
+function addGro(){
+  const name = document.getElementById('groInput').value.trim();
+  const rating = document.getElementById('groRating').value; // y o r
+  if(!name) return;
+  const now = new Date().toISOString();
+  groceries.push({id:'g_'+Math.random().toString(36).slice(2,8), name, done:false, rating, date: now});
+  save(LS_KEY_GRO, groceries); document.getElementById('groInput').value=''; renderGro();
+}
+function renderGro(){
+  const ul=document.getElementById('groList'); ul.innerHTML='';
+  document.getElementById('groCount').textContent = `${groceries.length} items`;
+  groceries.forEach(g=>{
+    const li=document.createElement('li');
+    const left = document.createElement('div');
+    left.innerHTML = `<span class="dot ${g.rating}"></span> ${g.done?'<s>'+g.name+'</s>':g.name}
+                      <div class="muted">${fmtDate(g.date)} · ${fmtTime(g.date)}</div>`;
+    const actions = document.createElement('div'); actions.className='actions right';
+    const cb = document.createElement('input'); cb.type='checkbox'; cb.checked=g.done;
+    cb.onchange=()=>{ g.done=cb.checked; save(LS_KEY_GRO, groceries); };
+    const eb=document.createElement('button'); eb.className='iconbtn edit'; eb.textContent='✎';
+    eb.onclick=()=>{ const n=prompt('Edit item', g.name); if(n!==null){ g.name=n.trim(); save(LS_KEY_GRO, groceries); renderGro(); }};
+    const mb=document.createElement('button'); mb.className='iconbtn'; mb.textContent='→'; mb.title='Move to Spend';
+    mb.onclick=()=>moveGroToSpend(g.id);
+    const db=document.createElement('button'); db.className='iconbtn del'; db.textContent='×'; db.onclick=()=>{ groceries=groceries.filter(x=>x.id!==g.id); save(LS_KEY_GRO, groceries); renderGro(); };
+    actions.appendChild(cb); actions.appendChild(eb); actions.appendChild(mb); actions.appendChild(db);
+    li.appendChild(left); li.appendChild(actions); ul.appendChild(li);
+  });
+}
+
+function moveGroToSpend(id){
+  const g = groceries.find(x=>x.id===id); if(!g) return;
+  document.getElementById('itemInput').value = g.name;
+  switchTab('spend');
+}
+
+function sumForDate(isoDate){
+  return spends.filter(s => (new Date(s.date)).toISOString().slice(0,10)===isoDate)
+               .reduce((a,b)=>a+Number(b.amount),0);
+}
+
+function lastNDays(n){
+  const out=[]; const now=new Date();
+  for(let i=0;i<n;i++){
+    const d=new Date(now); d.setDate(now.getDate()-i);
+    out.push(d.toISOString().slice(0,10));
+  }
+  return out.reverse();
+}
+
+function renderReports(){
+  // weekly trend
+  const days = lastNDays(7);
+  const rows = days.map(d=>({d, total: spends.filter(s => s.date.slice(0,10)===d).reduce((a,b)=>a+Number(b.amount),0)}));
+  const wt = rows.map(r=> `${fmtDate(r.d)}: ${fmt(r.total)}`).join('<br>');
+  document.getElementById('weeklyTrend').innerHTML = wt || '—';
+
+  // summary by type & payer & top shop
+  const byType={}, byPayer={}, byShop={};
+  spends.forEach(s=>{
+    byType[s.type]=(byType[s.type]||0)+Number(s.amount);
+    byPayer[s.payer]=(byPayer[s.payer]||0)+Number(s.amount);
+    if(s.shop) byShop[s.shop]=(byShop[s.shop]||0)+Number(s.amount);
+  });
+  const toRows = (obj, cls) => Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="sumrow ${cls||''}"><div>${k}</div><div>${fmt(v)}</div></div>`).join('');
+  const bestShop = Object.entries(byShop).sort((a,b)=>b[1]-a[1])[0];
+  const sumHtml = `
+    <div class="muted" style="margin-bottom:6px">${fmtDate(new Date().toISOString())} · last 7 days</div>
+    <strong>By type</strong>
+    ${toRows(byType,'') || '<div class="muted">no data</div>'}
+    <strong style="margin-top:6px;display:block">By payer</strong>
+    ${toRows(byPayer,'') || '<div class="muted">no data</div>'}
+    <strong style="margin-top:6px;display:block">Top shop</strong>
+    <div class="sumrow">${bestShop?('<div>'+bestShop[0]+'</div><div>'+fmt(bestShop[1])+'</div>'):'<div>(no shop)</div><div>—</div>'}</div>
+  `;
+  document.getElementById('summaryBox').innerHTML = sumHtml;
+}
+
+function saveLimit(){
+  const v = parseFloat(document.getElementById('limitInput').value || '0');
+  if(v>0){ dailyLimit=v; save(LS_KEY_LIMIT, v); document.getElementById('limitStatus').textContent='saved'; }
+  else { dailyLimit=null; save(LS_KEY_LIMIT, null); document.getElementById('limitStatus').textContent='cleared'; }
+}
+
+function searchHistory(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const ul=document.getElementById('searchResults'); ul.innerHTML='';
+  if(!q) return;
+  const hits = spends.filter(s=> [s.item,s.shop,s.payer,s.type].filter(Boolean).join(' ').toLowerCase().includes(q));
+  hits.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  hits.forEach(s=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<div><strong>${s.item}</strong> <span class="muted">(${s.type} · ${s.payer}${s.shop?(' · '+s.shop):''})</span><div class="muted">${fmtDate(s.date)} · ${fmtTime(s.date)}</div></div><div>${fmt(s.amount)}</div>`;
+    ul.appendChild(li);
+  });
+}
+function resetSearch(){ document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML=''; }
+
+// init existing renders
+renderSpend(); renderGro();
+</script>
+
+<!-- PWA SW registration -->
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
