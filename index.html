@@ -1,326 +1,601 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Money</title>
-
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icon-192.png" />
-<meta name="theme-color" content="#0f111a" />
-
-<style>
-  :root{
-    --bg:#0f111a; --card:#141725; --muted:#a7b0c3; --ink:#e9ecf5;
-    --line:#262a3c; --pill:#1b1e2f; --pill2:#20243a; --danger:#ff5a71;
-    --blue:#bfe3ff; --cyan:#cce9ff; --pink:#eed3ff;
-    --pad:14px; --radius:16px; --tap:52px; --fs:16px;
-  }
-  @media (max-width:480px){
-    :root{ --pad:12px; --radius:14px; --tap:56px; --fs:17px; }
-  }
-  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  html,body{height:100%}
-  body{
-    margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
-    color:var(--ink);
-    background:
-      radial-gradient(900px 420px at 60% 8%, #2b2542 0%, rgba(15,17,26,0) 55%),
-      radial-gradient(720px 420px at 10% 85%, #13233a 0%, rgba(15,17,26,0) 52%),
-      var(--bg);
-    font-size:var(--fs);
-  }
-  .wrap{max-width:720px;margin:0 auto;padding:var(--pad) var(--pad) calc(60px + env(safe-area-inset-bottom));}
-  .topbar{position:sticky;top:0;z-index:5;background:linear-gradient(180deg, rgba(15,17,26,.98) 0%, rgba(15,17,26,.75) 75%, rgba(15,17,26,0) 100%); padding:18px var(--pad) 8px}
-  h1{margin:0;font-size:22px}
-  .date{color:var(--muted);font-size:12px}
-
-  /* ===== Mobile-friendly, swipeable tabs ===== */
-  .tabs-wrap{
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 6px 8px;
-    overflow: hidden;
-    margin-top: 10px;
-  }
-  .tabs{
-    display:flex; gap:8px;
-    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
-    scroll-snap-type:x proximity;
-    padding: 6px 2px 8px;
-  }
-  .tabs::-webkit-scrollbar{ display:none; }
-  .tab{
-    scroll-snap-align:center;
-    flex:0 0 auto; min-width:110px;
-    text-align:center; background:var(--pill2);
-    border:1px solid var(--line); padding:10px 14px;
-    border-radius:14px; color:#cdd6e5; cursor:pointer;
-    min-height:var(--tap); display:flex; align-items:center; justify-content:center;
-  }
-  .tab.active{ background:#f1f3fb; color:#142033; font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,.18); }
-  @media (max-width:360px){ .tab{ min-width:96px; padding:10px 12px } h1{font-size:20px} }
-
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad);margin:10px 0;box-shadow:0 6px 30px rgba(0,0,0,.25)}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  input,select,button{border-radius:12px;border:1px solid var(--line);background:#0f1220;color:var(--ink);padding:12px 14px;font-size:var(--fs);min-height:var(--tap)}
-  input[type=number]{-moz-appearance:textfield} input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0;}
-  button.primary{background:#f1f3fb;color:#111;border:1px solid #cfd5ea;font-weight:600}
-  .list{list-style:none;padding:0;margin:0}
-  .list li{display:flex;gap:8px;justify-content:space-between;align-items:center;padding:12px 6px;border-bottom:1px dashed #22263a}
-  .muted{color:var(--muted)}
-  .sumrow{display:flex;justify-content:space-between;padding:10px 12px;margin:4px 0;border-radius:12px;background:#0f1220;border:1px solid var(--line)}
-  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--pill);border:1px solid var(--line);font-size:13px;margin-right:6px}
-  .pill.food{background:var(--blue); color:#142033} .pill.fuel{background:var(--cyan); color:#142033}
-  .pill.presh,.pill.daryl{background:var(--pink); color:#2a103a}
-  .actions{display:flex;gap:8px}
-  .iconbtn{min-height:var(--tap);padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#161a2b;color:var(--ink)}
-  .edit{color:#b7c4ff;border-color:#25305a} .del{color:#ff7786;border-color:#3a1b28}
-
-  /* Splash */
-  #splash{position:fixed;inset:0;background:#0d101c url('splash.png') center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;z-index:50}
-  #splash .footer{width:100%;text-align:center;padding:18px 0 calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 100%);color:#cfe8d6;font-weight:600}
-  .fadeout{animation:fade .6s ease forwards}
-  @keyframes fade{to{opacity:0;visibility:hidden}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskPulse Money</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0d12; --elev:#141824; --elev2:#1b2030; --ink:#eaf0ff; --ink-dim:#aab3c5;
+      --pri:#7c5cff; --pri-2:#00d6a3; --bad:#ff6b6b; --good:#29d78a; --warn:#f6c445;
+      --mut:#22283a; --ring: 0 0 0 3px rgba(124,92,255,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Apple Color Emoji,Noto Color Emoji,Arial,sans-serif;background:linear-gradient(180deg,#0b0d12,#0a0c11 20%,#0b0d12 80%);color:var(--ink)}
+    a{color:var(--pri)}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 18px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .badge{font-size:12px;color:var(--ink-dim);opacity:.9}
+    h1{font-size:24px;margin:0;font-weight:800;letter-spacing:.2px}
+    .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pri),#1e90ff);display:grid;place-items:center;font-weight:800}
+    .logo-mark span{font-size:16px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:10px 14px;border-radius:10px;background:var(--elev);color:var(--ink-dim);border:1px solid transparent;cursor:pointer;user-select:none}
+    .tab[aria-selected="true"]{background:var(--elev2);color:var(--ink);border-color:#2a3350}
+    .row{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .card{background:var(--elev);border:1px solid #232a40;border-radius:14px;padding:16px}
+    .ghost{background:transparent;border-style:dashed}
+    .card h3{margin:0 0 10px;font-size:16px;letter-spacing:.2px}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .metric{padding:14px;border-radius:12px;background:var(--elev2);border:1px solid #27304c}
+    .metric .t{font-size:12px;color:var(--ink-dim)}
+    .metric .n{font-size:22px;font-weight:800;margin-top:6px}
+    .metric .delta{font-size:12px;margin-top:2px}
+    .delta.pos{color:var(--good)}
+    .delta.neg{color:var(--bad)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stack{display:flex;flex-direction:column;gap:10px}
+    .input, select, textarea{width:100%;padding:12px 12px;border-radius:10px;background:#121624;border:1px solid #232a40;color:var(--ink)}
+    .input:focus, select:focus, textarea:focus{outline:none;box-shadow:var(--ring);border-color:#384471}
+    .btn{padding:12px 14px;border-radius:10px;border:1px solid #2b3555;background:linear-gradient(180deg,#20284a,#18203b);color:#fff;cursor:pointer}
+    .btn:hover{filter:brightness(1.06)}
+    .btn.ghost{background:transparent}
+    .btn.pri{background:linear-gradient(180deg,#7c5cff,#5e41ff);border-color:#6a51ff}
+    .btn.bad{background:linear-gradient(180deg,#d14a4a,#b93e3e);border-color:#e86d6d}
+    .btn.good{background:linear-gradient(180deg,#29d78a,#1dbb79);border-color:#33e79a}
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .mut{color:var(--ink-dim)}
+    .small{font-size:12px}
+    .list{display:flex;flex-direction:column}
+    .list .rowi{display:grid;grid-template-columns:110px 1.5fr 1fr 110px 110px 100px 80px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #243055}
+    .pill{padding:6px 8px;border-radius:999px;border:1px solid #2a3558;background:#151b2c;color:var(--ink-dim);font-size:12px}
+    .right{margin-left:auto}
+    .hidden{display:none}
+    footer{margin:26px 0;color:var(--ink-dim);text-align:center}
+    @media (max-width: 980px){
+      .metrics{grid-template-columns:1fr 1fr}
+      .list .rowi{grid-template-columns:90px 1.1fr .9fr 90px 90px 80px 70px}
+    }
+    @media (max-width: 720px){
+      .row{grid-template-columns:1fr}
+      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+      .metrics{grid-template-columns:1fr 1fr}
+      .list .rowi{grid-template-columns:70px 1fr 1fr 80px 80px 70px 60px}
+    }
+  </style>
+  <!-- Chart.js for simple reports -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Firebase (compat builds for CDN usage in a single HTML file) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 </head>
 <body>
-<!-- Splash (1.8s) -->
-<div id="splash"><div class="footer">Powered by Daryl G</div></div>
-
-<div class="wrap">
-  <div class="topbar">
-    <h1>Task Pulse Money</h1>
-    <div class="date" id="todayLabel"></div>
-
-    <div class="tabs-wrap">
-      <div class="tabs" role="tablist" id="tabsStrip">
-        <button id="tabSpend" class="tab active" onclick="switchTab('spend')" aria-selected="true">Spend</button>
-        <button id="tabGroceries" class="tab" onclick="switchTab('groceries')">Groceries</button>
-        <button id="tabReports" class="tab" onclick="switchTab('reports')">Reports</button>
-        <button id="tabSettings" class="tab" onclick="switchTab('settings')">Settings</button>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-mark"><span>TP</span></div>
+        <div>
+          <h1>TaskPulse <span style="font-weight:700;opacity:.9">Money</span></h1>
+          <div class="badge">Fast personal finance tracker • Firebase sync • Offline-first</div>
+        </div>
       </div>
-    </div>
+      <div class="toolbar" role="group" aria-label="Quick actions">
+        <button class="btn ghost small" id="exportJson">Export</button>
+        <label class="btn ghost small" for="importJsonInput">Import<input id="importJsonInput" type="file" accept="application/json" class="hidden"/></label>
+        <button class="btn pri small" id="openSync">Sync</button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Primary">
+      <button class="tab" data-tab="dashboard" aria-selected="true">Dashboard</button>
+      <button class="tab" data-tab="transactions">Transactions</button>
+      <button class="tab" data-tab="budgets">Budgets</button>
+      <button class="tab" data-tab="reports">Reports</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard" class="tabpane" role="tabpanel">
+      <div class="metrics" id="metricRow">
+        <div class="metric"><div class="t">Total Balance</div><div class="n" id="mBalance">R0</div><div class="delta" id="mBalanceDelta">–</div></div>
+        <div class="metric"><div class="t">This Month Income</div><div class="n" id="mIncome">R0</div><div class="delta pos" id="mIncomeCnt">–</div></div>
+        <div class="metric"><div class="t">This Month Expense</div><div class="n" id="mExpense">R0</div><div class="delta neg" id="mExpenseCnt">–</div></div>
+        <div class="metric"><div class="t">Budget Health</div><div class="n" id="mBudget">—</div><div class="delta" id="mBudgetDelta">—</div></div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div class="card" style="grid-column: span 8">
+          <h3>Recent activity</h3>
+          <div class="list" id="recentList"></div>
+        </div>
+        <div class="card" style="grid-column: span 4">
+          <h3>Quick add</h3>
+          <form id="quickAdd" class="stack">
+            <div class="grid-2">
+              <input class="input" type="date" id="qaDate" required />
+              <select id="qaType" class="input" required>
+                <option value="expense" selected>Expense</option>
+                <option value="income">Income</option>
+                <option value="transfer">Transfer</option>
+              </select>
+            </div>
+            <input class="input" id="qaDesc" placeholder="Description (e.g., groceries)" />
+            <div class="grid-3">
+              <input class="input" id="qaCategory" placeholder="Category (e.g., Food)" />
+              <input class="input" id="qaAccount" placeholder="Account (e.g., FNB Cheque)" />
+              <input class="input" id="qaAmount" type="number" step="0.01" placeholder="Amount" required />
+            </div>
+            <div class="toolbar">
+              <button class="btn pri" type="submit">Add transaction</button>
+              <label class="pill"><input type="checkbox" id="qaRecurring"/> Recurring monthly</label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSACTIONS -->
+    <section id="tab-transactions" class="tabpane hidden" role="tabpanel">
+      <div class="card">
+        <h3>All transactions</h3>
+        <div class="toolbar" style="margin-bottom:10px">
+          <input class="input" id="fSearch" placeholder="Search description/category/account" style="max-width:340px">
+          <input class="input" type="month" id="fMonth" />
+          <select class="input" id="fType" style="max-width:180px">
+            <option value="">All types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="transfer">Transfer</option>
+          </select>
+          <button class="btn ghost" id="clearFilters">Clear</button>
+          <span class="right small mut" id="txCount">0 items</span>
+        </div>
+        <div class="list" id="txList"></div>
+      </div>
+    </section>
+
+    <!-- BUDGETS -->
+    <section id="tab-budgets" class="tabpane hidden" role="tabpanel">
+      <div class="row">
+        <div class="card" style="grid-column: span 7">
+          <h3>Monthly budgets</h3>
+          <div id="budgetList" class="stack"></div>
+        </div>
+        <div class="card" style="grid-column: span 5">
+          <h3>Add / update budget</h3>
+          <form id="budgetForm" class="stack">
+            <input class="input" id="bCategory" placeholder="Category (e.g., Food)" required>
+            <input class="input" id="bLimit" type="number" step="0.01" placeholder="Monthly limit" required>
+            <button class="btn pri" type="submit">Save budget</button>
+          </form>
+          <div class="small mut" style="margin-top:6px">Budgets apply per calendar month and compare against expenses by category.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="tab-reports" class="tabpane hidden" role="tabpanel">
+      <div class="row">
+        <div class="card" style="grid-column: span 7">
+          <h3>Category breakdown (this month)</h3>
+          <canvas id="pieCat" height="220"></canvas>
+        </div>
+        <div class="card" style="grid-column: span 5">
+          <h3>Cashflow (last 6 months)</h3>
+          <canvas id="barFlow" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS / SYNC -->
+    <section id="tab-settings" class="tabpane hidden" role="tabpanel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Sync (Firebase)</h3>
+          <div class="stack">
+            <div class="small mut">Use the same sync code on your phone and laptop to keep data aligned in real time. No email/password needed.</div>
+            <div class="grid-2">
+              <input class="input" id="syncCode" placeholder="Sync code (auto-generated)" />
+              <button class="btn" id="applySync">Apply</button>
+            </div>
+            <div class="toolbar">
+              <button class="btn good" id="generateCode">Generate new code</button>
+              <button class="btn bad" id="disconnect">Disconnect</button>
+            </div>
+            <div class="small mut" id="syncStatus">Not connected</div>
+          </div>
+          <div class="card ghost" style="margin-top:12px">
+            <h3>Firebase config</h3>
+            <div class="small mut">Paste your Firebase Web App credentials below <em>and click "Apply"</em>. Use a Realtime Database in "test mode" while prototyping. Auth uses anonymous sign-in.</div>
+            <textarea id="firebaseConfigText" rows="8" class="input" placeholder='{
+  "apiKey": "YOUR_KEY",
+  "authDomain": "YOUR_PROJECT.firebaseapp.com",
+  "databaseURL": "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  "projectId": "YOUR_PROJECT",
+  "storageBucket": "YOUR_PROJECT.appspot.com",
+  "messagingSenderId": "XXXX",
+  "appId": "1:XXXX:web:XXXX"
+}'></textarea>
+            <div class="toolbar"><button class="btn pri" id="applyFirebase">Apply Firebase Config</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>App preferences</h3>
+          <div class="stack">
+            <label class="pill"><input type="checkbox" id="prefSouthAfrica" checked/> Format currency as ZAR (R)</label>
+            <label class="pill"><input type="checkbox" id="prefDark" checked/> Dark theme</label>
+            <label class="pill"><input type="checkbox" id="prefAutosave" checked/> Autosave to cloud</label>
+          </div>
+          <div class="card ghost" style="margin-top:12px">
+            <h3>About</h3>
+            <div class="small mut">Version 1.0 • Local-first storage with cloud sync • Built for speed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Powered by Daryl G</footer>
   </div>
 
-  <!-- Spend -->
-  <section id="screenSpend" class="card">
-    <h3 style="margin:0 0 6px">Add spending</h3>
-    <div class="row">
-      <input id="itemInput" placeholder="item (e.g. bread)" style="flex:1 1 160px">
-      <select id="typeInput">
-        <option value="food">food</option>
-        <option value="fuel">fuel</option>
-        <option value="clothing">clothing</option>
-        <option value="medicine">medicine</option>
-        <option value="electricity">electricity</option>
-      </select>
-      <select id="payerInput">
-        <option value="presh">presh</option>
-        <option value="daryl">daryl</option>
-      </select>
-      <input id="shopInput" placeholder="shop (optional)" style="flex:1 1 130px">
-      <input id="amountInput" type="number" step="0.01" min="0" inputmode="decimal" placeholder="amount" style="width:130px">
-      <button class="primary" onclick="addSpend()">Add</button>
+  <template id="txRowTpl">
+    <div class="rowi">
+      <div class="small mut dt"></div>
+      <div class="desc"></div>
+      <div class="cat small pill"></div>
+      <div class="acc small pill"></div>
+      <div class="type small pill"></div>
+      <div class="amt" style="font-weight:700"></div>
+      <div class="toolbar">
+        <button class="btn ghost small edit">Edit</button>
+        <button class="btn ghost small bad del">Delete</button>
+      </div>
     </div>
-    <div class="muted" id="todayTotal" style="margin-top:6px"></div>
-  </section>
+  </template>
 
-  <section class="card">
-    <h3 style="margin:0 0 6px">Spending (this day)</h3>
-    <ul id="spendList" class="list"></ul>
-    <div class="sumrow" style="margin-top:6px"><div>Total</div><div id="dayTotal">R 0.00</div></div>
-  </section>
+  <script>
+  // ---------------------------
+  // UTILITIES
+  // ---------------------------
+  const $ = (s, p=document) => p.querySelector(s);
+  const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
+  const fmt = new Intl.NumberFormat('en-ZA', { style:'currency', currency:'ZAR' });
+  const todayISO = () => new Date().toISOString().slice(0,10);
+  const monthKey = (d) => (d||todayISO()).slice(0,7);
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : ('id-' + Math.random().toString(36).slice(2)));
 
-  <!-- Groceries -->
-  <section id="screenGroceries" class="card" style="display:none">
-    <div class="row" style="justify-content:space-between">
-      <h3 style="margin:0">Groceries <span class="muted" id="groCount"></span></h3>
-      <div class="muted">Offline list</div>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <input id="groInput" placeholder="Add grocery item…" style="flex:1 1 220px">
-      <select id="groRating">
-        <option value="y">• low</option>
-        <option value="o">• med</option>
-        <option value="r">• high</option>
-      </select>
-      <button class="primary" onclick="addGro()">Add</button>
-    </div>
-    <ul id="groList" class="list" style="margin-top:6px"></ul>
-  </section>
+  // ---------------------------
+  // STATE
+  // ---------------------------
+  const state = {
+    tx: [], // transactions
+    budgets: {}, // { category: number }
+    prefs: { currency:'ZAR', dark:true, autosave:true },
+    sync: { code: '', connected:false, last:0 },
+    firebase: { cfg:null, app:null, db:null, user:null }
+  };
 
-  <!-- Reports -->
-  <section id="screenReports" style="display:none">
-    <div class="card">
-      <h3 style="margin:0 0 6px">7-day & 30-day reports</h3>
-      <div id="report7"></div>
-      <hr style="border:0;border-top:1px dashed #30364d;margin:10px 0">
-      <div id="report30"></div>
-    </div>
-  </section>
-
-  <!-- Settings -->
-  <section id="screenSettings" class="card" style="display:none">
-    <h3 style="margin:0 0 6px">Settings</h3>
-    <div class="row">
-      <label class="muted">Daily limit (ZAR):</label>
-      <input id="limitInput" type="number" step="0.01" min="0" placeholder="e.g. 600" style="width:140px;margin-left:8px">
-      <button onclick="saveLimit()">Save</button>
-      <span id="limitStatus" class="muted" style="margin-left:8px"></span>
-    </div>
-  </section>
-</div>
-
-<script>
-/* ===== Local storage + utils ===== */
-const LS_KEY_SPEND='tpm_spends', LS_KEY_GRO='tpm_groceries', LS_KEY_LIMIT='tpm_daily_limit', LS_KEY_LASTTAB='tpm_last_tab';
-const currency='R'; const fmt=n=>currency+' '+Number(n||0).toFixed(2);
-const todayISO=()=>new Date().toISOString().slice(0,10);
-const fmtDate=d=>new Date(d).toLocaleDateString(); const fmtTime=d=>new Date(d).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-function save(k,v){localStorage.setItem(k,JSON.stringify(v));} function load(k,def){try{return JSON.parse(localStorage.getItem(k))??def;}catch(e){return def;}}
-let spends=load(LS_KEY_SPEND,[]), groceries=load(LS_KEY_GRO,[]), dailyLimit=load(LS_KEY_LIMIT,null);
-
-/* Splash 1.8s */
-window.addEventListener('load',()=>{
-  setTimeout(()=>{ const s=document.getElementById('splash'); s.classList.add('fadeout'); setTimeout(()=>s.style.display='none',600); },1800);
-  renderHeader(); setInterval(renderHeader,60000);
-  switchTab(load(LS_KEY_LASTTAB,'spend'));
-});
-function renderHeader(){const d=new Date(); document.getElementById('todayLabel').textContent = d.toLocaleDateString()+' · '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}
-
-/* Ensure active tab is visible */
-function ensureTabVisible(id){
-  const el=document.getElementById(id);
-  if(!el) return;
-  el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
-}
-
-/* Tabs */
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('section[id^="screen"]').forEach(s=>s.style.display='none');
-  const tabId='tab'+name[0].toUpperCase()+name.slice(1);
-  const screenId='screen'+name[0].toUpperCase()+name.slice(1);
-  document.getElementById(tabId).classList.add('active');
-  document.getElementById(screenId).style.display='block';
-  ensureTabVisible(tabId);
-  save(LS_KEY_LASTTAB,name);
-  if(name==='reports') renderReports();
-  if(name==='groceries') renderGro();
-  if(name==='spend') renderSpend();
-}
-
-/* Spend */
-function addSpend(){
-  const item=document.getElementById('itemInput').value.trim();
-  const type=document.getElementById('typeInput').value;
-  const payer=document.getElementById('payerInput').value;
-  const shop=document.getElementById('shopInput').value.trim();
-  const amount=parseFloat(document.getElementById('amountInput').value||'0');
-  if(!item||!amount){alert('Enter item and amount');return;}
-  const now=new Date().toISOString();
-  spends.push({id:'s_'+Math.random().toString(36).slice(2,8), item,type,payer,shop,amount,date:now});
-  save(LS_KEY_SPEND,spends);
-  if(dailyLimit){
-    const daySum = sumForDate(todayISO());
-    document.getElementById('todayTotal').innerHTML = daySum>dailyLimit ? `<span style="color:#ff5a71;font-weight:700">⚠ Over limit</span> ${fmt(daySum)} / ${fmt(dailyLimit)}` : `Today: ${fmt(daySum)} / limit ${fmt(dailyLimit)}`;
+  // Load persisted
+  function loadLocal(){
+    try{
+      const saved = JSON.parse(localStorage.getItem('tpmoney-v1')||'{}');
+      Object.assign(state, saved, { firebase:{...state.firebase, ...(saved.firebase||{})} });
+    }catch(e){ console.warn('No local state yet'); }
   }
-  clearSpendInputs(); renderSpend();
-}
-function clearSpendInputs(){document.getElementById('itemInput').value='';document.getElementById('shopInput').value='';document.getElementById('amountInput').value='';}
-
-function renderSpend(){
-  const ul=document.getElementById('spendList'); ul.innerHTML='';
-  const today=todayISO();
-  const todays=spends.filter(s=>(new Date(s.date)).toISOString().slice(0,10)===today).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  let total=0;
-  todays.forEach(s=>{
-    total+=Number(s.amount);
-    const li=document.createElement('li');
-    const left=document.createElement('div');
-    const right=document.createElement('div'); right.textContent=fmt(s.amount);
-    const pills=`<span class="pill ${s.type}">${s.type}</span><span class="pill ${s.payer}">${s.payer}</span>${s.shop?`<span class="pill">${s.shop}</span>`:''}`;
-    left.innerHTML = `<div><strong>${s.item}</strong></div><div class="muted">${fmtDate(s.date)} · ${fmtTime(s.date)}</div><div style="margin-top:4px">${pills}</div>`;
-    const actions=document.createElement('div'); actions.className='actions';
-    const eb=document.createElement('button'); eb.className='iconbtn edit'; eb.textContent='✎'; eb.onclick=()=>editSpend(s.id);
-    const db=document.createElement('button'); db.className='iconbtn del'; db.textContent='×'; db.onclick=()=>delSpend(s.id);
-    actions.appendChild(eb); actions.appendChild(db);
-    li.appendChild(left); li.appendChild(right); li.appendChild(actions);
-    ul.appendChild(li);
-  });
-  document.getElementById('dayTotal').textContent=fmt(total);
-  if(dailyLimit){
-    document.getElementById('todayTotal').innerHTML = total>dailyLimit ? `<span style="color:#ff5a71;font-weight:700">⚠ Over limit</span> ${fmt(total)} / ${fmt(dailyLimit)}` : `Today: ${fmt(total)} / limit ${fmt(dailyLimit)}`;
-  } else {
-    document.getElementById('todayTotal').textContent = `Today: ${fmt(total)}`;
+  function saveLocal(){
+    localStorage.setItem('tpmoney-v1', JSON.stringify({ tx:state.tx, budgets:state.budgets, prefs:state.prefs, sync:state.sync, firebase:{cfg:state.firebase.cfg} }));
   }
-}
-function editSpend(id){
-  const s=spends.find(x=>x.id===id); if(!s) return;
-  const item=prompt('Edit item', s.item); if(item===null) return;
-  const amount=parseFloat(prompt('Edit amount', s.amount)||s.amount);
-  const shop=prompt('Edit shop (optional)', s.shop||'') ?? s.shop;
-  s.item=item.trim(); s.amount=amount; s.shop=(shop||'').trim();
-  save(LS_KEY_SPEND,spends); renderSpend();
-}
-function delSpend(id){ if(!confirm('Delete this spend?')) return; spends=spends.filter(x=>x.id!==id); save(LS_KEY_SPEND,spends); renderSpend(); }
 
-/* Groceries */
-function addGro(){
-  const name=document.getElementById('groInput').value.trim();
-  const rating=document.getElementById('groRating').value;
-  if(!name) return;
-  const now=new Date().toISOString();
-  groceries.push({id:'g_'+Math.random().toString(36).slice(2,8), name, done:false, rating, date:now});
-  save(LS_KEY_GRO,groceries);
-  document.getElementById('groInput').value=''; renderGro();
-}
-function renderGro(){
-  const ul=document.getElementById('groList'); ul.innerHTML='';
-  document.getElementById('groCount').textContent=`${groceries.length} items`;
-  groceries.forEach(g=>{
-    const li=document.createElement('li');
-    const left=document.createElement('div');
-    const dot=g.rating==='y'?'#ffd166':g.rating==='o'?'#ff9f1c':'#ef476f';
-    left.innerHTML=`<span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${dot};margin-right:6px"></span> ${g.done?'<s>'+g.name+'</s>':g.name}<div class="muted">${fmtDate(g.date)} · ${fmtTime(g.date)}</div>`;
-    const actions=document.createElement('div'); actions.className='actions';
-    const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=g.done; cb.onchange=()=>{ g.done=cb.checked; save(LS_KEY_GRO,groceries); };
-    const eb=document.createElement('button'); eb.className='iconbtn edit'; eb.textContent='✎'; eb.onclick=()=>{ const n=prompt('Edit item', g.name); if(n!==null){ g.name=n.trim(); save(LS_KEY_GRO,groceries); renderGro(); }};
-    const mb=document.createElement('button'); mb.className='iconbtn'; mb.textContent='→'; mb.title='Move to Spend'; mb.onclick=()=>moveGroToSpend(g.id);
-    const db=document.createElement('button'); db.className='iconbtn del'; db.textContent='×'; db.onclick=()=>{ groceries=groceries.filter(x=>x.id!==g.id); save(LS_KEY_GRO,groceries); renderGro(); };
-    actions.appendChild(cb); actions.appendChild(eb); actions.appendChild(mb); actions.appendChild(db);
-    li.appendChild(left); li.appendChild(actions); ul.appendChild(li);
+  // ---------------------------
+  // RENDER HELPERS
+  // ---------------------------
+  function render(){
+    renderDashboard();
+    renderTransactions();
+    renderBudgets();
+    renderReports();
+    renderSettings();
+    saveLocal();
+  }
+
+  function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
+  function monthRange(n=6){
+    const out=[]; const d=new Date(); d.setDate(1);
+    for(let i=n-1;i>=0;i--){ const t=new Date(d); t.setMonth(d.getMonth()-i); out.push(t.toISOString().slice(0,7)); }
+    return out;
+  }
+
+  function renderDashboard(){
+    const m=monthKey();
+    const monthTx = state.tx.filter(t=> t.date.startsWith(m));
+    const income = sum(monthTx.filter(t=>t.type==='income').map(t=>+t.amount));
+    const expense = sum(monthTx.filter(t=>t.type==='expense').map(t=>+t.amount));
+    const transfers = sum(monthTx.filter(t=>t.type==='transfer').map(t=>+t.amount));
+    const balance = sum(state.tx.map(t=> t.type==='income'?+t.amount:(t.type==='expense'? -t.amount : 0)));
+    $('#mBalance').textContent = fmt.format(balance);
+    $('#mIncome').textContent = fmt.format(income);
+    $('#mExpense').textContent = fmt.format(expense);
+    $('#mIncomeCnt').textContent = monthTx.filter(t=>t.type==='income').length + ' items';
+    $('#mExpenseCnt').textContent = monthTx.filter(t=>t.type==='expense').length + ' items';
+
+    // Budget health
+    let used=0, limit=0;
+    const cats = Object.keys(state.budgets);
+    cats.forEach(c=>{
+      const l=+state.budgets[c]||0; limit+=l;
+      const u=sum(monthTx.filter(t=>t.type==='expense' && (t.category||'').toLowerCase()===c.toLowerCase()).map(t=>+t.amount));
+      used+=u;
+    });
+    const pct = limit? Math.min(100, Math.round(100*used/limit)) : 0;
+    $('#mBudget').textContent = limit? `${pct}% used` : 'No budgets';
+    $('#mBudgetDelta').textContent = limit? `${fmt.format(used)} / ${fmt.format(limit)}` : '—';
+
+    // Recent activity
+    const recent = [...state.tx].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+    const list = $('#recentList'); list.innerHTML='';
+    recent.forEach(t=> list.appendChild(txRow(t,true)));
+  }
+
+  function txRow(t, compact=false){
+    const tpl = $('#txRowTpl').content.cloneNode(true);
+    const root = tpl.querySelector('.rowi');
+    root.dataset.id = t.id;
+    root.querySelector('.dt').textContent = t.date;
+    root.querySelector('.desc').textContent = t.desc || '(no description)';
+    root.querySelector('.cat').textContent = t.category||'—';
+    root.querySelector('.acc').textContent = t.account||'—';
+    root.querySelector('.type').textContent = t.type;
+    const amt = root.querySelector('.amt');
+    amt.textContent = (t.type==='expense'? '-' : t.type==='income'? '+' : '') + fmt.format(Math.abs(+t.amount));
+    amt.style.color = t.type==='expense'? 'var(--bad)': (t.type==='income'? 'var(--good)' : 'var(--ink)');
+    root.querySelector('.edit').onclick = ()=> editTx(t.id);
+    root.querySelector('.del').onclick = ()=> delTx(t.id);
+    if(compact){ root.querySelector('.edit').classList.add('hidden'); root.querySelector('.del').classList.add('hidden'); }
+    return root;
+  }
+
+  function renderTransactions(){
+    const q = ($('#fSearch').value||'').toLowerCase();
+    const mm = $('#fMonth').value; const ty = $('#fType').value;
+    const list = $('#txList'); list.innerHTML='';
+    let col = state.tx.filter(t=>
+      (!q || (t.desc||'').toLowerCase().includes(q) || (t.category||'').toLowerCase().includes(q) || (t.account||'').toLowerCase().includes(q)) &&
+      (!mm || t.date.startsWith(mm)) && (!ty || t.type===ty)
+    ).sort((a,b)=> b.date.localeCompare(a.date));
+    col.forEach(t=> list.appendChild(txRow(t)));
+    $('#txCount').textContent = col.length + ' items';
+  }
+
+  function renderBudgets(){
+    const host = $('#budgetList'); host.innerHTML='';
+    const m = monthKey();
+    const monthTx = state.tx.filter(t=> t.date.startsWith(m) && t.type==='expense');
+    Object.entries(state.budgets).forEach(([cat,limit])=>{
+      const spent = sum(monthTx.filter(t=> (t.category||'').toLowerCase()===cat.toLowerCase()).map(t=>+t.amount));
+      const pct = Math.min(100, Math.round(100*spent/limit));
+      const row = document.createElement('div');
+      row.className='card';
+      row.innerHTML = `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="pill">${cat}</div>
+        <div class="small mut">${fmt.format(spent)} / ${fmt.format(limit)} • ${pct}%</div>
+        <div style="height:10px;flex:1;border-radius:999px;background:#111729;border:1px solid #27304c;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--pri),#42e3c8)"></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn ghost small" data-edit="${cat}">Edit</button>
+          <button class="btn ghost small bad" data-del="${cat}">Delete</button>
+        </div>`;
+      host.appendChild(row);
+      row.querySelector('[data-edit]').onclick = ()=>{
+        $('#bCategory').value = cat; $('#bLimit').value = limit; $('#bCategory').focus();
+      };
+      row.querySelector('[data-del]').onclick = ()=>{ delete state.budgets[cat]; render(); maybeSync(); };
+    });
+  }
+
+  let pieChart=null, barChart=null;
+  function renderReports(){
+    const ctxPie = $('#pieCat'); const ctxBar = $('#barFlow');
+    // Pie: by category (this month, expenses only)
+    const m = monthKey(); const monthExp = state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense');
+    const catMap = {};
+    monthExp.forEach(t=>{ const k=(t.category||'Uncategorised'); catMap[k]=(catMap[k]||0) + (+t.amount); });
+    const labels = Object.keys(catMap); const values = Object.values(catMap);
+    if(pieChart) pieChart.destroy();
+    pieChart = new Chart(ctxPie, { type:'pie', data:{ labels, datasets:[{ data: values }] }, options:{ plugins:{ legend:{ labels:{ color:'#cdd4ea' } } } } });
+
+    // Bar: last 6 months cashflow
+    const months = monthRange(6);
+    const income = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='income').map(t=>+t.amount)));
+    const expense = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense').map(t=>+t.amount)));
+    if(barChart) barChart.destroy();
+    barChart = new Chart(ctxBar, { type:'bar', data:{ labels:months, datasets:[{ label:'Income', data:income }, { label:'Expense', data:expense }] }, options:{ scales:{ x:{ ticks:{ color:'#cdd4ea' } }, y:{ ticks:{ color:'#cdd4ea' } } }, plugins:{ legend:{ labels:{ color:'#cdd4ea' } } } } });
+  }
+
+  function renderSettings(){
+    $('#syncCode').value = state.sync.code || '';
+    $('#syncStatus').textContent = state.sync.connected ? 'Connected to cloud' : 'Not connected';
+    $('#prefSouthAfrica').checked = (state.prefs.currency==='ZAR');
+    $('#prefDark').checked = !!state.prefs.dark;
+    $('#prefAutosave').checked = !!state.prefs.autosave;
+  }
+
+  // ---------------------------
+  // CRUD
+  // ---------------------------
+  function addTx(partial){
+    const t = { id: uuid(), date: todayISO(), type:'expense', desc:'', category:'', account:'', amount:0, recurring:false, ...partial };
+    state.tx.push(t); render(); maybeSync();
+  }
+  function editTx(id){
+    const t = state.tx.find(x=>x.id===id); if(!t) return;
+    const desc = prompt('Description', t.desc||''); if(desc===null) return;
+    const category = prompt('Category', t.category||''); if(category===null) return;
+    const account = prompt('Account', t.account||''); if(account===null) return;
+    const amount = parseFloat(prompt('Amount', t.amount)); if(isNaN(amount)) return;
+    const type = prompt('Type (income|expense|transfer)', t.type)||t.type;
+    const date = prompt('Date (YYYY-MM-DD)', t.date)||t.date;
+    Object.assign(t, { desc, category, account, amount, type, date }); render(); maybeSync();
+  }
+  function delTx(id){ state.tx = state.tx.filter(t=>t.id!==id); render(); maybeSync(); }
+
+  // ---------------------------
+  // TAB LOGIC
+  // ---------------------------
+  $$('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      $$('.tab').forEach(b=> b.setAttribute('aria-selected','false'));
+      btn.setAttribute('aria-selected','true');
+      $$('.tabpane').forEach(p=> p.classList.add('hidden'));
+      $('#tab-'+btn.dataset.tab).classList.remove('hidden');
+      if(btn.dataset.tab==='reports'){ renderReports(); }
+    });
   });
-}
-function moveGroToSpend(id){ const g=groceries.find(x=>x.id===id); if(!g) return; document.getElementById('itemInput').value=g.name; switchTab('spend'); }
 
-/* Reports */
-function sumForDate(iso){ return spends.filter(s=>(new Date(s.date)).toISOString().slice(0,10)===iso).reduce((a,b)=>a+Number(b.amount),0); }
-function rangeRows(days){ const now=new Date(); const start=new Date(); start.setDate(now.getDate()-days+1); return spends.filter(s=> new Date(s.date)>=start && new Date(s.date)<=now ); }
-function groupSum(rows, key){ const m={}; rows.forEach(r=>{const k=r[key]||'(none)'; m[k]=(m[k]||0)+Number(r.amount);}); return m; }
-function rowsHtml(obj){ return Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class='sumrow'><div>${k}</div><div>${fmt(v)}</div></div>`).join('') || '<div class="muted">no data</div>'; }
-function renderReports(){
-  const r7=rangeRows(7), r30=rangeRows(30);
-  const total7=r7.reduce((a,b)=>a+Number(b.amount),0), total30=r30.reduce((a,b)=>a+Number(b.amount),0);
-  document.getElementById('report7').innerHTML =
-    `<strong>Total (7 days):</strong> ${fmt(total7)}<br><br>` +
-    `<strong>By type</strong>${rowsHtml(groupSum(r7,'type'))}` +
-    `<strong style='display:block;margin-top:6px'>By payer</strong>${rowsHtml(groupSum(r7,'payer'))}` +
-    `<strong style='display:block;margin-top:6px'>Top shop</strong>${rowsHtml(groupSum(r7,'shop'))}`;
-  document.getElementById('report30').innerHTML =
-    `<strong>Total (30 days):</strong> ${fmt(total30)}<br><br>` +
-    `<strong>By type</strong>${rowsHtml(groupSum(r30,'type'))}` +
-    `<strong style='display:block;margin-top:6px'>By payer</strong>${rowsHtml(groupSum(r30,'payer'))}` +
-    `<strong style='display:block;margin-top:6px'>Top shop</strong>${rowsHtml(groupSum(r30,'shop'))}`;
-}
+  // Quick add
+  $('#qaDate').value = todayISO();
+  $('#quickAdd').addEventListener('submit', e=>{
+    e.preventDefault();
+    addTx({ date: $('#qaDate').value, type:$('#qaType').value, desc:$('#qaDesc').value.trim(), category:$('#qaCategory').value.trim(), account:$('#qaAccount').value.trim(), amount: parseFloat($('#qaAmount').value||'0'), recurring: $('#qaRecurring').checked });
+    e.target.reset(); $('#qaDate').value = todayISO(); $('#qaType').value='expense';
+  });
 
-/* PWA */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-}
-</script>
+  // Filters
+  $('#fSearch').addEventListener('input', renderTransactions);
+  $('#fMonth').addEventListener('input', renderTransactions);
+  $('#fType').addEventListener('input', renderTransactions);
+  $('#clearFilters').addEventListener('click', ()=>{ $('#fSearch').value=''; $('#fMonth').value=''; $('#fType').value=''; renderTransactions(); });
+
+  // Budgets
+  $('#budgetForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const cat = $('#bCategory').value.trim(); const lim = parseFloat($('#bLimit').value||'0');
+    if(!cat || !lim){ alert('Category and limit required'); return; }
+    state.budgets[cat]=lim; render(); maybeSync(); e.target.reset();
+  });
+
+  // Export / Import
+  $('#exportJson').addEventListener('click', ()=>{
+    const data = { tx:state.tx, budgets:state.budgets, prefs:state.prefs };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='taskpulse-money.json'; a.click(); URL.revokeObjectURL(url);
+  });
+  $('#importJsonInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0]; if(!file) return; const text = await file.text();
+    try{ const data = JSON.parse(text); state.tx = data.tx||[]; state.budgets = data.budgets||{}; state.prefs = {...state.prefs, ...(data.prefs||{})}; render(); maybeSync(); }
+    catch(err){ alert('Invalid JSON'); }
+  });
+
+  // ---------------------------
+  // FIREBASE SYNC
+  // ---------------------------
+  // How it works (tl;dr):
+  // 1) Paste Firebase config in Settings and Apply. We'll init app, sign in anonymously.
+  // 2) Enter/share a Sync Code (e.g., 6 letters) — this becomes your DB path.
+  // 3) Data writes to /rooms/{code}/tpmoney and listens for remote changes.
+  // 4) Local-first: we always render from local, and merge on cloud updates.
+
+  function ensureFirebase(){
+    if(state.firebase.app || !state.firebase.cfg) return !!state.firebase.app;
+    try{
+      state.firebase.app = firebase.initializeApp(state.firebase.cfg);
+      state.firebase.db = firebase.database();
+      return true;
+    }catch(e){ console.error('Firebase init failed', e); alert('Firebase init failed. Check your config.'); return false; }
+  }
+
+  async function signInAnon(){
+    try{
+      await firebase.auth().signInAnonymously();
+      state.firebase.user = firebase.auth().currentUser;
+      console.log('Anon user', state.firebase.user?.uid);
+      return true;
+    }catch(e){ console.error('Auth failed', e); alert('Auth failed: '+e.message); return false; }
+  }
+
+  function roomRef(){ return state.firebase.db.ref(`/rooms/${state.sync.code}/tpmoney`); }
+
+  let unsub=null; // listener
+  function connect(){
+    if(!state.sync.code){ alert('Enter a sync code first'); return; }
+    if(!ensureFirebase()) return;
+    signInAnon().then(ok=>{
+      if(!ok) return;
+      // push initial local snapshot and also subscribe for changes
+      if(unsub) { roomRef().off('value', unsub); unsub=null; }
+      unsub = roomRef().on('value', snap=>{
+        const cloud = snap.val();
+        if(!cloud) return; // nothing yet
+        // naive merge: prefer latest updated
+        const { tx=[], budgets={}, prefs={} } = cloud;
+        // Merge transactions by id
+        const mapLocal = new Map(state.tx.map(t=>[t.id,t]));
+        tx.forEach(ct=>{ if(!mapLocal.has(ct.id)) mapLocal.set(ct.id, ct); else { const lt=mapLocal.get(ct.id); if((ct.updated||0)>(lt.updated||0)) mapLocal.set(ct.id, ct); } });
+        state.tx = Array.from(mapLocal.values());
+        // shallow merge budgets/prefs
+        state.budgets = { ...state.budgets, ...budgets };
+        state.prefs = { ...state.prefs, ...prefs };
+        state.sync.connected = true; state.sync.last = Date.now();
+        render();
+      });
+      // push local asap
+      pushCloud();
+      state.sync.connected = true; renderSettings(); saveLocal();
+    });
+  }
+
+  function pushCloud(){
+    if(!state.prefs.autosave || !state.sync.code || !state.firebase.db) return;
+    const payload = { tx: state.tx.map(t=>({ ...t, updated: t.updated||Date.now() })), budgets: state.budgets, prefs: state.prefs, ts: Date.now() };
+    roomRef().set(payload).catch(err=> console.error('Push failed', err));
+  }
+
+  let syncTimer=null;
+  function maybeSync(){
+    renderSettings(); saveLocal();
+    if(state.prefs.autosave){ clearTimeout(syncTimer); syncTimer = setTimeout(()=> pushCloud(), 400); }
+  }
+
+  // Settings UI handlers
+  $('#openSync').addEventListener('click', ()=>{ $$('.tab').forEach(b=> b.setAttribute('aria-selected','false')); $('[data-tab="settings"]').setAttribute('aria-selected','true'); $$('.tabpane').forEach(p=> p.classList.add('hidden')); $('#tab-settings').classList.remove('hidden'); });
+  $('#generateCode').addEventListener('click', ()=>{ state.sync.code = (Math.random().toString(36).slice(2,8)).toUpperCase(); renderSettings(); saveLocal(); });
+  $('#disconnect').addEventListener('click', ()=>{ state.sync.connected=false; if(unsub){ roomRef().off('value', unsub); unsub=null; } renderSettings(); saveLocal(); });
+  $('#applySync').addEventListener('click', ()=>{ state.sync.code = $('#syncCode').value.trim().toUpperCase(); connect(); });
+  $('#applyFirebase').addEventListener('click', ()=>{
+    try{ state.firebase.cfg = JSON.parse($('#firebaseConfigText').value||'{}'); ensureFirebase(); saveLocal(); alert('Firebase config applied. Now set a Sync Code and click Apply.'); }
+    catch(e){ alert('Invalid JSON for Firebase config'); }
+  });
+
+  // Prefs
+  $('#prefSouthAfrica').addEventListener('change', e=>{ state.prefs.currency = e.target.checked? 'ZAR' : 'USD'; render(); maybeSync(); });
+  $('#prefDark').addEventListener('change', e=>{ state.prefs.dark = !!e.target.checked; document.body.classList.toggle('light', !e.target.checked); saveLocal(); });
+  $('#prefAutosave').addEventListener('change', e=>{ state.prefs.autosave = !!e.target.checked; saveLocal(); });
+
+  // ---------------------------
+  // INIT
+  // ---------------------------
+  loadLocal();
+  render();
+
+  // Seed demo data if empty
+  if(state.tx.length===0){
+    const d = todayISO();
+    addTx({ date:d, type:'income', desc:'Salary', category:'Income', account:'FNB', amount: 25000 });
+    addTx({ date:d, type:'expense', desc:'Groceries', category:'Food', account:'FNB', amount: 1200 });
+    addTx({ date:d, type:'expense', desc:'Fuel', category:'Transport', account:'FNB', amount: 650 });
+    addTx({ date:d, type:'expense', desc:'Airtime/Data', category:'Utilities', account:'Vodacom', amount: 299 });
+    state.budgets = { Food: 4000, Transport: 2000, Utilities: 1500 };
+    render(); maybeSync();
+  }
+
+  // When a sync code exists and firebase cfg present, auto connect
+  window.addEventListener('load', ()=>{ if(state.sync.code && state.firebase.cfg){ connect(); } });
+  </script>
 </body>
 </html>
