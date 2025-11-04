@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-  <title>TaskPulse Money</title>
+  <title>TaskPulse Advisor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,27 +11,27 @@
     :root{
       --bg:#0b0d12; --elev:#141824; --elev2:#1b2030; --ink:#eaf0ff; --ink-dim:#aab3c5;
       --pri:#7c5cff; --pri-2:#00d6a3; --bad:#ff6b6b; --good:#29d78a; --warn:#f6c445;
-      --mut:#22283a; --ring: 0 0 0 3px rgba(124,92,255,.35);
+      --ring:0 0 0 3px rgba(124,92,255,.35);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Apple Color Emoji,Noto Color Emoji,Arial,sans-serif;background:linear-gradient(180deg,#0b0d12,#0a0c11 20%,#0b0d12 80%);color:var(--ink)}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b0d12,#0a0c11 20%,#0b0d12 80%);color:var(--ink)}
     a{color:var(--pri)}
-    .wrap{max-width:1100px;margin:0 auto;padding:12px 12px 24px}
+    .wrap{max-width:1100px;margin:0 auto;padding:12px 12px 80px}
     header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px}
     .logo{display:flex;align-items:center;gap:10px}
-    .badge{font-size:12px;color:var(--ink-dim);opacity:.9}
     h1{font-size:22px;margin:0;font-weight:800;letter-spacing:.2px}
+    .badge{font-size:12px;color:var(--ink-dim);opacity:.9}
     .logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--pri),#1e90ff);display:grid;place-items:center;overflow:hidden;border:1px solid #2a3350}
     .logo-mark img{width:100%;height:100%;object-fit:cover}
 
-    /* TABS */
+    /* Tabs (top on desktop, bottom nav on mobile) */
     .tabs{position:sticky;top:0;z-index:5;display:flex;gap:8px;flex-wrap:nowrap;overflow:auto;padding:6px 2px 10px;background:linear-gradient(180deg,#0b0d12 70%,rgba(11,13,18,0));backdrop-filter:saturate(140%)}
     .tab{padding:10px 14px;border-radius:12px;background:var(--elev);color:var(--ink-dim);border:1px solid transparent;cursor:pointer;user-select:none;flex:0 0 auto}
     .tab[aria-selected="true"]{background:var(--elev2);color:var(--ink);border-color:#2a3350}
 
     .row{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .card{background:var(--elev);border:1px solid #232a40;border-radius:14px;padding:14px}
+    .card{background:var(--elev);border:1px solid #232a40;border-radius:14px;padding:14px;overflow:visible}
     .ghost{background:transparent;border-style:dashed}
     .card h3{margin:0 0 10px;font-size:16px;letter-spacing:.2px}
 
@@ -44,7 +44,9 @@
     .delta.neg{color:var(--bad)}
 
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid-2.sync{grid-template-columns:1fr auto}
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
     .stack{display:flex;flex-direction:column;gap:10px}
 
     .input, select, textarea{width:100%;padding:12px;border-radius:10px;background:#121624;border:1px solid #232a40;color:var(--ink)}
@@ -58,148 +60,161 @@
     .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .mut{color:var(--ink-dim)}
     .small{font-size:12px}
-    .list{display:flex;flex-direction:column}
-    .list .rowi{display:grid;grid-template-columns:110px 1.5fr 1fr 110px 110px 100px 100px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #243055;overflow:visible}
-.list .rowi .toolbar{justify-content:flex-end;gap:6px}
-.card{overflow:visible}
     .pill{padding:6px 8px;border-radius:999px;border:1px solid #2a3558;background:#151b2c;color:var(--ink-dim);font-size:12px}
     .right{margin-left:auto}
     .hidden{display:none}
     footer{margin:26px 0;color:var(--ink-dim);text-align:center}
 
-    /* Splash screen */
-    .splash{position:fixed;inset:0;background:#090b10;display:grid;place-items:center;z-index:9999;transition:opacity .45s ease}
-    .splash.hide{opacity:0;pointer-events:none}
-    .splash-inner{width:min(520px,86vw);height:min(520px,86vw);border-radius:22px;overflow:hidden;border:1px solid #2a3350;box-shadow:0 10px 50px rgba(0,0,0,.5);position:relative}
-    .splash-bg{position:absolute;inset:0;background:#111;background-position:center;background-size:cover;filter:saturate(110%) contrast(105%)}
-    .splash-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.7))}
-    .splash-brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px}
-    .splash-logo{width:min(120px,30vw);height:min(120px,30vw);border-radius:26%;overflow:hidden;border:2px solid rgba(255,255,255,.2);background:#0f1220}
-    .splash-logo img{width:100%;height:100%;object-fit:cover}
-    .splash-title{font-weight:800;letter-spacing:.3px}
+    /* Lists */
+    .list{display:flex;flex-direction:column}
+    .list .rowi{display:grid;grid-template-columns:110px 1.5fr 1fr 110px 110px 100px 100px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #243055}
+
+    /* Calendar */
+    .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+    .cal .day{aspect-ratio:1;border:1px solid #253154;border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;background:#121624}
+    .cal .day .d{font-size:12px;color:#cbd4ff}
+    .dot{width:8px;height:8px;border-radius:50%}
 
     @media (max-width: 980px){
       .metrics{grid-template-columns:1fr 1fr}
       .list .rowi{grid-template-columns:90px 1.1fr .9fr 90px 90px 80px 90px}
     }
-      .list .rowi{grid-template-columns:90px 1.1fr .9fr 90px 90px 80px 70px}
-    }
     @media (max-width: 720px){
-      .wrap{padding:10px}
+      .wrap{padding:10px 10px 96px}
       .row{grid-template-columns:1fr}
-      .grid-2,.grid-3{grid-template-columns:1fr}
+      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
       .metrics{grid-template-columns:1fr 1fr}
-      .list .rowi{grid-template-columns:70px 1fr 1fr 80px 80px 70px 60px}
+      .list .rowi{grid-template-columns:70px 1fr 1fr 80px 80px;align-items:start}
+      .list .rowi .toolbar{grid-column:1/-1;justify-content:flex-end}
       h1{font-size:20px}
       .tab{padding:9px 12px}
+      /* bottom nav */
+      .tabs{position:fixed;bottom:0;top:auto;border-top:1px solid #20263a;background:#0c0f19;justify-content:space-between;padding:8px 10px}
+      .tab{flex:1;text-align:center}
     }
   </style>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
   <script>
-    // Embedded assets (no user upload needed)
-    const DEFAULT_SPLASH = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEsB9ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8fLz9PX29/j5+v/2gAMAwEAAhEDEQA/AP8AJy0IY7uT6y4o4b8v9bP2n2qj1l2Vx3s2k8j3EU2R9kY9B7+R9y7K4mZic9o3b3y8r9i2V+zZ7c4j5b1Q6nRr1VtXZ1bR0dX8W3bu5k9n+zj8p4w4I4j4cf8AuGPOL7mJvf4Rz+GZcamhfI5DlmK6jDjn84hyfzg7pvwYN5Pwsp0fZMA/Yf6wXZ/TOc+1gk+MP/8ABIeQ+zFeW+jP/wAtgPBfRgDgD6//AIb/AP/Z';
-    const DEFAULT_LOGO   = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAk4AAAGaCAYAAAD5HsxRAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAEIiSURBVEhL7d1BctvIGYbh/7o0q9Lq5K7z9T7m7k2C3kB5qk7y8r9gq9z3OIlvVxS7q3WbC2t1...nhwOAAAwVcHACQAAALZg4HRj67oOAQAAwBo4XXl12N+oAwAAmIpg4LR//6asrQVhAACAlReMkPYfOCjr+w/oMAAAwMr7/wDyk6OIdkQ8AAAAAElFTkSuQmCC';
-    // Optional: hard-code Firebase config (UI removed)
-    // window.FIREBASE_CONFIG = { /* paste here if you want sync */ };
+    // Embedded brand (always available)
+    const DEFAULT_SPLASH = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI3NjgiIHZpZXdCb3g9IjAgMCAxMDI0IDc2OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRkREQzgyIi8+PHN0b3Agb2Zmc2V0PSIwLjUiIHN0b3AtY29sb3I9IiNGRkM1NjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGRUE2MDQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI3NjgiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=';
+    const DEFAULT_LOGO   = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSIyNCIgZmlsbD0iI0QwQzIxRSIvPjxyZWN0IHg9IjEyIiB5PSIxMiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTgiIGZpbGw9IiM0QkYyRkYiLz48cGF0aCBkPSJNMzggNzJjMC0xNSAxMi0yOCAyOC0yOHMyOCAxMyAyOCAyOC0xMiAyOC0yOCAyOC0yOC0xMy0yOC0yOHoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44Ii8+PHRleHQgeD0iNjAiIHk9Ijg0IiBmb250LXNpemU9IjM2IiB0ZXh0LWFuY2hvcj0iY2VudGVyIiBmaWxsPSIjMDAwIj5SPC90ZXh0Pjwvc3ZnPg==';
+
+    // Optional Firebase (UI removed) — paste here if you want sync
+    // window.FIREBASE_CONFIG = { /* ... */ };
+
+    // Overdraft limit (R500)
+    const OD_LIMIT = -500; // allowed to go down to -R500
   </script>
 </head>
 <body>
-  <!-- Splash overlay -->
-  <div class="splash" id="splash">
-    <div class="splash-inner">
-      <div class="splash-bg" id="splashBg"></div>
-      <div class="splash-overlay"></div>
-      <div class="splash-brand">
-        <div class="splash-logo"><img id="splashLogo" alt="TaskPulse Money logo"></div>
-        <div class="splash-title">TaskPulse <span style="font-weight:800;opacity:.9">Money</span></div>
-        <div class="small" style="opacity:.8">Powered by Daryl G</div>
-      </div>
-    </div>
-  </div>
-
   <div class="wrap">
     <header>
       <div class="logo">
-        <div class="logo-mark"><img id="headerLogo" alt="logo"></div>
+        <div class="logo-mark"><img id="headerLogo" alt="logo" onerror="this.onerror=null; this.src=DEFAULT_LOGO;"></div>
         <div>
-          <h1>TaskPulse <span style="font-weight:700;opacity:.9">Money</span></h1>
-          <div class="badge">Fast personal finance tracker • Offline-first • Optional cloud sync</div>
+          <h1>TaskPulse <span style="font-weight:700;opacity:.9">Advisor</span></h1>
+          <div class="badge">Financial advisor • planner • tracker (PDF-first, offline-first)</div>
         </div>
       </div>
       <div class="toolbar" role="group" aria-label="Quick actions">
         <button class="btn ghost small" id="exportJson">Export</button>
-        <label class="btn ghost small" for="importJsonInput">Import<input id="importJsonInput" type="file" accept="application/json" class="hidden"/></label>
-        <button class="btn pri small" id="openSync">Sync</button>
+        <label class="btn ghost small" for="importJsonInput">Import JSON<input id="importJsonInput" type="file" accept="application/json" class="hidden"/></label>
+        <label class="btn ghost small" for="importPdfInput">Import PDF<input id="importPdfInput" type="file" accept="application/pdf" class="hidden"/></label>
+        <button class="btn pri small" id="openSettings">Settings</button>
       </div>
     </header>
 
     <nav class="tabs" role="tablist" aria-label="Primary">
-      <button class="tab" data-tab="dashboard" aria-selected="true">Dashboard</button>
-      <button class="tab" data-tab="transactions">Transactions</button>
+      <button class="tab" data-tab="home" aria-selected="true">Home</button>
+      <button class="tab" data-tab="calendar">Calendar</button>
+      <button class="tab" data-tab="statements">Statements</button>
       <button class="tab" data-tab="budgets">Budgets</button>
+      <button class="tab" data-tab="goals">Goals</button>
       <button class="tab" data-tab="reports">Reports</button>
       <button class="tab" data-tab="settings">Settings</button>
     </nav>
 
-    <!-- DASHBOARD -->
-    <section id="tab-dashboard" class="tabpane" role="tabpanel">
-      <div class="metrics" id="metricRow">
-        <div class="metric"><div class="t">Total Balance</div><div class="n" id="mBalance">R0</div><div class="delta" id="mBalanceDelta">–</div></div>
-        <div class="metric"><div class="t">This Month Income</div><div class="n" id="mIncome">R0</div><div class="delta pos" id="mIncomeCnt">–</div></div>
-        <div class="metric"><div class="t">This Month Expense</div><div class="n" id="mExpense">R0</div><div class="delta neg" id="mExpenseCnt">–</div></div>
-        <div class="metric"><div class="t">Budget Health</div><div class="n" id="mBudget">—</div><div class="delta" id="mBudgetDelta">—</div></div>
-      </div>
-      <div class="row" style="margin-top:14px">
-        <div class="card" style="grid-column: span 8">
-          <h3>Recent activity</h3>
-          <div class="list" id="recentList"></div>
+    <!-- HOME (Advisor) -->
+    <section id="tab-home" class="tabpane" role="tabpanel">
+      <div class="metrics">
+        <div class="metric">
+          <div class="t">Advisor Score</div>
+          <div class="n" id="mScore">—</div>
+          <div class="delta" id="mScoreWhy">–</div>
         </div>
-        <div class="card" style="grid-column: span 4">
-          <h3>Quick add</h3>
-          <form id="quickAdd" class="stack">
-            <div class="grid-2">
-              <input class="input" type="date" id="qaDate" required />
-              <select id="qaType" class="input" required>
-                <option value="expense" selected>Expense</option>
-                <option value="income">Income</option>
-                <option value="transfer">Transfer</option>
-              </select>
-            </div>
-            <input class="input" id="qaDesc" placeholder="Description (e.g., groceries)" />
-            <div class="grid-3">
-              <input class="input" id="qaCategory" placeholder="Category (e.g., Food)" />
-              <input class="input" id="qaAccount" placeholder="Account (e.g., FNB Cheque)" />
-              <input class="input" id="qaAmount" type="number" step="0.01" placeholder="Amount" required />
-            </div>
-            <div class="toolbar">
-              <button class="btn pri" type="submit">Add transaction</button>
-              <label class="pill"><input type="checkbox" id="qaRecurring"/> Recurring monthly</label>
-            </div>
-          </form>
+        <div class="metric">
+          <div class="t">Cash Buffer (days)</div>
+          <div class="n" id="mBuffer">—</div>
+          <div class="delta" id="mBufferMsg">–</div>
+        </div>
+        <div class="metric">
+          <div class="t">Pace vs Budget</div>
+          <div class="n" id="mPace">—</div>
+          <div class="delta" id="mPaceMsg">–</div>
+        </div>
+        <div class="metric">
+          <div class="t">Overdraft Risk</div>
+          <div class="n" id="mRisk">—</div>
+          <div class="delta" id="mRiskMsg">–</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <div class="card" style="grid-column: span 7">
+          <h3>Next 7 days forecast</h3>
+          <div style="height:240px"><canvas id="chart7"></canvas></div>
+        </div>
+        <div class="card" style="grid-column: span 5">
+          <h3>Smart nudges</h3>
+          <ul id="nudges" class="stack" style="list-style: none; padding:0; margin:0"></ul>
         </div>
       </div>
     </section>
 
-    <!-- TRANSACTIONS -->
-    <section id="tab-transactions" class="tabpane hidden" role="tabpanel">
+    <!-- CALENDAR -->
+    <section id="tab-calendar" class="tabpane hidden" role="tabpanel">
       <div class="card">
-        <h3>All transactions</h3>
+        <h3>Monthly cashflow calendar</h3>
         <div class="toolbar" style="margin-bottom:10px">
-          <input class="input" id="fSearch" placeholder="Search description/category/account" style="max-width:340px">
-          <input class="input" type="month" id="fMonth" />
-          <select class="input" id="fType" style="max-width:180px">
-            <option value="">All types</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-            <option value="transfer">Transfer</option>
-          </select>
-          <button class="btn ghost" id="clearFilters">Clear</button>
-          <span class="right small mut" id="txCount">0 items</span>
+          <input class="input" type="month" id="calMonth">
+          <button class="btn" id="rebuildCalendar">Rebuild</button>
+          <span class="small mut">Red dot: balance < 0 • Amber: between 0 and overdraft (−R500) • Crimson: below −R500</span>
         </div>
-        <div class="list" id="txList"></div>
+        <div id="calGrid" class="cal"></div>
+      </div>
+    </section>
+
+    <!-- STATEMENTS -->
+    <section id="tab-statements" class="tabpane hidden" role="tabpanel">
+      <div class="row">
+        <div class="card" style="grid-column: span 7">
+          <h3>Import bank statement (PDF)</h3>
+          <div class="stack">
+            <div class="small mut">Drop in FNB/Capitec PDF. We parse locally on-device. No raw PDFs leave your device.</div>
+            <label class="btn pri">Choose PDF<input id="pdfChoose" type="file" accept="application/pdf" class="hidden"></label>
+            <div id="importSummary" class="small mut">No statement imported yet.</div>
+          </div>
+        </div>
+        <div class="card" style="grid-column: span 5">
+          <h3>Auto-categorise rules</h3>
+          <div id="ruleList" class="stack"></div>
+          <form id="ruleForm" class="grid-3" style="margin-top:8px">
+            <input class="input" id="ruleRegex" placeholder="Regex (e.g., electricity|prepaid)" required>
+            <input class="input" id="ruleCat" placeholder="Category (e.g., Utilities:Electricity)" required>
+            <button class="btn">Add rule</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Review & approve (first 20 rows)</h3>
+        <div id="reviewList" class="list"></div>
       </div>
     </section>
 
@@ -207,17 +222,36 @@
     <section id="tab-budgets" class="tabpane hidden" role="tabpanel">
       <div class="row">
         <div class="card" style="grid-column: span 7">
-          <h3>Monthly budgets</h3>
+          <h3>Envelopes</h3>
           <div id="budgetList" class="stack"></div>
         </div>
         <div class="card" style="grid-column: span 5">
-          <h3>Add / update budget</h3>
+          <h3>Add / update envelope</h3>
           <form id="budgetForm" class="stack">
-            <input class="input" id="bCategory" placeholder="Category (e.g., Food)" required>
+            <input class="input" id="bCategory" placeholder="Category (e.g., Transport:Fuel)" required>
             <input class="input" id="bLimit" type="number" step="0.01" placeholder="Monthly limit" required>
-            <button class="btn pri" type="submit">Save budget</button>
+            <button class="btn pri" type="submit">Save</button>
           </form>
-          <div class="small mut" style="margin-top:6px">Budgets apply per calendar month and compare against expenses by category.</div>
+          <div class="small mut" style="margin-top:6px">Suggested: Transport:Fuel, Utilities:Electricity, Utilities:Airtime, Subscriptions, Fees, Cash.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section id="tab-goals" class="tabpane hidden" role="tabpanel">
+      <div class="row">
+        <div class="card" style="grid-column: span 5">
+          <h3>Create goal</h3>
+          <form id="goalForm" class="stack">
+            <input class="input" id="gName" placeholder="Goal name (e.g., Emergency fund)" required>
+            <input class="input" id="gTarget" type="number" step="0.01" placeholder="Target (R)" required>
+            <input class="input" id="gDue" type="date" placeholder="Due date (optional)">
+            <button class="btn pri" type="submit">Add goal</button>
+          </form>
+        </div>
+        <div class="card" style="grid-column: span 7">
+          <h3>Goals & progress</h3>
+          <div id="goalList" class="stack"></div>
         </div>
       </div>
     </section>
@@ -231,40 +265,36 @@
         </div>
         <div class="card" style="grid-column: span 5">
           <h3>Cashflow (last 6 months)</h3>
-          <canvas id="barFlow" height="220"></canvas>
+          <div style="height:240px"><canvas id="barFlow"></canvas></div>
         </div>
       </div>
     </section>
 
-    <!-- SETTINGS (Firebase config UI removed) -->
+    <!-- SETTINGS -->
     <section id="tab-settings" class="tabpane hidden" role="tabpanel">
       <div class="grid-2">
         <div class="card">
-          <h3>Sync</h3>
+          <h3>Cloud sync</h3>
           <div class="stack">
-            <div class="small mut">Use the same sync code on your phone and laptop to keep data aligned in real time. No email/password needed.</div>
-            <div class="grid-2">
-              <input class="input" id="syncCode" placeholder="Sync code (e.g., TPM123)" />
+            <div class="small mut">Optional Firebase realtime sync (enter code on each device). Raw PDFs never sync, only structured data.</div>
+            <div class="grid-2 sync">
+              <input class="input" id="syncCode" placeholder="Sync code (e.g., TPM123)">
               <button class="btn" id="applySync">Apply</button>
             </div>
             <div class="toolbar">
-              <button class="btn good" id="generateCode">Generate new code</button>
+              <button class="btn good" id="generateCode">Generate</button>
               <button class="btn bad" id="disconnect">Disconnect</button>
-              <label class="pill"><input type="checkbox" id="prefAutosave" checked/> Autosave to cloud</label>
+              <label class="pill"><input type="checkbox" id="prefAutosave" checked> Autosave to cloud</label>
             </div>
             <div class="small mut" id="syncStatus">Not connected</div>
           </div>
         </div>
         <div class="card">
-          <h3>Brand & appearance</h3>
+          <h3>Brand & preferences</h3>
           <div class="stack">
-            <div class="small mut">Images are pre-bundled. You can still override them later using these uploaders.</div>
-            <div class="grid-2">
-              <label class="btn ghost">Change logo<input id="logoInput" class="hidden" type="file" accept="image/*"></label>
-              <label class="btn ghost">Change splash<input id="splashInput" class="hidden" type="file" accept="image/*"></label>
-            </div>
-            <label class="pill"><input type="checkbox" id="prefSouthAfrica" checked/> Currency format: ZAR (R)</label>
-            <label class="pill"><input type="checkbox" id="prefDark" checked/> Dark theme</label>
+            <label class="pill"><input type="checkbox" id="prefSouthAfrica" checked> Currency format: ZAR (R)</label>
+            <label class="pill"><input type="checkbox" id="prefDark" checked> Dark theme</label>
+            <div class="small mut">Overdraft limit is fixed at <b>R500</b> (used for forecast thresholds).</div>
           </div>
         </div>
       </div>
@@ -289,136 +319,295 @@
   </template>
 
   <script>
-  // ---------------------------
-  // UTILITIES
-  // ---------------------------
+  // ---------- UTIL ----------
   const $ = (s, p=document) => p.querySelector(s);
   const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
-  const fmt = new Intl.NumberFormat('en-ZA', { style:'currency', currency:'ZAR' });
+  const fmt = new Intl.NumberFormat('en-ZA',{style:'currency',currency:'ZAR'});
   const todayISO = () => new Date().toISOString().slice(0,10);
-  const monthKey = (d) => (d||todayISO()).slice(0,7);
+  const monthKey = d => (d||todayISO()).slice(0,7);
   const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : ('id-' + Math.random().toString(36).slice(2)));
 
-  // ---------------------------
-  // STATE
-  // ---------------------------
+  // ---------- STATE ----------
   const state = {
-    tx: [], budgets: {}, prefs: { currency:'ZAR', dark:true, autosave:true },
-    sync: { code: '', connected:false, last:0 },
+    tx: [],
+    budgets: {},
+    prefs: { currency:'ZAR', dark:true, autosave:true },
+    sync: { code:'', connected:false, last:0 },
     firebase: { cfg:null, app:null, db:null, user:null },
-    brand: { logo: DEFAULT_LOGO, splash: DEFAULT_SPLASH }
+    rules: [ // starter SA-centric rules
+      { re:'electricity|prepaid', cat:'Utilities:Electricity' },
+      { re:'airtime|data', cat:'Utilities:Airtime' },
+      { re:'bp|garage|fuel|motors', cat:'Transport:Fuel' },
+      { re:'youtube|spotify|openai|netflix|google', cat:'Subscriptions' },
+      { re:'service fee|monthly fee|vat|int on debit', cat:'Fees' },
+    ],
+    goals: [],
+    plan: [], // future PlanItems (scheduled)
+    brand: { logo: DEFAULT_LOGO, splash: DEFAULT_SPLASH },
+    balanceNow: 0
   };
 
-  // Load persisted
-  function loadLocal(){
-    try{
-      const saved = JSON.parse(localStorage.getItem('tpmoney-v1')||'{}');
-      Object.assign(state, saved, { firebase:{...state.firebase, ...(saved.firebase||{})} });
-    }catch(e){ console.warn('No local state yet'); }
-  }
   function saveLocal(){
-    localStorage.setItem('tpmoney-v1', JSON.stringify({ tx:state.tx, budgets:state.budgets, prefs:state.prefs, sync:state.sync, firebase:{cfg:state.firebase.cfg}, brand:state.brand }));
+    localStorage.setItem('tp-advisor', JSON.stringify({ tx:state.tx, budgets:state.budgets, prefs:state.prefs, rules:state.rules, goals:state.goals, plan:state.plan, brand:state.brand, sync:state.sync }));
+  }
+  function loadLocal(){
+    try{ const s = JSON.parse(localStorage.getItem('tp-advisor')||'{}'); Object.assign(state, s, { firebase:{...state.firebase} }); }catch{}
   }
 
-  // Image helpers (pre-bundled defaults)
-  function applyBrand(){
-    if(state.brand.logo){ $('#headerLogo').src = state.brand.logo; $('#splashLogo').src = state.brand.logo; }
-    if(state.brand.splash){ $('#splashBg').style.backgroundImage = `url(${state.brand.splash})`; }
-  }
-  async function fileToDataUrl(file){ return new Promise(r=>{ const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(file); }); }
-
-  // ---------------------------
-  // RENDER
-  // ---------------------------
-  function render(){
-    renderDashboard();
-    renderTransactions();
-    renderBudgets();
-    renderReports();
-    renderSettings();
-    applyBrand();
-    saveLocal();
+  // ---------- RULES ----------
+  function autoCategory(tx){
+    const s = (tx.merchant||'') + ' ' + (tx.raw||'');
+    for(const r of state.rules){ if(new RegExp(r.re,'i').test(s)) return r.cat; }
+    return 'Uncategorised';
   }
 
-  function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
-  function monthRange(n=6){ const out=[]; const d=new Date(); d.setDate(1); for(let i=n-1;i>=0;i--){ const t=new Date(d); t.setMonth(d.getMonth()-i); out.push(t.toISOString().slice(0,7)); } return out; }
-
-  function renderDashboard(){
-    const m=monthKey();
-    const monthTx = state.tx.filter(t=> t.date.startsWith(m));
-    const income = sum(monthTx.filter(t=>t.type==='income').map(t=>+t.amount));
-    const expense = sum(monthTx.filter(t=>t.type==='expense').map(t=>+t.amount));
-    const balance = sum(state.tx.map(t=> t.type==='income'?+t.amount:(t.type==='expense'? -t.amount : 0)));
-    $('#mBalance').textContent = fmt.format(balance);
-    $('#mIncome').textContent = fmt.format(income);
-    $('#mExpense').textContent = fmt.format(expense);
-    $('#mIncomeCnt').textContent = monthTx.filter(t=>t.type==='income').length + ' items';
-    $('#mExpenseCnt').textContent = monthTx.filter(t=>t.type==='expense').length + ' items';
-
-    // Budget health
-    let used=0, limit=0;
-    Object.keys(state.budgets).forEach(c=>{
-      const l=+state.budgets[c]||0; limit+=l;
-      const u=sum(monthTx.filter(t=>t.type==='expense' && (t.category||'').toLowerCase()===c.toLowerCase()).map(t=>+t.amount));
-      used+=u;
-    });
-    const pct = limit? Math.min(100, Math.round(100*used/limit)) : 0;
-    $('#mBudget').textContent = limit? `${pct}% used` : 'No budgets';
-    $('#mBudgetDelta').textContent = limit? `${fmt.format(used)} / ${fmt.format(limit)}` : '—';
-
-    // Recent activity
-    const recent = [...state.tx].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
-    const list = $('#recentList'); list.innerHTML='';
-    recent.forEach(t=> list.appendChild(txRow(t,true)));
-  }
-
+  // ---------- TX ROW RENDER ----------
   function txRow(t, compact=false){
     const tpl = $('#txRowTpl').content.cloneNode(true);
     const root = tpl.querySelector('.rowi');
     root.dataset.id = t.id;
     root.querySelector('.dt').textContent = t.date;
-    root.querySelector('.desc').textContent = t.desc || '(no description)';
+    root.querySelector('.desc').textContent = t.desc || t.merchant || '(no description)';
     root.querySelector('.cat').textContent = t.category||'—';
-    root.querySelector('.acc').textContent = t.account||'—';
+    root.querySelector('.acc').textContent = t.account||'Bank';
     root.querySelector('.type').textContent = t.type;
     const amt = root.querySelector('.amt');
-    amt.textContent = (t.type==='expense'? '-' : t.type==='income'? '+' : '') + fmt.format(Math.abs(+t.amount));
-    amt.style.color = t.type==='expense'? 'var(--bad)': (t.type==='income'? 'var(--good)' : 'var(--ink)');
+    amt.textContent = (t.type==='expense'? '-' : '+') + fmt.format(Math.abs(+t.amount));
+    amt.style.color = t.type==='expense'? 'var(--bad)' : 'var(--good)';
     root.querySelector('.edit').onclick = ()=> editTx(t.id);
     root.querySelector('.del').onclick = ()=> delTx(t.id);
-    // Make row more touch-friendly: tap description or amount to edit
-    root.querySelector('.desc').style.cursor='pointer';
-    root.querySelector('.amt').style.cursor='pointer';
-    root.querySelector('.desc').onclick = ()=> editTx(t.id);
-    amt.onclick = ()=> editTx(t.id);
-    root.tabIndex = 0;
-    root.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'){ editTx(t.id); }});
     if(compact){ root.querySelector('.edit').classList.add('hidden'); root.querySelector('.del').classList.add('hidden'); }
     return root;
-    return root;
   }
 
-  function renderTransactions(){
-    const q = ($('#fSearch').value||'').toLowerCase();
-    const mm = $('#fMonth').value; const ty = $('#fType').value;
-    const list = $('#txList'); list.innerHTML='';
-    let col = state.tx.filter(t=>
-      (!q || (t.desc||'').toLowerCase().includes(q) || (t.category||'').toLowerCase().includes(q) || (t.account||'').toLowerCase().includes(q)) &&
-      (!mm || t.date.startsWith(mm)) && (!ty || t.type===ty)
-    ).sort((a,b)=> b.date.localeCompare(a.date));
-    col.forEach(t=> list.appendChild(txRow(t)));
-    $('#txCount').textContent = col.length + ' items';
+  // ---------- DASHBOARD / ADVISOR ----------
+  function advisorScore(){
+    // naive score 0..100 based on risk, buffer and pace
+    const forecast7 = forecastSeries(7);
+    const anyBelowZero = forecast7.some(d=> d.bal < 0);
+    const anyBelowOD = forecast7.some(d=> d.bal < OD_LIMIT);
+    const bufferDays = cashBufferDays();
+    let score = 70 + Math.min(30, bufferDays*2);
+    if(anyBelowZero) score -= 20;
+    if(anyBelowOD) score -= 30;
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    return { score, anyBelowZero, anyBelowOD, bufferDays };
+  }
+  function cashBufferDays(){
+    const last30 = state.tx.filter(t=> new Date(t.date) >= new Date(Date.now()-30*864e5));
+    const dailyOut = last30.filter(t=>t.type==='expense').reduce((a,b)=>a+Math.abs(+b.amount),0) / 30 || 0;
+    const bal = currentBalance();
+    if(dailyOut<=0) return 60; // no spend? assume safe
+    return Math.max(0, Math.round((bal - OD_LIMIT) / dailyOut));
+  }
+  function currentBalance(){
+    const net = state.tx.reduce((a,t)=> a + (t.type==='income'? +t.amount : -Math.abs(+t.amount)), 0);
+    state.balanceNow = net; return net;
+  }
+  function paceVsBudget(){
+    const m = monthKey();
+    const day = new Date().getDate();
+    const monthDays = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+    const allowed = Object.values(state.budgets).reduce((a,b)=>a+(+b||0),0) * (day/monthDays);
+    const spent = state.tx.filter(t=> t.type==='expense' && t.date.startsWith(m)).reduce((a,b)=>a+Math.abs(+b.amount),0);
+    return { pct: allowed? Math.round(100*spent/allowed) : 0, spent, allowed };
   }
 
+  function renderHome(){
+    const {score, anyBelowZero, anyBelowOD, bufferDays} = advisorScore();
+    $('#mScore').textContent = score;
+    $('#mScoreWhy').textContent = anyBelowOD? 'High risk: below overdraft soon' : (anyBelowZero? 'Risk: below R0 projected' : 'Stable');
+    $('#mBuffer').textContent = bufferDays;
+    const pace = paceVsBudget();
+    $('#mPace').textContent = pace.pct? pace.pct+'%' : '—';
+    $('#mPaceMsg').textContent = pace.allowed? `${fmt.format(pace.spent)} / ${fmt.format(pace.allowed)} (to date)` : 'Set envelopes to track pace';
+
+    const risk = anyBelowOD? 'Severe' : (anyBelowZero? 'Warning' : 'OK');
+    $('#mRisk').textContent = risk;
+    $('#mRiskMsg').textContent = anyBelowOD? 'Projected < −R500 within 7 days' : (anyBelowZero? 'Projected < R0 within 7 days' : 'No overdraft projected');
+
+    // Chart next 7 days
+    const series = forecastSeries(7);
+    const ctx = document.getElementById('chart7').getContext('2d');
+    if(window._c7) window._c7.destroy();
+    window._c7 = new Chart(ctx, { type:'line', data:{ labels:series.map(d=>d.date.slice(5)), datasets:[{ label:'Projected balance', data:series.map(d=>d.bal) }] }, options:{ plugins:{legend:{labels:{color:'#cdd4ea'}}}, scales:{ x:{ ticks:{color:'#cdd4ea'} }, y:{ ticks:{color:'#cdd4ea'} } } } });
+
+    // Nudges
+    const ul = $('#nudges'); ul.innerHTML='';
+    const nudges = [];
+    if(pace.pct>120) nudges.push(`You are spending at <b>${pace.pct}%</b> of your month-to-date pace. Consider trimming a discretionary envelope.`);
+    if(anyBelowZero) nudges.push('Your balance may go below <b>R0</b> this week. Try moving a scheduled debit by a day or splitting it.');
+    if(anyBelowOD) nudges.push('Projected to dip beyond <b>−R500</b> overdraft. Options: delay a debit, reduce a top-up, or add a temporary transfer.');
+    if(feesThisMonth()>100) nudges.push(`Bank/other fees already at ${fmt.format(feesThisMonth())}. Check your account pricing & alerts.`);
+    (nudges.slice(0,3).length? nudges.slice(0,3) : ['All quiet. Nice work!']).forEach(n=>{ const li=document.createElement('li'); li.innerHTML = '• '+n; ul.appendChild(li); });
+  }
+
+  function feesThisMonth(){
+    const m = monthKey();
+    return state.tx.filter(t=> t.type==='expense' && (t.category||'').toLowerCase().includes('fee') && t.date.startsWith(m))
+      .reduce((a,b)=>a+Math.abs(+b.amount),0);
+  }
+
+  function forecastSeries(days){
+    const startBal = currentBalance();
+    const plan = buildPlanItems(days);
+    const spendRate = avgDailyVariableSpend();
+    const out=[]; let bal = startBal;
+    for(let i=0;i<days;i++){
+      const d = new Date(); d.setDate(d.getDate()+i);
+      const iso = d.toISOString().slice(0,10);
+      const todays = plan.filter(p=>p.date===iso);
+      const planAmt = todays.reduce((s,p)=> s + p.amount, 0);
+      bal += planAmt - spendRate;
+      out.push({ date:iso, bal });
+    }
+    return out;
+  }
+
+  function buildPlanItems(horizonDays){
+    // Existing plan + recurring subscriptions approximated from last 90 days
+    const out = [...state.plan];
+    const recMerch = detectRecurring(state.tx);
+    const today = new Date();
+    recMerch.forEach(rec=>{
+      // find last amount and approximate next due date ~ monthly (same day)
+      const rows = state.tx.filter(t=> t.normMerchant===rec).sort((a,b)=> b.date.localeCompare(a.date));
+      if(!rows.length) return; const last = rows[0];
+      const due = new Date(today.getFullYear(), today.getMonth(), Math.min(new Date(last.date).getDate(), 28));
+      for(let i=0;i<horizonDays;i++){
+        const d = new Date(today); d.setDate(today.getDate()+i);
+        if(d.getDate()===due.getDate()) out.push({ id: 'p-'+rec, date: d.toISOString().slice(0,10), amount: last.type==='expense'? -Math.abs(+last.amount) : +Math.abs(+last.amount), category: last.category||'Subscriptions', merchant: rec, source:'recurring' });
+      }
+    });
+    return out;
+  }
+
+  function avgDailyVariableSpend(){
+    // last 90d expenses excluding fees & subscriptions
+    const cutoff = new Date(Date.now()-90*864e5);
+    const x = state.tx.filter(t=> t.type==='expense' && new Date(t.date)>=cutoff && !(t.category||'').match(/fees|subscriptions/i));
+    const total = x.reduce((a,b)=>a+Math.abs(+b.amount),0);
+    return total/90 || 0;
+  }
+
+  function detectRecurring(list){
+    const g = {};
+    list.forEach(t=>{ const k=(t.normMerchant||t.merchant||'').toLowerCase().trim(); if(!k) return; (g[k]=g[k]||[]).push(t); });
+    const rec=[];
+    Object.entries(g).forEach(([m,arr])=>{
+      const dates = arr.map(t=>new Date(t.date)).sort((a,b)=>a-b);
+      const gaps = dates.slice(1).map((d,i)=> (d - dates[i])/(1000*60*60*24));
+      const monthlyish = gaps.filter(x=>x>24 && x<35).length>=2;
+      if(monthlyish) rec.push(m);
+    });
+    return rec;
+  }
+
+  // ---------- CALENDAR ----------
+  function renderCalendar(){
+    const grid = $('#calGrid'); grid.innerHTML='';
+    const mval = $('#calMonth').value || todayISO().slice(0,7);
+    const [Y,M] = mval.split('-').map(n=>+n);
+    const first = new Date(Y, M-1, 1);
+    const last = new Date(Y, M, 0);
+    // header filler
+    for(let i=0;i<((first.getDay()+6)%7);i++) grid.appendChild(document.createElement('div'));
+    const plan = buildPlanItems(40);
+    const series = forecastSeries(40);
+    for(let d=1; d<=last.getDate(); d++){
+      const date = new Date(Y, M-1, d).toISOString().slice(0,10);
+      const cell = document.createElement('div'); cell.className='day';
+      const bal = series.find(x=>x.date===date)?.bal ?? state.balanceNow;
+      const dot = document.createElement('div'); dot.className='dot';
+      dot.style.background = bal < OD_LIMIT ? '#d94848' : (bal < 0 ? '#f6c445' : '#29d78a');
+      cell.innerHTML = `<div class="d">${d}</div>`;
+      cell.appendChild(dot);
+      const todays = plan.filter(p=>p.date===date);
+      todays.slice(0,3).forEach(p=>{
+        const chip = document.createElement('div'); chip.className='pill';
+        chip.textContent = `${p.category||'Planned'} ${fmt.format(Math.abs(p.amount))}`;
+        cell.appendChild(chip);
+      });
+      grid.appendChild(cell);
+    }
+  }
+
+  // ---------- STATEMENTS (PDF) ----------
+  $('#pdfChoose').addEventListener('change', async (e)=>{ await handlePdfFile(e.target.files?.[0]); });
+  $('#importPdfInput').addEventListener('change', async (e)=>{ await handlePdfFile(e.target.files?.[0]); });
+
+  async function handlePdfFile(file){
+    if(!file) return;
+    const buf = await file.arrayBuffer();
+    try{
+      const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+      let allText = '';
+      for(let i=1;i<=pdf.numPages;i++){
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        allText += '\n' + content.items.map(it=> it.str).join('\n');
+      }
+      const rows = parseBankPdf(allText);
+      const before = state.tx.length;
+      rows.forEach(t=>{ if(!state.tx.some(x=> x.hash===t.hash)) state.tx.push(t); });
+      const imported = state.tx.length - before;
+      $('#importSummary').textContent = imported? `Imported ${imported} transactions. (Parsed ${rows.length}, deduped ${rows.length-imported})` : 'No new transactions found (duplicates skipped).';
+      // preview first 20
+      const host = $('#reviewList'); host.innerHTML='';
+      rows.slice(0,20).forEach(t=> host.appendChild(txRow(t)));
+      renderAll();
+    }catch(err){ console.error(err); alert('PDF parsing failed.'); }
+  }
+
+  function parseBankPdf(text){
+    const out=[]; const lines = text.split(/\n+/).map(s=> s.trim()).filter(Boolean);
+    const monthMap = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+    const money = s=> parseFloat((s||'').replace(/[^0-9.-]/g,''));
+    const parseDate = tok => { const m = tok.match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/); if(!m) return null; const d=String(m[1]).padStart(2,'0'); const mon=monthMap[m[2].toLowerCase()]; if(!mon) return null; return `${m[3]}-${String(mon).padStart(2,'0')}-${d}`; };
+
+    for(const raw of lines){
+      const squish = raw.replace(/\s{2,}/g,'  ');
+      const cols = squish.split('  ').map(x=>x.trim()).filter(Boolean);
+      const dt = parseDate(cols[0]||''); if(!dt) continue;
+      const nums = cols.filter(p=> /(?:\d{1,3}(?:,\d{3})*|\d+)\.\d{2}/.test(p));
+      const desc = cols.slice(1, cols.length - Math.min(3, nums.length)).join(' ') || '(no description)';
+      let debit=null, credit=null;
+      if(nums.length>=2){ debit = nums[nums.length-2]; credit = nums[nums.length-1]; }
+      else if(nums.length===1){ const hasCR = raw.toUpperCase().includes('CR'); if(hasCR) credit=nums[0]; else debit=nums[0]; }
+      const merchant = normaliseMerchant(desc);
+      if(debit && !isNaN(money(debit))) addParsed(out, { date:dt, type:'expense', amount:Math.abs(money(debit)), merchant, raw:raw });
+      if(credit&& !isNaN(money(credit))) addParsed(out, { date:dt, type:'income',  amount:Math.abs(money(credit)), merchant, raw:raw });
+    }
+    return out;
+  }
+  function addParsed(out, t){
+    const norm = normaliseMerchant(t.merchant);
+    const cat = autoCategory({ merchant:norm, raw:t.raw });
+    const id = uuid();
+    const hash = btoa(unescape(encodeURIComponent(`${t.date}|${t.type}|${t.amount}|${norm}`))).slice(0,32);
+    out.push({ id, date:t.date, type:t.type, desc:t.merchant, merchant:t.merchant, normMerchant:norm, category:cat, account:'Bank', amount:t.amount, src:'pdf', hash });
+  }
+  function normaliseMerchant(s){ return (s||'').toLowerCase().replace(/\s+/g,' ').replace(/\d+/g,'').replace(/[^a-z\s:&]/g,'').trim().replace(/\b(pvt|ltd|pty|cc)\b/g,'').trim(); }
+
+  // ---------- CRUD simple (edit/delete) ----------
+  function editTx(id){
+    const t = state.tx.find(x=>x.id===id); if(!t) return;
+    const desc = prompt('Description', t.desc||''); if(desc===null) return;
+    const category = prompt('Category', t.category||''); if(category===null) return;
+    const amount = parseFloat(prompt('Amount', t.amount)); if(isNaN(amount)) return;
+    Object.assign(t, { desc, category, amount }); saveLocal(); renderAll();
+  }
+  function delTx(id){ state.tx = state.tx.filter(t=>t.id!==id); saveLocal(); renderAll(); }
+
+  // ---------- BUDGETS ----------
   function renderBudgets(){
     const host = $('#budgetList'); host.innerHTML='';
     const m = monthKey();
-    const monthExp = state.tx.filter(t=> t.date.startsWith(m) && t.type==='expense');
+    const monthExp = state.tx.filter(t=> t.type==='expense' && t.date.startsWith(m));
     Object.entries(state.budgets).forEach(([cat,limit])=>{
-      const spent = sum(monthExp.filter(t=> (t.category||'').toLowerCase()===cat.toLowerCase()).map(t=>+t.amount));
+      const spent = monthExp.filter(t=> (t.category||'').toLowerCase()===cat.toLowerCase()).reduce((a,b)=>a+Math.abs(+b.amount),0);
       const pct = Math.min(100, Math.round(100*spent/limit));
-      const row = document.createElement('div');
-      row.className='card';
+      const row = document.createElement('div'); row.className='card';
       row.innerHTML = `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <div class="pill">${cat}</div>
         <div class="small mut">${fmt.format(spent)} / ${fmt.format(limit)} • ${pct}%</div>
@@ -431,10 +620,33 @@
         </div>`;
       host.appendChild(row);
       row.querySelector('[data-edit]').onclick = ()=>{ $('#bCategory').value = cat; $('#bLimit').value = limit; $('#bCategory').focus(); };
-      row.querySelector('[data-del]').onclick = ()=>{ delete state.budgets[cat]; render(); maybeSync(); };
+      row.querySelector('[data-del]').onclick = ()=>{ delete state.budgets[cat]; saveLocal(); renderAll(); };
     });
   }
 
+  // ---------- GOALS ----------
+  function renderGoals(){
+    const host = $('#goalList'); host.innerHTML='';
+    state.goals.forEach(g=>{
+      const card = document.createElement('div'); card.className='card';
+      const saved = Math.max(0, currentBalance() - safetyBuffer());
+      const progress = Math.min(100, Math.round(100 * (g.saved||0) / g.target));
+      card.innerHTML = `<div class="stack">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>${g.name}</b><span class="pill">Target ${fmt.format(g.target)}</span></div>
+        <div class="small mut">Saved ${fmt.format(g.saved||0)} • ${progress}%</div>
+        <div style="height:10px;border-radius:999px;background:#111729;border:1px solid #27304c;overflow:hidden">
+          <div style="height:100%;width:${progress}%;background:linear-gradient(90deg,var(--pri),#42e3c8)"></div>
+        </div>
+        <div class="toolbar"><button class="btn ghost small" data-add="${g.id}">Add R100</button><button class="btn ghost small bad" data-del="${g.id}">Delete</button></div>
+      </div>`;
+      host.appendChild(card);
+      card.querySelector('[data-add]').onclick = ()=>{ g.saved=(g.saved||0)+100; saveLocal(); renderAll(); };
+      card.querySelector('[data-del]').onclick = ()=>{ state.goals = state.goals.filter(x=>x.id!==g.id); saveLocal(); renderAll(); };
+    });
+  }
+  function safetyBuffer(){ return 0; } // placeholder if you want to reserve some buffer before goals
+
+  // ---------- REPORTS ----------
   let pieChart=null, barChart=null;
   function renderReports(){
     const ctxPie = $('#pieCat'); const ctxBar = $('#barFlow');
@@ -444,168 +656,58 @@
     if(pieChart) pieChart.destroy();
     pieChart = new Chart(ctxPie, { type:'pie', data:{ labels, datasets:[{ data: values }] }, options:{ plugins:{ legend:{ labels:{ color:'#cdd4ea' } } } } });
 
-    const months = monthRange(6);
-    const income = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='income').map(t=>+t.amount)));
-    const expense = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense').map(t=>+t.amount)));
-    if(barChart) barChart.destroy();
-    barChart = new Chart(ctxBar, { type:'bar', data:{ labels:months, datasets:[{ label:'Income', data:income }, { label:'Expense', data:expense }] }, options:{ scales:{ x:{ ticks:{ color:'#cdd4ea' } }, y:{ ticks:{ color:'#cdd4ea' } } }, plugins:{ legend:{ labels:{ color:'#cdd4ea' } } } } });
-  }
-
-  function renderSettings(){
-    $('#syncCode').value = state.sync.code || '';
-    $('#syncStatus').textContent = state.sync.connected ? 'Connected to cloud' : 'Not connected';
-    $('#prefSouthAfrica').checked = (state.prefs.currency==='ZAR');
-    $('#prefDark').checked = !!state.prefs.dark;
-    $('#prefAutosave').checked = !!state.prefs.autosave;
-  }
-
-  // ---------------------------
-  // CRUD
-  // ---------------------------
-  function addTx(partial){
-    const t = { id: uuid(), date: todayISO(), type:'expense', desc:'', category:'', account:'', amount:0, recurring:false, ...partial };
-    state.tx.push(t); render(); maybeSync();
-  }
-  function editTx(id){
-    const t = state.tx.find(x=>x.id===id); if(!t) return;
-    const desc = prompt('Description', t.desc||''); if(desc===null) return;
-    const category = prompt('Category', t.category||''); if(category===null) return;
-    const account = prompt('Account', t.account||''); if(account===null) return;
-    const amount = parseFloat(prompt('Amount', t.amount)); if(isNaN(amount)) return;
-    const type = prompt('Type (income|expense|transfer)', t.type)||t.type;
-    const date = prompt('Date (YYYY-MM-DD)', t.date)||t.date;
-    Object.assign(t, { desc, category, account, amount, type, date }); render(); maybeSync();
-  }
-  function delTx(id){ state.tx = state.tx.filter(t=>t.id!==id); render(); maybeSync(); }
-
-  // ---------------------------
-  // TAB LOGIC
-  // ---------------------------
-  $$('.tab').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      $$('.tab').forEach(b=> b.setAttribute('aria-selected','false'));
-      btn.setAttribute('aria-selected','true');
-      $$('.tabpane').forEach(p=> p.classList.add('hidden'));
-      $('#tab-'+btn.dataset.tab).classList.remove('hidden');
-      if(btn.dataset.tab==='reports'){ renderReports(); }
+    const months = [...Array(6)].map((_,i)=>{
+      const d=new Date(); d.setMonth(d.getMonth()- (5-i)); return d.toISOString().slice(0,7);
     });
-  });
-
-  // Quick add
-  $('#qaDate').value = todayISO();
-  $('#quickAdd').addEventListener('submit', e=>{
-    e.preventDefault();
-    addTx({ date: $('#qaDate').value, type:$('#qaType').value, desc:$('#qaDesc').value.trim(), category:$('#qaCategory').value.trim(), account:$('#qaAccount').value.trim(), amount: parseFloat($('#qaAmount').value||'0'), recurring: $('#qaRecurring').checked });
-    e.target.reset(); $('#qaDate').value = todayISO(); $('#qaType').value='expense';
-  });
-
-  // Filters
-  $('#fSearch').addEventListener('input', renderTransactions);
-  $('#fMonth').addEventListener('input', renderTransactions);
-  $('#fType').addEventListener('input', renderTransactions);
-  $('#clearFilters').addEventListener('click', ()=>{ $('#fSearch').value=''; $('#fMonth').value=''; $('#fType').value=''; renderTransactions(); });
-
-  // Budgets
-  $('#budgetForm').addEventListener('submit', e=>{
-    e.preventDefault();
-    const cat = $('#bCategory').value.trim(); const lim = parseFloat($('#bLimit').value||'0');
-    if(!cat || !lim){ alert('Category and limit required'); return; }
-    state.budgets[cat]=lim; render(); maybeSync(); e.target.reset();
-  });
-
-  // Export / Import
-  $('#exportJson').addEventListener('click', ()=>{
-    const data = { tx:state.tx, budgets:state.budgets, prefs:state.prefs, brand:state.brand };
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='taskpulse-money.json'; a.click(); URL.revokeObjectURL(url);
-  });
-  $('#importJsonInput').addEventListener('change', async (e)=>{
-    const file = e.target.files[0]; if(!file) return; const text = await file.text();
-    try{ const data = JSON.parse(text); state.tx = data.tx||[]; state.budgets = data.budgets||{}; state.prefs = {...state.prefs, ...(data.prefs||{})}; state.brand = data.brand||state.brand; render(); maybeSync(); }
-    catch(err){ alert('Invalid JSON'); }
-  });
-
-  // ---------------------------
-  // FIREBASE SYNC (config UI removed; reads window.FIREBASE_CONFIG or saved cfg)
-  // ---------------------------
-  function ensureFirebase(){
-    if(state.firebase.app || !(state.firebase.cfg || window.FIREBASE_CONFIG)) return !!state.firebase.app;
-    try{
-      state.firebase.cfg = state.firebase.cfg || window.FIREBASE_CONFIG;
-      state.firebase.app = firebase.initializeApp(state.firebase.cfg);
-      state.firebase.db = firebase.database();
-      return true;
-    }catch(e){ console.warn('Firebase init failed', e); return false; }
+    const income = months.map(m=> state.tx.filter(t=>t.date.startsWith(m) && t.type==='income').reduce((a,b)=>a+ +b.amount,0));
+    const expense = months.map(m=> state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense').reduce((a,b)=>a+ +b.amount,0));
+    if(barChart) barChart.destroy();
+    barChart = new Chart(ctxBar, { type:'bar', data:{ labels:months, datasets:[{ label:'Income', data:income }, { label:'Expense', data:expense }] }, options:{ maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:'#cdd4ea' } } }, scales:{ x:{ ticks:{ color:'#cdd4ea' } }, y:{ ticks:{ color:'#cdd4ea' } } } } });
   }
+
+  // ---------- SETTINGS / SYNC ----------
+  function ensureFirebase(){ if(state.firebase.app || !(state.firebase.cfg || window.FIREBASE_CONFIG)) return !!state.firebase.app; try{ state.firebase.cfg = state.firebase.cfg || window.FIREBASE_CONFIG; state.firebase.app = firebase.initializeApp(state.firebase.cfg); state.firebase.db = firebase.database(); return true; }catch(e){ console.warn('Firebase init failed', e); return false; } }
   async function signInAnon(){ try{ await firebase.auth().signInAnonymously(); state.firebase.user = firebase.auth().currentUser; return true; } catch(e){ console.warn('Auth failed', e); return false; } }
-  function roomRef(){ return state.firebase.db.ref(`/rooms/${state.sync.code}/tpmoney`); }
+  function roomRef(){ return state.firebase.db.ref(`/rooms/${state.sync.code}/advisor`); }
   let unsub=null;
   function connect(){
     if(!state.sync.code){ alert('Enter a sync code first'); return; }
-    if(!ensureFirebase()) { alert('Cloud sync not configured in this build. App will run locally.'); return; }
+    if(!ensureFirebase()){ alert('Cloud sync not configured. Running local-only.'); return; }
     signInAnon().then(ok=>{
       if(!ok) return;
-      if(unsub) { roomRef().off('value', unsub); unsub=null; }
+      if(unsub){ roomRef().off('value', unsub); unsub=null; }
       unsub = roomRef().on('value', snap=>{
         const cloud = snap.val(); if(!cloud) return;
-        const { tx=[], budgets={}, prefs={}, brand=null } = cloud;
-        const mapLocal = new Map(state.tx.map(t=>[t.id,t]));
-        tx.forEach(ct=>{ if(!mapLocal.has(ct.id)) mapLocal.set(ct.id, ct); else { const lt=mapLocal.get(ct.id); if((ct.updated||0)>(lt.updated||0)) mapLocal.set(ct.id, ct); } });
-        state.tx = Array.from(mapLocal.values());
+        const { tx=[], budgets={}, prefs={}, rules=[], goals=[], plan=[] } = cloud;
+        const map = new Map(state.tx.map(t=>[t.hash||t.id,t]));
+        tx.forEach(ct=>{ const key=ct.hash||ct.id; if(!map.has(key)) map.set(key, ct); });
+        state.tx = Array.from(map.values());
         state.budgets = { ...state.budgets, ...budgets };
         state.prefs = { ...state.prefs, ...prefs };
-        if(brand){ state.brand = { ...state.brand, ...brand }; applyBrand(); }
-        state.sync.connected = true; state.sync.last = Date.now();
-        render();
+        state.rules = rules.length? rules : state.rules;
+        state.goals = goals.length? goals : state.goals;
+        state.plan  = plan.length?  plan  : state.plan;
+        renderAll();
       });
-      pushCloud(); state.sync.connected = true; renderSettings(); saveLocal();
+      pushCloud(); state.sync.connected = true; $('#syncStatus').textContent = 'Connected'; saveLocal();
     });
   }
-  function pushCloud(){
-    if(!state.prefs.autosave || !state.sync.code || !state.firebase.db) return;
-    const payload = { tx: state.tx.map(t=>({ ...t, updated: t.updated||Date.now() })), budgets: state.budgets, prefs: state.prefs, brand: state.brand, ts: Date.now() };
-    roomRef().set(payload).catch(err=> console.error('Push failed', err));
-  }
+  function pushCloud(){ if(!state.prefs.autosave || !state.sync.code || !state.firebase.db) return; const payload = { tx:state.tx, budgets:state.budgets, prefs:state.prefs, rules:state.rules, goals:state.goals, plan:state.plan, ts:Date.now() }; roomRef().set(payload).catch(err=> console.error('Push failed', err)); }
   let syncTimer=null; function maybeSync(){ saveLocal(); if(state.prefs.autosave){ clearTimeout(syncTimer); syncTimer = setTimeout(()=> pushCloud(), 400); } }
 
-  // Settings handlers (sync)
-  $('#openSync').addEventListener('click', ()=>{ $$('.tab').forEach(b=> b.setAttribute('aria-selected','false')); $('[data-tab="settings"]').setAttribute('aria-selected','true'); $$('.tabpane').forEach(p=> p.classList.add('hidden')); $('#tab-settings').classList.remove('hidden'); });
-  $('#generateCode').addEventListener('click', ()=>{ state.sync.code = (Math.random().toString(36).slice(2,8)).toUpperCase(); renderSettings(); saveLocal(); });
-  $('#disconnect').addEventListener('click', ()=>{ state.sync.connected=false; if(unsub){ roomRef().off('value', unsub); unsub=null; } renderSettings(); saveLocal(); });
-  $('#applySync').addEventListener('click', ()=>{ state.sync.code = $('#syncCode').value.trim().toUpperCase(); connect(); });
+  // ---------- WIRES ----------
+  $$('.tab').forEach(btn=> btn.addEventListener('click', ()=>{ $$('.tab').forEach(b=> b.setAttribute('aria-selected','false')); btn.setAttribute('aria-selected','true'); $$('.tabpane').forEach(p=> p.classList.add('hidden')); $('#tab-'+btn.dataset.tab).classList.remove('hidden'); if(btn.dataset.tab==='home') renderHome(); if(btn.dataset.tab==='calendar') renderCalendar(); if(btn.dataset.tab==='reports') renderReports(); if(btn.dataset.tab==='budgets') renderBudgets(); if(btn.dataset.tab==='goals') renderGoals(); }));
+  $('#openSettings').addEventListener('click', ()=>{ $$('.tab[aria-selected]')[0]?.setAttribute('aria-selected','false'); $('[data-tab="settings"]').setAttribute('aria-selected','true'); $$('.tabpane').forEach(p=> p.classList.add('hidden')); $('#tab-settings').classList.remove('hidden'); });
 
-  // Brand handlers (optional overrides)
-  $('#logoInput').addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; state.brand.logo = await fileToDataUrl(f); applyBrand(); maybeSync(); });
-  $('#splashInput').addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; state.brand.splash = await fileToDataUrl(f); applyBrand(); maybeSync(); });
+  // budgets form
+  $('#budgetForm').addEventListener('submit', e=>{ e.preventDefault(); const cat=$('#bCategory').value.trim(); const lim=parseFloat($('#bLimit').value||'0'); if(!cat||!lim){ alert('Category and limit required'); return;} state.budgets[cat]=lim; maybeSync(); renderBudgets(); e.target.reset(); });
 
-  // Prefs
-  $('#prefSouthAfrica').addEventListener('change', e=>{ state.prefs.currency = e.target.checked? 'ZAR' : 'USD'; render(); maybeSync(); });
-  $('#prefDark').addEventListener('change', e=>{ state.prefs.dark = !!e.target.checked; document.body.classList.toggle('light', !e.target.checked); saveLocal(); });
-  $('#prefAutosave').addEventListener('change', e=>{ state.prefs.autosave = !!e.target.checked; saveLocal(); });
+  // rules form
+  function renderRules(){ const host=$('#ruleList'); host.innerHTML=''; state.rules.forEach((r,i)=>{ const row=document.createElement('div'); row.className='toolbar'; row.innerHTML=`<span class="pill">/${r.re}/ → ${r.cat}</span><button class="btn ghost small" data-del="${i}">Delete</button>`; host.appendChild(row); row.querySelector('[data-del]').onclick=()=>{ state.rules.splice(i,1); maybeSync(); renderRules(); }; }); }
+  $('#ruleForm').addEventListener('submit', e=>{ e.preventDefault(); const re=$('#ruleRegex').value.trim(); const cat=$('#ruleCat').value.trim(); state.rules.push({re,cat}); e.target.reset(); maybeSync(); renderRules(); });
 
-  // ---------------------------
-  // INIT
-  // ---------------------------
-  loadLocal();
-  applyBrand();
-  let splashMs = sessionStorage.getItem('tpmoney-seen') ? 600 : 1400;
-  sessionStorage.setItem('tpmoney-seen','1');
-  setTimeout(()=> $('#splash').classList.add('hide'), splashMs);
-  render();
+  // goals form
+  $('#goalForm').addEventListener('submit', e=>{ e.preventDefault(); const g={ id:uuid(), name:$('#gName').value.trim(), target:+$('#gTarget').value, due:$('#gDue').value||null, saved:0 }; state.goals.push(g); maybeSync(); renderGoals(); e.target.reset(); });
 
-  // Seed demo data if empty
-  if(state.tx.length===0){
-    const d = todayISO();
-    addTx({ date:d, type:'income', desc:'Salary', category:'Income', account:'FNB', amount: 25000 });
-    addTx({ date:d, type:'expense', desc:'Groceries', category:'Food', account:'FNB', amount: 1200 });
-    addTx({ date:d, type:'expense', desc:'Fuel', category:'Transport', account:'FNB', amount: 650 });
-    addTx({ date:d, type:'expense', desc:'Airtime/Data', category:'Utilities', account:'Vodacom', amount: 299 });
-    state.budgets = { Food: 4000, Transport: 2000, Utilities: 1500 };
-    render(); maybeSync();
-  }
-
-  // Auto connect if code + config were previously set
-  window.addEventListener('load', ()=>{ if(state.sync.code && (state.firebase.cfg || window.FIREBASE_CONFIG)){ connect(); } });
-  </script>
-</body>
-</html>
+  // export/import
+  $('#exportJson').addEventListener('click', ()=>{ const data={ tx:state.tx, budgets:state.budgets, prefs:state.prefs, rules:state.rules, goals:state.goals, plan:state.plan }; con
