@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <title>TaskPulse Money</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,32 +17,37 @@
     html,body{height:100%}
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Apple Color Emoji,Noto Color Emoji,Arial,sans-serif;background:linear-gradient(180deg,#0b0d12,#0a0c11 20%,#0b0d12 80%);color:var(--ink)}
     a{color:var(--pri)}
-    .wrap{max-width:1100px;margin:0 auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 18px}
-    .logo{display:flex;align-items:center;gap:12px}
+    .wrap{max-width:1100px;margin:0 auto;padding:12px 12px 24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px}
+    .logo{display:flex;align-items:center;gap:10px}
     .badge{font-size:12px;color:var(--ink-dim);opacity:.9}
-    h1{font-size:24px;margin:0;font-weight:800;letter-spacing:.2px}
-    .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pri),#1e90ff);display:grid;place-items:center;font-weight:800}
-    .logo-mark span{font-size:16px}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{padding:10px 14px;border-radius:10px;background:var(--elev);color:var(--ink-dim);border:1px solid transparent;cursor:pointer;user-select:none}
+    h1{font-size:22px;margin:0;font-weight:800;letter-spacing:.2px}
+    .logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--pri),#1e90ff);display:grid;place-items:center;overflow:hidden;border:1px solid #2a3350}
+    .logo-mark img{width:100%;height:100%;object-fit:cover}
+
+    /* TABS */
+    .tabs{position:sticky;top:0;z-index:5;display:flex;gap:8px;flex-wrap:nowrap;overflow:auto;padding:6px 2px 10px;background:linear-gradient(180deg,#0b0d12 70%,rgba(11,13,18,0));backdrop-filter:saturate(140%)}
+    .tab{padding:10px 14px;border-radius:12px;background:var(--elev);color:var(--ink-dim);border:1px solid transparent;cursor:pointer;user-select:none;flex:0 0 auto}
     .tab[aria-selected="true"]{background:var(--elev2);color:var(--ink);border-color:#2a3350}
+
     .row{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .card{background:var(--elev);border:1px solid #232a40;border-radius:14px;padding:16px}
+    .card{background:var(--elev);border:1px solid #232a40;border-radius:14px;padding:14px}
     .ghost{background:transparent;border-style:dashed}
     .card h3{margin:0 0 10px;font-size:16px;letter-spacing:.2px}
+
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
     .metric{padding:14px;border-radius:12px;background:var(--elev2);border:1px solid #27304c}
     .metric .t{font-size:12px;color:var(--ink-dim)}
-    .metric .n{font-size:22px;font-weight:800;margin-top:6px}
+    .metric .n{font-size:20px;font-weight:800;margin-top:6px}
     .metric .delta{font-size:12px;margin-top:2px}
     .delta.pos{color:var(--good)}
     .delta.neg{color:var(--bad)}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     .stack{display:flex;flex-direction:column;gap:10px}
-    .input, select, textarea{width:100%;padding:12px 12px;border-radius:10px;background:#121624;border:1px solid #232a40;color:var(--ink)}
+
+    .input, select, textarea{width:100%;padding:12px;border-radius:10px;background:#121624;border:1px solid #232a40;color:var(--ink)}
     .input:focus, select:focus, textarea:focus{outline:none;box-shadow:var(--ring);border-color:#384471}
     .btn{padding:12px 14px;border-radius:10px;border:1px solid #2b3555;background:linear-gradient(180deg,#20284a,#18203b);color:#fff;cursor:pointer}
     .btn:hover{filter:brightness(1.06)}
@@ -54,37 +59,74 @@
     .mut{color:var(--ink-dim)}
     .small{font-size:12px}
     .list{display:flex;flex-direction:column}
-    .list .rowi{display:grid;grid-template-columns:110px 1.5fr 1fr 110px 110px 100px 80px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #243055}
+    .list .rowi{display:grid;grid-template-columns:110px 1.5fr 1fr 110px 110px 100px 100px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #243055;overflow:visible}
+.list .rowi .toolbar{justify-content:flex-end;gap:6px}
+.card{overflow:visible}
     .pill{padding:6px 8px;border-radius:999px;border:1px solid #2a3558;background:#151b2c;color:var(--ink-dim);font-size:12px}
     .right{margin-left:auto}
     .hidden{display:none}
     footer{margin:26px 0;color:var(--ink-dim);text-align:center}
+
+    /* Splash screen */
+    .splash{position:fixed;inset:0;background:#090b10;display:grid;place-items:center;z-index:9999;transition:opacity .45s ease}
+    .splash.hide{opacity:0;pointer-events:none}
+    .splash-inner{width:min(520px,86vw);height:min(520px,86vw);border-radius:22px;overflow:hidden;border:1px solid #2a3350;box-shadow:0 10px 50px rgba(0,0,0,.5);position:relative}
+    .splash-bg{position:absolute;inset:0;background:#111;background-position:center;background-size:cover;filter:saturate(110%) contrast(105%)}
+    .splash-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.7))}
+    .splash-brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px}
+    .splash-logo{width:min(120px,30vw);height:min(120px,30vw);border-radius:26%;overflow:hidden;border:2px solid rgba(255,255,255,.2);background:#0f1220}
+    .splash-logo img{width:100%;height:100%;object-fit:cover}
+    .splash-title{font-weight:800;letter-spacing:.3px}
+
     @media (max-width: 980px){
       .metrics{grid-template-columns:1fr 1fr}
+      .list .rowi{grid-template-columns:90px 1.1fr .9fr 90px 90px 80px 90px}
+    }
       .list .rowi{grid-template-columns:90px 1.1fr .9fr 90px 90px 80px 70px}
     }
     @media (max-width: 720px){
+      .wrap{padding:10px}
       .row{grid-template-columns:1fr}
-      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+      .grid-2,.grid-3{grid-template-columns:1fr}
       .metrics{grid-template-columns:1fr 1fr}
       .list .rowi{grid-template-columns:70px 1fr 1fr 80px 80px 70px 60px}
+      h1{font-size:20px}
+      .tab{padding:9px 12px}
     }
   </style>
-  <!-- Chart.js for simple reports -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Firebase (compat builds for CDN usage in a single HTML file) -->
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script>
+    // Embedded assets (no user upload needed)
+    const DEFAULT_SPLASH = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEsB9ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8fLz9PX29/j5+v/2gAMAwEAAhEDEQA/AP8AJy0IY7uT6y4o4b8v9bP2n2qj1l2Vx3s2k8j3EU2R9kY9B7+R9y7K4mZic9o3b3y8r9i2V+zZ7c4j5b1Q6nRr1VtXZ1bR0dX8W3bu5k9n+zj8p4w4I4j4cf8AuGPOL7mJvf4Rz+GZcamhfI5DlmK6jDjn84hyfzg7pvwYN5Pwsp0fZMA/Yf6wXZ/TOc+1gk+MP/8ABIeQ+zFeW+jP/wAtgPBfRgDgD6//AIb/AP/Z';
+    const DEFAULT_LOGO   = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAk4AAAGaCAYAAAD5HsxRAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAEIiSURBVEhL7d1BctvIGYbh/7o0q9Lq5K7z9T7m7k2C3kB5qk7y8r9gq9z3OIlvVxS7q3WbC2t1...nhwOAAAwVcHACQAAALZg4HRj67oOAQAAwBo4XXl12N+oAwAAmIpg4LR//6asrQVhAACAlReMkPYfOCjr+w/oMAAAwMr7/wDyk6OIdkQ8AAAAAElFTkSuQmCC';
+    // Optional: hard-code Firebase config (UI removed)
+    // window.FIREBASE_CONFIG = { /* paste here if you want sync */ };
+  </script>
 </head>
 <body>
+  <!-- Splash overlay -->
+  <div class="splash" id="splash">
+    <div class="splash-inner">
+      <div class="splash-bg" id="splashBg"></div>
+      <div class="splash-overlay"></div>
+      <div class="splash-brand">
+        <div class="splash-logo"><img id="splashLogo" alt="TaskPulse Money logo"></div>
+        <div class="splash-title">TaskPulse <span style="font-weight:800;opacity:.9">Money</span></div>
+        <div class="small" style="opacity:.8">Powered by Daryl G</div>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <header>
       <div class="logo">
-        <div class="logo-mark"><span>TP</span></div>
+        <div class="logo-mark"><img id="headerLogo" alt="logo"></div>
         <div>
           <h1>TaskPulse <span style="font-weight:700;opacity:.9">Money</span></h1>
-          <div class="badge">Fast personal finance tracker • Firebase sync • Offline-first</div>
+          <div class="badge">Fast personal finance tracker • Offline-first • Optional cloud sync</div>
         </div>
       </div>
       <div class="toolbar" role="group" aria-label="Quick actions">
@@ -194,48 +236,35 @@
       </div>
     </section>
 
-    <!-- SETTINGS / SYNC -->
+    <!-- SETTINGS (Firebase config UI removed) -->
     <section id="tab-settings" class="tabpane hidden" role="tabpanel">
       <div class="grid-2">
         <div class="card">
-          <h3>Sync (Firebase)</h3>
+          <h3>Sync</h3>
           <div class="stack">
             <div class="small mut">Use the same sync code on your phone and laptop to keep data aligned in real time. No email/password needed.</div>
             <div class="grid-2">
-              <input class="input" id="syncCode" placeholder="Sync code (auto-generated)" />
+              <input class="input" id="syncCode" placeholder="Sync code (e.g., TPM123)" />
               <button class="btn" id="applySync">Apply</button>
             </div>
             <div class="toolbar">
               <button class="btn good" id="generateCode">Generate new code</button>
               <button class="btn bad" id="disconnect">Disconnect</button>
+              <label class="pill"><input type="checkbox" id="prefAutosave" checked/> Autosave to cloud</label>
             </div>
             <div class="small mut" id="syncStatus">Not connected</div>
           </div>
-          <div class="card ghost" style="margin-top:12px">
-            <h3>Firebase config</h3>
-            <div class="small mut">Paste your Firebase Web App credentials below <em>and click "Apply"</em>. Use a Realtime Database in "test mode" while prototyping. Auth uses anonymous sign-in.</div>
-            <textarea id="firebaseConfigText" rows="8" class="input" placeholder='{
-  "apiKey": "YOUR_KEY",
-  "authDomain": "YOUR_PROJECT.firebaseapp.com",
-  "databaseURL": "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  "projectId": "YOUR_PROJECT",
-  "storageBucket": "YOUR_PROJECT.appspot.com",
-  "messagingSenderId": "XXXX",
-  "appId": "1:XXXX:web:XXXX"
-}'></textarea>
-            <div class="toolbar"><button class="btn pri" id="applyFirebase">Apply Firebase Config</button></div>
-          </div>
         </div>
         <div class="card">
-          <h3>App preferences</h3>
+          <h3>Brand & appearance</h3>
           <div class="stack">
-            <label class="pill"><input type="checkbox" id="prefSouthAfrica" checked/> Format currency as ZAR (R)</label>
+            <div class="small mut">Images are pre-bundled. You can still override them later using these uploaders.</div>
+            <div class="grid-2">
+              <label class="btn ghost">Change logo<input id="logoInput" class="hidden" type="file" accept="image/*"></label>
+              <label class="btn ghost">Change splash<input id="splashInput" class="hidden" type="file" accept="image/*"></label>
+            </div>
+            <label class="pill"><input type="checkbox" id="prefSouthAfrica" checked/> Currency format: ZAR (R)</label>
             <label class="pill"><input type="checkbox" id="prefDark" checked/> Dark theme</label>
-            <label class="pill"><input type="checkbox" id="prefAutosave" checked/> Autosave to cloud</label>
-          </div>
-          <div class="card ghost" style="margin-top:12px">
-            <h3>About</h3>
-            <div class="small mut">Version 1.0 • Local-first storage with cloud sync • Built for speed</div>
           </div>
         </div>
       </div>
@@ -274,11 +303,10 @@
   // STATE
   // ---------------------------
   const state = {
-    tx: [], // transactions
-    budgets: {}, // { category: number }
-    prefs: { currency:'ZAR', dark:true, autosave:true },
+    tx: [], budgets: {}, prefs: { currency:'ZAR', dark:true, autosave:true },
     sync: { code: '', connected:false, last:0 },
-    firebase: { cfg:null, app:null, db:null, user:null }
+    firebase: { cfg:null, app:null, db:null, user:null },
+    brand: { logo: DEFAULT_LOGO, splash: DEFAULT_SPLASH }
   };
 
   // Load persisted
@@ -289,11 +317,18 @@
     }catch(e){ console.warn('No local state yet'); }
   }
   function saveLocal(){
-    localStorage.setItem('tpmoney-v1', JSON.stringify({ tx:state.tx, budgets:state.budgets, prefs:state.prefs, sync:state.sync, firebase:{cfg:state.firebase.cfg} }));
+    localStorage.setItem('tpmoney-v1', JSON.stringify({ tx:state.tx, budgets:state.budgets, prefs:state.prefs, sync:state.sync, firebase:{cfg:state.firebase.cfg}, brand:state.brand }));
   }
 
+  // Image helpers (pre-bundled defaults)
+  function applyBrand(){
+    if(state.brand.logo){ $('#headerLogo').src = state.brand.logo; $('#splashLogo').src = state.brand.logo; }
+    if(state.brand.splash){ $('#splashBg').style.backgroundImage = `url(${state.brand.splash})`; }
+  }
+  async function fileToDataUrl(file){ return new Promise(r=>{ const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(file); }); }
+
   // ---------------------------
-  // RENDER HELPERS
+  // RENDER
   // ---------------------------
   function render(){
     renderDashboard();
@@ -301,22 +336,18 @@
     renderBudgets();
     renderReports();
     renderSettings();
+    applyBrand();
     saveLocal();
   }
 
   function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
-  function monthRange(n=6){
-    const out=[]; const d=new Date(); d.setDate(1);
-    for(let i=n-1;i>=0;i--){ const t=new Date(d); t.setMonth(d.getMonth()-i); out.push(t.toISOString().slice(0,7)); }
-    return out;
-  }
+  function monthRange(n=6){ const out=[]; const d=new Date(); d.setDate(1); for(let i=n-1;i>=0;i--){ const t=new Date(d); t.setMonth(d.getMonth()-i); out.push(t.toISOString().slice(0,7)); } return out; }
 
   function renderDashboard(){
     const m=monthKey();
     const monthTx = state.tx.filter(t=> t.date.startsWith(m));
     const income = sum(monthTx.filter(t=>t.type==='income').map(t=>+t.amount));
     const expense = sum(monthTx.filter(t=>t.type==='expense').map(t=>+t.amount));
-    const transfers = sum(monthTx.filter(t=>t.type==='transfer').map(t=>+t.amount));
     const balance = sum(state.tx.map(t=> t.type==='income'?+t.amount:(t.type==='expense'? -t.amount : 0)));
     $('#mBalance').textContent = fmt.format(balance);
     $('#mIncome').textContent = fmt.format(income);
@@ -326,8 +357,7 @@
 
     // Budget health
     let used=0, limit=0;
-    const cats = Object.keys(state.budgets);
-    cats.forEach(c=>{
+    Object.keys(state.budgets).forEach(c=>{
       const l=+state.budgets[c]||0; limit+=l;
       const u=sum(monthTx.filter(t=>t.type==='expense' && (t.category||'').toLowerCase()===c.toLowerCase()).map(t=>+t.amount));
       used+=u;
@@ -356,7 +386,15 @@
     amt.style.color = t.type==='expense'? 'var(--bad)': (t.type==='income'? 'var(--good)' : 'var(--ink)');
     root.querySelector('.edit').onclick = ()=> editTx(t.id);
     root.querySelector('.del').onclick = ()=> delTx(t.id);
+    // Make row more touch-friendly: tap description or amount to edit
+    root.querySelector('.desc').style.cursor='pointer';
+    root.querySelector('.amt').style.cursor='pointer';
+    root.querySelector('.desc').onclick = ()=> editTx(t.id);
+    amt.onclick = ()=> editTx(t.id);
+    root.tabIndex = 0;
+    root.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'){ editTx(t.id); }});
     if(compact){ root.querySelector('.edit').classList.add('hidden'); root.querySelector('.del').classList.add('hidden'); }
+    return root;
     return root;
   }
 
@@ -375,9 +413,9 @@
   function renderBudgets(){
     const host = $('#budgetList'); host.innerHTML='';
     const m = monthKey();
-    const monthTx = state.tx.filter(t=> t.date.startsWith(m) && t.type==='expense');
+    const monthExp = state.tx.filter(t=> t.date.startsWith(m) && t.type==='expense');
     Object.entries(state.budgets).forEach(([cat,limit])=>{
-      const spent = sum(monthTx.filter(t=> (t.category||'').toLowerCase()===cat.toLowerCase()).map(t=>+t.amount));
+      const spent = sum(monthExp.filter(t=> (t.category||'').toLowerCase()===cat.toLowerCase()).map(t=>+t.amount));
       const pct = Math.min(100, Math.round(100*spent/limit));
       const row = document.createElement('div');
       row.className='card';
@@ -392,9 +430,7 @@
           <button class="btn ghost small bad" data-del="${cat}">Delete</button>
         </div>`;
       host.appendChild(row);
-      row.querySelector('[data-edit]').onclick = ()=>{
-        $('#bCategory').value = cat; $('#bLimit').value = limit; $('#bCategory').focus();
-      };
+      row.querySelector('[data-edit]').onclick = ()=>{ $('#bCategory').value = cat; $('#bLimit').value = limit; $('#bCategory').focus(); };
       row.querySelector('[data-del]').onclick = ()=>{ delete state.budgets[cat]; render(); maybeSync(); };
     });
   }
@@ -402,15 +438,12 @@
   let pieChart=null, barChart=null;
   function renderReports(){
     const ctxPie = $('#pieCat'); const ctxBar = $('#barFlow');
-    // Pie: by category (this month, expenses only)
     const m = monthKey(); const monthExp = state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense');
-    const catMap = {};
-    monthExp.forEach(t=>{ const k=(t.category||'Uncategorised'); catMap[k]=(catMap[k]||0) + (+t.amount); });
+    const catMap = {}; monthExp.forEach(t=>{ const k=(t.category||'Uncategorised'); catMap[k]=(catMap[k]||0) + (+t.amount); });
     const labels = Object.keys(catMap); const values = Object.values(catMap);
     if(pieChart) pieChart.destroy();
     pieChart = new Chart(ctxPie, { type:'pie', data:{ labels, datasets:[{ data: values }] }, options:{ plugins:{ legend:{ labels:{ color:'#cdd4ea' } } } } });
 
-    // Bar: last 6 months cashflow
     const months = monthRange(6);
     const income = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='income').map(t=>+t.amount)));
     const expense = months.map(m=> sum(state.tx.filter(t=>t.date.startsWith(m) && t.type==='expense').map(t=>+t.amount)));
@@ -482,95 +515,68 @@
 
   // Export / Import
   $('#exportJson').addEventListener('click', ()=>{
-    const data = { tx:state.tx, budgets:state.budgets, prefs:state.prefs };
+    const data = { tx:state.tx, budgets:state.budgets, prefs:state.prefs, brand:state.brand };
     const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
     const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='taskpulse-money.json'; a.click(); URL.revokeObjectURL(url);
   });
   $('#importJsonInput').addEventListener('change', async (e)=>{
     const file = e.target.files[0]; if(!file) return; const text = await file.text();
-    try{ const data = JSON.parse(text); state.tx = data.tx||[]; state.budgets = data.budgets||{}; state.prefs = {...state.prefs, ...(data.prefs||{})}; render(); maybeSync(); }
+    try{ const data = JSON.parse(text); state.tx = data.tx||[]; state.budgets = data.budgets||{}; state.prefs = {...state.prefs, ...(data.prefs||{})}; state.brand = data.brand||state.brand; render(); maybeSync(); }
     catch(err){ alert('Invalid JSON'); }
   });
 
   // ---------------------------
-  // FIREBASE SYNC
+  // FIREBASE SYNC (config UI removed; reads window.FIREBASE_CONFIG or saved cfg)
   // ---------------------------
-  // How it works (tl;dr):
-  // 1) Paste Firebase config in Settings and Apply. We'll init app, sign in anonymously.
-  // 2) Enter/share a Sync Code (e.g., 6 letters) — this becomes your DB path.
-  // 3) Data writes to /rooms/{code}/tpmoney and listens for remote changes.
-  // 4) Local-first: we always render from local, and merge on cloud updates.
-
   function ensureFirebase(){
-    if(state.firebase.app || !state.firebase.cfg) return !!state.firebase.app;
+    if(state.firebase.app || !(state.firebase.cfg || window.FIREBASE_CONFIG)) return !!state.firebase.app;
     try{
+      state.firebase.cfg = state.firebase.cfg || window.FIREBASE_CONFIG;
       state.firebase.app = firebase.initializeApp(state.firebase.cfg);
       state.firebase.db = firebase.database();
       return true;
-    }catch(e){ console.error('Firebase init failed', e); alert('Firebase init failed. Check your config.'); return false; }
+    }catch(e){ console.warn('Firebase init failed', e); return false; }
   }
-
-  async function signInAnon(){
-    try{
-      await firebase.auth().signInAnonymously();
-      state.firebase.user = firebase.auth().currentUser;
-      console.log('Anon user', state.firebase.user?.uid);
-      return true;
-    }catch(e){ console.error('Auth failed', e); alert('Auth failed: '+e.message); return false; }
-  }
-
+  async function signInAnon(){ try{ await firebase.auth().signInAnonymously(); state.firebase.user = firebase.auth().currentUser; return true; } catch(e){ console.warn('Auth failed', e); return false; } }
   function roomRef(){ return state.firebase.db.ref(`/rooms/${state.sync.code}/tpmoney`); }
-
-  let unsub=null; // listener
+  let unsub=null;
   function connect(){
     if(!state.sync.code){ alert('Enter a sync code first'); return; }
-    if(!ensureFirebase()) return;
+    if(!ensureFirebase()) { alert('Cloud sync not configured in this build. App will run locally.'); return; }
     signInAnon().then(ok=>{
       if(!ok) return;
-      // push initial local snapshot and also subscribe for changes
       if(unsub) { roomRef().off('value', unsub); unsub=null; }
       unsub = roomRef().on('value', snap=>{
-        const cloud = snap.val();
-        if(!cloud) return; // nothing yet
-        // naive merge: prefer latest updated
-        const { tx=[], budgets={}, prefs={} } = cloud;
-        // Merge transactions by id
+        const cloud = snap.val(); if(!cloud) return;
+        const { tx=[], budgets={}, prefs={}, brand=null } = cloud;
         const mapLocal = new Map(state.tx.map(t=>[t.id,t]));
         tx.forEach(ct=>{ if(!mapLocal.has(ct.id)) mapLocal.set(ct.id, ct); else { const lt=mapLocal.get(ct.id); if((ct.updated||0)>(lt.updated||0)) mapLocal.set(ct.id, ct); } });
         state.tx = Array.from(mapLocal.values());
-        // shallow merge budgets/prefs
         state.budgets = { ...state.budgets, ...budgets };
         state.prefs = { ...state.prefs, ...prefs };
+        if(brand){ state.brand = { ...state.brand, ...brand }; applyBrand(); }
         state.sync.connected = true; state.sync.last = Date.now();
         render();
       });
-      // push local asap
-      pushCloud();
-      state.sync.connected = true; renderSettings(); saveLocal();
+      pushCloud(); state.sync.connected = true; renderSettings(); saveLocal();
     });
   }
-
   function pushCloud(){
     if(!state.prefs.autosave || !state.sync.code || !state.firebase.db) return;
-    const payload = { tx: state.tx.map(t=>({ ...t, updated: t.updated||Date.now() })), budgets: state.budgets, prefs: state.prefs, ts: Date.now() };
+    const payload = { tx: state.tx.map(t=>({ ...t, updated: t.updated||Date.now() })), budgets: state.budgets, prefs: state.prefs, brand: state.brand, ts: Date.now() };
     roomRef().set(payload).catch(err=> console.error('Push failed', err));
   }
+  let syncTimer=null; function maybeSync(){ saveLocal(); if(state.prefs.autosave){ clearTimeout(syncTimer); syncTimer = setTimeout(()=> pushCloud(), 400); } }
 
-  let syncTimer=null;
-  function maybeSync(){
-    renderSettings(); saveLocal();
-    if(state.prefs.autosave){ clearTimeout(syncTimer); syncTimer = setTimeout(()=> pushCloud(), 400); }
-  }
-
-  // Settings UI handlers
+  // Settings handlers (sync)
   $('#openSync').addEventListener('click', ()=>{ $$('.tab').forEach(b=> b.setAttribute('aria-selected','false')); $('[data-tab="settings"]').setAttribute('aria-selected','true'); $$('.tabpane').forEach(p=> p.classList.add('hidden')); $('#tab-settings').classList.remove('hidden'); });
   $('#generateCode').addEventListener('click', ()=>{ state.sync.code = (Math.random().toString(36).slice(2,8)).toUpperCase(); renderSettings(); saveLocal(); });
   $('#disconnect').addEventListener('click', ()=>{ state.sync.connected=false; if(unsub){ roomRef().off('value', unsub); unsub=null; } renderSettings(); saveLocal(); });
   $('#applySync').addEventListener('click', ()=>{ state.sync.code = $('#syncCode').value.trim().toUpperCase(); connect(); });
-  $('#applyFirebase').addEventListener('click', ()=>{
-    try{ state.firebase.cfg = JSON.parse($('#firebaseConfigText').value||'{}'); ensureFirebase(); saveLocal(); alert('Firebase config applied. Now set a Sync Code and click Apply.'); }
-    catch(e){ alert('Invalid JSON for Firebase config'); }
-  });
+
+  // Brand handlers (optional overrides)
+  $('#logoInput').addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; state.brand.logo = await fileToDataUrl(f); applyBrand(); maybeSync(); });
+  $('#splashInput').addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; state.brand.splash = await fileToDataUrl(f); applyBrand(); maybeSync(); });
 
   // Prefs
   $('#prefSouthAfrica').addEventListener('change', e=>{ state.prefs.currency = e.target.checked? 'ZAR' : 'USD'; render(); maybeSync(); });
@@ -581,6 +587,10 @@
   // INIT
   // ---------------------------
   loadLocal();
+  applyBrand();
+  let splashMs = sessionStorage.getItem('tpmoney-seen') ? 600 : 1400;
+  sessionStorage.setItem('tpmoney-seen','1');
+  setTimeout(()=> $('#splash').classList.add('hide'), splashMs);
   render();
 
   // Seed demo data if empty
@@ -594,8 +604,8 @@
     render(); maybeSync();
   }
 
-  // When a sync code exists and firebase cfg present, auto connect
-  window.addEventListener('load', ()=>{ if(state.sync.code && state.firebase.cfg){ connect(); } });
+  // Auto connect if code + config were previously set
+  window.addEventListener('load', ()=>{ if(state.sync.code && (state.firebase.cfg || window.FIREBASE_CONFIG)){ connect(); } });
   </script>
 </body>
 </html>
