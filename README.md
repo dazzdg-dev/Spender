@@ -1,2 +1,0 @@
-# Spender
-Financial Recorder
