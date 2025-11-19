@@ -4,6 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Task Pulse</title>
+  
+<link rel="preload" as="image" href="taskpulse-splash-hex.jpg" />
+
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="icon-192.png" sizes="192x192" />
 <meta name="theme-color" content="#0f111a" />
@@ -513,7 +516,7 @@ function tpUpdateLastBackupLabel(){ const el=document.getElementById('tpLastBack
 /* ===== Predictive text ===== */
 const SUGGEST_MAX=10;
 function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
-function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b)=>(b.count-a.count)||(b.last-a-last)).map(v=>v.name); }
+function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b)=>(b.count - a.count)||(b.last - a.last)).map(v=>v.name); }
 function tpGetSuggestions(prefix){ const ranked=tpRankedNames(tpCollectTaskStats()); const p=(prefix||'').trim().toLowerCase(); if(!p) return ranked.slice(0,SUGGEST_MAX); const pref=ranked.filter(n=>n.toLowerCase().startsWith(p)); if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX); const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p)); return [...pref,...rest].slice(0,SUGGEST_MAX); }
 function tpRenderDatalist(prefix){ const dl=document.getElementById('taskSuggestions'); if(!dl) return; const opts=tpGetSuggestions(prefix); dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join(''); }
 
