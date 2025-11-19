@@ -317,7 +317,7 @@ function renderMeds(){
 }
 
 /* Timed Meds Reminders */
-let medsTimers = [];
+var medsTimers = [];
 function clearMedsTimers(){ medsTimers.forEach(id => clearTimeout(id)); medsTimers = []; }
 function computeMedsSchedule(){
   const mToday = medsFor(TODAY);
@@ -514,9 +514,9 @@ function renderHistory(){
 function tpUpdateLastBackupLabel(){ const el=document.getElementById('tpLastBackup'); if(el) el.textContent=`Last backup: ${localStorage.getItem('tp_last_backup')||'none'}`; }
 
 /* ===== Predictive text ===== */
-const SUGGEST_MAX=10;
+var SUGGEST_MAX=10;
 function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
-function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b)=>(b.count - a.count)||(b.last - a.last)).map(v=>v.name); }
+function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b) => (b.count - a.count)||(b.last - a.last)).map(v=> v.name); }
 function tpGetSuggestions(prefix){ const ranked=tpRankedNames(tpCollectTaskStats()); const p=(prefix||'').trim().toLowerCase(); if(!p) return ranked.slice(0,SUGGEST_MAX); const pref=ranked.filter(n=>n.toLowerCase().startsWith(p)); if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX); const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p)); return [...pref,...rest].slice(0,SUGGEST_MAX); }
 function tpRenderDatalist(prefix){ const dl=document.getElementById('taskSuggestions'); if(!dl) return; const opts=tpGetSuggestions(prefix); dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join(''); }
 
