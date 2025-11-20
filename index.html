@@ -85,25 +85,26 @@
     display:none;margin:8px 0 0 0;padding:10px 12px;border-radius:12px;
     border:1px solid #3e4a13;background:#161d07;color:#d8ee8a;font-weight:600
   }
-   /* med button */
- #medsReminder small {
+   
+ /* med button */
+#medsReminder small{
   display:block;
   color:#b9c66a;
   font-weight:400;
   margin-top:4px;
 }
 
-/* Meds banner button – larger + orange glow */
-#medsReminder button {
+#medsReminder button{
   margin-left:6px;
-  border-radius:8px;
+  border-radius:9px;
   border:1px solid #ff9d3b;
-  background:#2a1b0d;               /* dark orange panel */
-  color:#ffd8a2;                     /* warm text */
-  padding:2px 16px;                  /* bigger click target */
-  font-size:11px;
+  background:#2a1b0d;
+  color:#ffd8a2;
+  padding:6px 14px;
+  font-size:0.86rem;
   box-shadow:0 0 10px rgba(255,140,40,0.35);
-  cursor:pointer;
+}
+
 }
 
 
@@ -335,9 +336,21 @@ function renderMeds(){
   scheduleMedsReminders();
 }
 
+
 /* Timed Meds Reminders */
 var medsTimers = [];
-function clearMedsTimers(){ medsTimers.forEach(id => clearTimeout(id)); medsTimers = []; }
+
+function clearMedsTimers() {
+  // Safety net in case something reset/overwrote medsTimers
+  if (!Array.isArray(medsTimers)) {
+    medsTimers = [];
+  }
+  medsTimers.forEach(function (id) {
+    clearTimeout(id);
+  });
+  medsTimers = [];
+}
+
 function computeMedsSchedule(){
   const mToday = medsFor(TODAY);
   if (!mToday.day) return { nightDueAt: null, nextDayPreAt: null };
@@ -347,6 +360,7 @@ function computeMedsSchedule(){
   const nextDayPreAt = new Date(nextDaySameTime.getTime() - 5*60*1000);
   return { nightDueAt, nextDayPreAt };
 }
+
 function scheduleMedsReminders(){
   clearMedsTimers();
   const bar = document.getElementById('medsReminder'); if (!bar) return;
@@ -365,7 +379,7 @@ function scheduleMedsReminders(){
     if (now >= nightDueAt) {
       show('Reminder: Night dose due', 'It’s been ~12 hours since your Day dose.');
     } else {
-      medsTimers.push(setTimeout(()=>{
+      medsTimers.push(setTimeout(function (){
         const m = medsFor(isoToday());
         if (!m.night) show('Reminder: Night dose due', 'It’s been ~12 hours since your Day dose.');
       }, nightDueAt - now));
@@ -377,13 +391,16 @@ function scheduleMedsReminders(){
     if (now >= nextDayPreAt && !mNow.day) {
       show('Reminder: Day dose in ~5 min', 'This is your usual time based on yesterday.');
     } else {
-      medsTimers.push(setTimeout(()=>{
+      medsTimers.push(setTimeout(function (){
         const m = medsFor(isoToday());
         if (!m.day) show('Reminder: Day dose in ~5 min', 'This is your usual time based on yesterday.');
       }, Math.max(0, nextDayPreAt - now)));
     }
   }
 }
+
+
+  
 function updateMedsReminder(){
   const bar = document.getElementById('medsReminder'); if(!bar) return;
   const m = medsFor(TODAY);
