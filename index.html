@@ -516,22 +516,113 @@ function renderHistory(){
   });
 }
 
-/* ===== Backup/Restore (simple) ===== */
-(function(){
-  window.tpDownloadBackup=function(){
-    try{
-      const dump={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(/^tp_/.test(k)) dump[k]=localStorage.getItem(k); }
-      const payload={app:'taskpulse',flavor:'v6',exportedAt:new Date().toISOString(),dump};
-      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='taskpulse_backup.json'; document.body.appendChild(a); a.click(); a.remove();
-      localStorage.setItem('tp_last_backup', new Date().toLocaleString()); tpUpdateLastBackupLabel(); setStatus('Backup downloaded.');
-    }catch(e){console.error(e); setStatus('Backup failed.');}
-  };
-  const fi=document.getElementById('tpRestoreFile'); if(fi){ fi.addEventListener('change',async e=>{ const f=e.target.files?.[0]; if(!f) return; try{ const text=await f.text(); const data=JSON.parse(text); if(data&&data.dump){ Object.entries(data.dump).forEach(([k,v])=>{ if(/^tp_/.test(k)) localStorage.setItem(k,v); }); } setStatus('Restore complete. Reloading…'); setTimeout(()=>location.reload(),600);}catch(err){console.error(err); setStatus('Restore failed.');} finally{ e.target.value=''; } }); }
-  function setStatus(m){ const el=document.getElementById('tpBackupStatus'); if(el) el.textContent=m; }
-})();
-function tpUpdateLastBackupLabel(){ const el=document.getElementById('tpLastBackup'); if(el) el.textContent=`Last backup: ${localStorage.getItem('tp_last_backup')||'none'}`; }
+/* ===== Backup & Restore (V6.4 hardened) ===== */
+(function () {
+  function buildBackupPayload() {
+    // Collect all TaskPulse-related keys
+    const dump = {};
 
+    // Raw localStorage values (legacy)
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (/^tp_/.test(k)) {
+        dump[k] = localStorage.getItem(k);
+      }
+    }
+
+    // Force-save latest in-memory state as well
+    dump[LS_KEY]  = JSON.stringify(days || {});
+    dump[LS_MEDS] = JSON.stringify(meds || {});
+    dump[LS_SYNC] = localStorage.getItem(LS_SYNC) || '';
+    dump[LS_TAB]  = localStorage.getItem(LS_TAB)  || 'tasks';
+    dump[LS_LAST_OPEN]        = localStorage.getItem(LS_LAST_OPEN) || isoToday();
+    dump[LS_LAST_CARRY_COUNT] = localStorage.getItem(LS_LAST_CARRY_COUNT) || '0';
+
+    return {
+      app: 'taskpulse',
+      flavor: 'v6.4',
+      exportedAt: new Date().toISOString(),
+      dump
+    };
+  }
+
+  // Exposed function used by the "Download Backup" button
+  window.tpDownloadBackup = function () {
+    try {
+      const payload = buildBackupPayload();
+
+      const blob = new Blob(
+        [JSON.stringify(payload, null, 2)],
+        { type: 'application/json' }
+      );
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'taskpulse_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      localStorage.setItem('tp_last_backup', new Date().toLocaleString());
+      tpUpdateLastBackupLabel();
+      setStatus('Backup downloaded.');
+      console.log('[TaskPulse] Backup downloaded:', payload);
+    } catch (e) {
+      console.error('[TaskPulse] Backup failed:', e);
+      setStatus('Backup failed: ' + e.message);
+      alert('Backup failed: ' + e.message);
+    }
+  };
+
+  // Restore handler
+  const fi = document.getElementById('tpRestoreFile');
+  if (fi) {
+    fi.addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+
+      try {
+        const text = await f.text();
+        const data = JSON.parse(text);
+
+        if (data && data.dump) {
+          Object.entries(data.dump).forEach(([k, v]) => {
+            if (/^tp_/.test(k)) {
+              localStorage.setItem(k, v);
+            }
+          });
+        }
+
+        setStatus('Restore complete. Reloading…');
+        console.log('[TaskPulse] Restore complete, reloading…');
+        setTimeout(() => location.reload(), 600);
+      } catch (err) {
+        console.error('[TaskPulse] Restore failed:', err);
+        setStatus('Restore failed: ' + err.message);
+        alert('Restore failed: ' + err.message);
+      } finally {
+        e.target.value = '';
+      }
+    });
+  }
+
+  function setStatus(msg) {
+    const el = document.getElementById('tpBackupStatus');
+    if (el) el.textContent = msg;
+  }
+})();
+
+/* Label under the buttons */
+function tpUpdateLastBackupLabel() {
+  const el = document.getElementById('tpLastBackup');
+  if (!el) return;
+  el.textContent =
+    `Last backup: ${localStorage.getItem('tp_last_backup') || 'none'}`;
+}
+
+  
 /* ===== Predictive text ===== */
 var SUGGEST_MAX=10;
 function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
