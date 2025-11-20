@@ -112,7 +112,7 @@
   <header class="hero">
     <div class="muted">Today</div>
     <h1 id="todayLabel">—</h1>
-    <div class="build">Build: V6  </div>
+    <div class="build">Build: V6.1  </div>
     <div class="kpi" id="kpiRow">
       <span>0 / 0 done (0%) · Quality 0%</span>
       <span id="syncState" class="badge">Local-only</span>
@@ -373,7 +373,7 @@ function updateMedsReminder(){
   if (missing.length === 0){ bar.style.display='none'; bar.innerHTML=''; return; }
   if (!hasTimedMsg){
     const msg = `Reminder: ${missing.join(' & ')} not logged`;
-    bar.innerHTML = `${msg}<small>Tap the buttons above to log — this will disappear automatically.</small> <button onclick="scrollToMeds()">Go to Meds</button>`;
+    bar.innerHTML = `${msg}<small>                           </small> <button onclick="scrollToMeds()">Go to Meds</button>`;
     bar.style.display='block';
   }
 }
