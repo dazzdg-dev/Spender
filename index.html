@@ -758,31 +758,104 @@ function showCarryBannerIfAny(){
 }
 
 /* Render Tasks area */
-function renderAll(){
-  const todayLabel=document.getElementById('todayLabel');
-  if(todayLabel) todayLabel.textContent=fmtHumanDate(TODAY);
-  document.getElementById('viewingLabel').textContent=fmtHumanDate(viewing);
-  const list=ensureDay(viewing); const ul=document.getElementById('taskList'); ul.innerHTML='';
-  list.forEach(t=>{
-    const li=document.createElement('li'); li.className='task';
-    const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=t.done; cb.onchange=e=>toggleDone(viewing,t.id,e.target);
-    const center=document.createElement('div'); const prioc=t.prio==='low'?'p-low':t.prio==='med'?'p-med':'p-high';
-    const completedMeta = (t.done && t.timeCompleted) ? `<div class="meta">✔ completed ${fmtDateTime(t.timeCompleted)}</div>` : '';
-    center.innerHTML=`<div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">${escapeHtml(t.name)}</div><div><span class="priority ${prioc}">${t.prio}</span></div>${completedMeta}`;
-    const stars=document.createElement('div'); stars.className='stars'; for(let s=1;s<=3;s++){const b=document.createElement('button'); b.textContent='★'; if(t.stars>=s) b.classList.add('on'); b.onclick=()=>setStars(viewing,t.id,s===t.stars?0:s); stars.appendChild(b);}
-    const act=document.createElement('div'); act.className='actions'; const e=document.createElement('button'); e.textContent='✎'; e.onclick=()=>editTask(viewing,t.id); const d=document.createElement('button'); d.textContent='×'; d.className='del'; d.onclick=()=>delTask(viewing,t.id); act.appendChild(e); act.appendChild(d);
-    li.appendChild(cb); li.appendChild(center); li.appendChild(stars); li.appendChild(act); ul.appendChild(li);
-  });
-  const total=list.length, done=list.filter(x=>x.done).length; const pct=total?Math.round(done/total*100):0;
-  const q=list.filter(x=>x.done).reduce((a,b)=>a+(b.stars||0),0); const qPct=done?Math.round((q/(done*3))*100):0;
-  document.getElementById('doneSummary').textContent=`${done} / ${total} tasks done (${pct}%)`;
-  document.getElementById('qualitySummary').textContent=`Quality ${qPct}%`;
-  const kpiRow=document.getElementById('kpiRow');
-  if(kpiRow && kpiRow.firstElementChild){
-    kpiRow.firstElementChild.textContent=`${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
+
+  function renderAll(){
+  const todayLabel = document.getElementById('todayLabel');
+  if (todayLabel) {
+    todayLabel.textContent = fmtHumanDate(TODAY);
   }
+
+  const viewingLabel = document.getElementById('viewingLabel');
+  if (viewingLabel) {
+    viewingLabel.textContent = fmtHumanDate(viewing);
+  }
+
+  const list = ensureDay(viewing);
+  const ul = document.getElementById('taskList');
+
+  if (ul) {
+    ul.innerHTML = '';
+    list.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'task';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = t.done;
+      cb.onchange = e => toggleDone(viewing, t.id, e.target);
+
+      const center = document.createElement('div');
+      const prioc = t.prio === 'low' ? 'p-low'
+                  : t.prio === 'med' ? 'p-med'
+                  : 'p-high';
+      const completedMeta =
+        (t.done && t.timeCompleted)
+          ? `<div class="meta">✔ completed ${fmtDateTime(t.timeCompleted)}</div>`
+          : '';
+
+      center.innerHTML = `
+        <div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">
+          ${escapeHtml(t.name)}
+        </div>
+        <div><span class="priority ${prioc}">${t.prio}</span></div>
+        ${completedMeta}
+      `;
+
+      const stars = document.createElement('div');
+      stars.className = 'stars';
+      for (let s = 1; s <= 3; s++) {
+        const b = document.createElement('button');
+        b.textContent = '★';
+        if (t.stars >= s) b.classList.add('on');
+        b.onclick = () => setStars(viewing, t.id, s === t.stars ? 0 : s);
+        stars.appendChild(b);
+      }
+
+      const act = document.createElement('div');
+      act.className = 'actions';
+      const eBtn = document.createElement('button');
+      eBtn.textContent = '✎';
+      eBtn.onclick = () => editTask(viewing, t.id);
+      const dBtn = document.createElement('button');
+      dBtn.textContent = '×';
+      dBtn.className = 'del';
+      dBtn.onclick = () => delTask(viewing, t.id);
+      act.appendChild(eBtn);
+      act.appendChild(dBtn);
+
+      li.appendChild(cb);
+      li.appendChild(center);
+      li.appendChild(stars);
+      li.appendChild(act);
+      ul.appendChild(li);
+    });
+  }
+
+  const total = list.length;
+  const done = list.filter(x => x.done).length;
+  const pct  = total ? Math.round(done / total * 100) : 0;
+  const q    = list.filter(x => x.done).reduce((a,b)=>a+(b.stars||0),0);
+  const qPct = done ? Math.round((q / (done * 3)) * 100) : 0;
+
+  const doneSummary = document.getElementById('doneSummary');
+  if (doneSummary) {
+    doneSummary.textContent = `${done} / ${total} tasks done (${pct}%)`;
+  }
+
+  const qualitySummary = document.getElementById('qualitySummary');
+  if (qualitySummary) {
+    qualitySummary.textContent = `Quality ${qPct}%`;
+  }
+
+  const kpiRow = document.getElementById('kpiRow');
+  if (kpiRow && kpiRow.firstElementChild) {
+    kpiRow.firstElementChild.textContent =
+      `${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
+  }
+
   renderMeds(); // keep meds card fresh
 }
+
 
 /* ===== History tab ===== */
 function renderHistory(){
