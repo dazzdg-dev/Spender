@@ -86,25 +86,30 @@
     border:1px solid #3e4a13;background:#161d07;color:#d8ee8a;font-weight:600
   }
    /* med button */
-  #medsReminder small
-  {display:block;
-   color:#b9c66a;
-   font-weight:400;
-   margin-top:4px}
-  
-  #medsReminder button
-  {margin-left:6px;
-   border-radius:9px;
-   border:1px solid #ff9d3b 
-   solid #3e4a13;
-   background:#2a1b0d;
-   color:#ffd8a2;
-   padding:4px 10px}
-   box-shadow:0 0 10px rgba(255,140,40,0.35);}
+ #medsReminder small {
+  display:block;
+  color:#b9c66a;
+  font-weight:400;
+  margin-top:4px;
+}
+
+/* Meds banner button – larger + orange glow */
+#medsReminder button {
+  margin-left:8px;
+  border-radius:10px;
+  border:1px solid #ff9d3b;
+  background:#2a1b0d;               /* dark orange panel */
+  color:#ffd8a2;                     /* warm text */
+  padding:6px 16px;                  /* bigger click target */
+  font-size:14px;
+  box-shadow:0 0 10px rgba(255,140,40,0.35);
+  cursor:pointer;
+}
+
 
   /* Splash */
   #splash{position:fixed;inset:0;z-index:9999;background:#0b0d14;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  #splash::before{content:"";position:absolute;inset:0;background:url('taskpulse-splash-hex.jpeg') center/cover no-repeat;filter:contrast(105%) saturate(110%);transform:scale(1.05);animation:zoomfade 1.8s ease forwards}
+  #splash::before{content:"";position:absolute;inset:0;background:url('taskpulse-splash-hex.jpeg') center/cover no-repeat;filter:contrast(105%) saturate(110%);transform:scale(1.05);animation:zoomfade 2.0s ease forwards}
   #splash .label{position:relative;text-align:center;color:#fff;text-shadow:0 6px 26px rgba(0,0,0,.55);animation:textin .6s ease both .15s}
   #splash h2{margin:0;font-size:42px;letter-spacing:.5px}
   #splash .sub{opacity:.85;margin-top:8px}
@@ -126,7 +131,7 @@
   <header class="hero">
     <div class="muted">Today</div>
     <h1 id="todayLabel">—</h1>
-    <div class="build">Build: V6.2  </div>
+    <div class="build">Build: V6.3  </div>
     <div class="kpi" id="kpiRow">
       <span>0 / 0 done (0%) · Quality 0%</span>
       <span id="syncState" class="badge">Local-only</span>
