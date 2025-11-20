@@ -32,7 +32,12 @@
   @media (max-width:480px){
     :root{ --pad:12px; --radius:14px; --tap:56px; --fs:17px }
   }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0;}
+  *{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+    margin:0;
+    padding:0;
+  }
 
   html,body{height:100%}
 
@@ -130,7 +135,7 @@
     background:rgba(10,15,30,.9);
   }
 
-  /* Tabs – re-skin of V6 tabbar using V7 pills */
+  /* Tabs */
   .tabs{
     position:sticky;
     top:0;
@@ -217,7 +222,6 @@
   }
 
   .muted{color:var(--muted);}
-
   .list{list-style:none;margin:0;padding:0}
 
   /* Task rows */
@@ -263,6 +267,7 @@
     opacity:1;
     text-shadow:0 0 8px rgba(255,215,120,.7);
   }
+  .actions{display:flex;gap:4px;}
   .actions button{
     border:none;
     background:transparent;
@@ -341,775 +346,55 @@
     box-shadow:0 0 10px rgba(255,140,40,0.35);
   }
 
-  /* Splash (keep V6 logic, darker + hex-ish glow) */
-  #splash{
-    position:fixed;
-    inset:0;
-    z-index:9999;
-    background:radial-gradient(circle at top,#2b2220 0,#050611 60%);
+  /* Meds card styling */
+  .meds-card{
+    padding:10px 10px 10px;
+  }
+  .meds-head{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    justify-content:center;
-    overflow:hidden;
+    margin-bottom:6px;
   }
-  #splash::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:url('taskpulse-splash-hex.jpeg') center/cover no-repeat;
-    filter:contrast(105%) saturate(110%);
-    transform:scale(1.05);
-    animation:zoomfade 2.0s ease forwards;
-    opacity:.95;
+  .meds-head-title{
+    font-size:14px;
+    font-weight:600;
   }
-  #splash .label{
-    position:relative;
-    text-align:center;
-    color:#fff;
-    text-shadow:0 6px 26px rgba(0,0,0,.55);
-    animation:textin .6s ease both .15s;
+  .meds-head-tag{
+    font-size:11px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:#101828;
+    color:#9fd2ff;
+    border:1px solid #294064;
   }
-  #splash h2{margin:0;font-size:32px;letter-spacing:.5px}
-  #splash .sub{opacity:.85;margin-top:8px;font-size:13px}
-  #splash .foot{position:absolute;bottom:18px;width:100%;text-align:center;font-size:13px;opacity:.85}
-  @keyframes zoomfade{0%{opacity:0;transform:scale(1.08)}15%{opacity:1}100%{opacity:0;transform:scale(1)}}
-  @keyframes textin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  .hide-splash #splash{display:none}
-
-  /* Mobile tweaks */
-  @media (max-width:600px){
-    .shell{padding:14px 10px 12px;}
-    .hero-header{flex-direction:column;align-items:flex-start;gap:8px;}
-    .top-right{align-items:flex-start;}
-    .task{grid-template-columns:auto 1fr auto;}
-    .task .actions{grid-column:1 / -1;justify-content:flex-end;}
+  .meds-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:6px;
   }
-</style>
-</head>
-<body>
-
-<!-- Splash -->
-<div id="splash"><div class="label">
-  <h2>Task Pulse Smart</h2>
-  <div class="sub">Focus · Sync · Achieve (V8.0)</div>
-  <div class="foot">Powered by Daryl G</div>
-</div></div>
-
-<div class="shell">
-  <div class="wrap">
-    <header class="hero-header">
-      <div class="brand">
-        <div class="logo-pill">TP</div>
-        <div>
-          <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily focus advisor · V8.0</div>
-        </div>
-      </div>
-      <div class="top-right">
-        <div id="syncState" class="badge">Local-only</div>
-        <div id="tpLastBackup">Last backup: none</div>
-      </div>
-    </header>
-
-    <!-- KPI pill row (uses kpiRow like V6 logic) -->
-    <div class="kpi-pill" id="kpiRow">
-      <span>0 / 0 done (0%) · Quality 0%</span>
-      <span id="todayLabel" class="muted">—</span>
-    </div>
-
-    <!-- Banners -->
-    <div id="carryWarn"></div>
-    <div id="medsReminder"></div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tabbar">
-        <button id="btnTabTasks" class="active" onclick="showTab('tasks')">Tasks</button>
-        <button id="btnTabHistory" onclick="showTab('history')">History</button>
-        <button id="btnTabSettings" onclick="showTab('settings')">Settings</button>
-      </div>
-    </div>
-
-    <!-- TAB: TASKS -->
-    <div id="tab-tasks" class="tabpage active">
-
-      <!-- Medication card -->
-    <section class="card meds-card" id="medsCard">
-  <div class="meds-head">
-    <div class="meds-head-title">Medication — Today</div>
-    <div class="meds-head-tag">TLE routine</div>
-  </div>
-
-  <div class="meds-row">
-    <button id="btnMedsDay"
-            class="meds-btn"
-            onclick="toggleMeds('day')"
-            title="Log/undo Day dose">
-      <!-- content filled by renderMeds() -->
-    </button>
-
-    <button id="btnMedsNight"
-            class="meds-btn"
-            onclick="toggleMeds('night')"
-            title="Log/undo Night dose">
-      <!-- content filled by renderMeds() -->
-    </button>
-  </div>
-
-  <div class="muted" id="medsMeta"></div>
-</section>
-
-
-    <!-- TAB: HISTORY -->
-    <div id="tab-history" class="tabpage">
-      <section class="card">
-        <h3 style="margin:0 0 8px">History</h3>
-        <div class="row" style="gap:6px;margin-bottom:6px">
-          <input id="histSearch" type="text" placeholder="Search text or YYYY-MM-DD…" oninput="renderHistory()" />
-          <select id="histSpan" onchange="renderHistory()">
-            <option value="7">Last 7 days</option>
-            <option value="14">Last 14 days</option>
-            <option value="30" selected>Last 30 days</option>
-            <option value="90">Last 90 days</option>
-            <option value="all">All</option>
-          </select>
-        </div>
-        <div id="histList"></div>
-      </section>
-    </div>
-
-    <!-- TAB: SETTINGS -->
-    <div id="tab-settings" class="tabpage">
-      <section class="card">
-        <h3 style="margin:0 0 8px">Sync</h3>
-        <div class="row" style="margin-bottom:8px">
-          <input id="syncCode" placeholder="Sync code" style="flex:1 1 260px" />
-          <button class="btn-ghost" onclick="copySyncCode()">Copy</button>
-          <button class="btn-ghost" onclick="newSyncCode()">New code</button>
-          <button class="primary" onclick="saveSyncCode()">Save</button>
-        </div>
-        <div class="muted" id="syncHint" style="font-size:12px;">
-          Open this site on your second device and use the same code. Sync uses Firebase Realtime Database.
-        </div>
-      </section>
-
-      <section class="card" id="backupCard">
-        <h3 style="margin:0 0 8px">Backup &amp; Restore</h3>
-        <div class="row" style="align-items:center">
-          <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳  Download Backup</button>
-          <input id="tpRestoreFile" type="file" accept="application/json" style="display:none" />
-          <button id="btnRestore" class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱  Import Backup</button>
-        </div>
-        <div id="tpBackupStatus" class="muted" style="margin-top:6px;font-size:12px;"></div>
-        <!-- #tpLastBackup lives in header now; JS still updates it -->
-      </section>
-    </div>
-  </div>
-
-  <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V8.1 · Powered by D Gounder
-  </footer>
-</div>
-
-<!-- Firebase (UNCOMMENT & PASTE YOUR CONFIG BELOW IF USING YOUR OWN PROJECT) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script>
-/* ===== Paste real config and UNCOMMENT to enable cloud sync =====
-const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "1:XXXX:web:XXXX"
-};
-firebase.initializeApp(firebaseConfig);
-*/
-</script>
-
-<script>
-/* ========= Core state & utilities ========= */
-const LS_KEY='tp_days_v1', LS_SYNC='tp_sync_code', LS_TAB='tp_last_tab';
-const LS_LAST_OPEN='tp_last_open', LS_LAST_CARRY_COUNT='tp_last_carry_count';
-const LS_MEDS='tp_meds_v1';
-const TODAY=isoToday(); let days=load(LS_KEY,{}); let meds=load(LS_MEDS,{}); let viewing=TODAY;
-
-/* Auto-save safety net */
-let tpDirty=false;
-function baseSave(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-let save = function(k,v){
-  try{ baseSave(k,v); tpDirty=false; }catch(e){ console.warn('save failed, will retry', e); tpDirty=true; }
-};
-setInterval(()=>{ if(!tpDirty) return; try{ baseSave(LS_KEY, days); tpDirty=false; }catch(e){} }, 4000);
-window.addEventListener('beforeunload',()=>{ try{ baseSave(LS_KEY, days); baseSave(LS_MEDS, meds); }catch{} });
-
-window.addEventListener('load',()=>{ setTimeout(()=>document.body.classList.add('hide-splash'),1800); });
-
-document.addEventListener('DOMContentLoaded',()=>{
-  const last=localStorage.getItem(LS_TAB)||'tasks'; showTab(last);
-  ensureSyncCode(); // auto-generate sync code & attach if Firebase ready
-  tpUpdateLastBackupLabel(); tpRenderDatalist('');
-  renderHistory();
-  showCarryBannerIfAny();
-  renderMeds();
-  updateMedsReminder();
-  scheduleMedsReminders();
-});
-
-autoCarryForwardIfNewDay(); // auto carry tasks
-renderAll();
-
-/* Tabs */
-function showTab(id){
-  document.querySelectorAll('.tabpage').forEach(el=>el.classList.remove('active'));
-  const page=document.getElementById('tab-'+id);
-  if(page) page.classList.add('active');
-  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.remove('active'));
-  const btn=document.getElementById('btnTab'+cap(id));
-  if(btn) btn.classList.add('active');
-  localStorage.setItem(LS_TAB,id);
-  if(id==='history') renderHistory();
-}
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-
-/* ===== Medication ===== */
-function medsFor(iso){ if(!meds[iso]) meds[iso]={day:'', night:''}; return meds[iso]; }
-function toggleMeds(which){
-  const m=medsFor(TODAY);
-  if(m[which]){ if(!confirm('Unmark this dose as taken?')) return; m[which]=''; }
-  else { m[which]=new Date().toISOString(); }
-  baseSave(LS_MEDS, meds);
-  renderMeds();
-  updateMedsReminder();
-  scheduleMedsReminders();
-  notifyLocalChanged(); // push via sync if enabled
-}
-
-function renderMeds(){
-  const m = medsFor(TODAY);
-  const btnDay   = document.getElementById('btnMedsDay');
-  const btnNight = document.getElementById('btnMedsNight');
-  const meta     = document.getElementById('medsMeta');
-
-  if(btnDay){
-    const isTaken = !!m.day;
-    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
-    btnDay.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
-    btnDay.innerHTML = `
-      <span class="meds-btn-title">Day dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-    `;
+  .meds-btn{
+    flex:1 1 150px;
+    min-width:0;
+    border-radius:14px;
+    padding:10px 12px;
+    background:#050814;
+    border:1px solid #27324b;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
   }
-
-  if(btnNight){
-    const isTaken = !!m.night;
-    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
-    btnNight.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
-    btnNight.innerHTML = `
-      <span class="meds-btn-title">Night dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-    `;
+  .meds-btn-title{
+    font-size:13px;
+    font-weight:600;
   }
-
-  if(meta){
-    const a = m.day   ? `Day: ${fmtDateTime(m.day)}`   : 'Day: —';
-    const b = m.night ? `Night: ${fmtDateTime(m.night)}` : 'Night: —';
-    meta.textContent = `${a}   •   ${b}`;
+  .meds-btn-sub{
+    font-size:11px;
+    color:#a7b0cf;
   }
-
-  updateMedsReminder();
-  scheduleMedsReminders();
-}
-
-
-
-  
-
-/* Timed Meds Reminders */
-var medsTimers = [];
-
-function clearMedsTimers() {
-  if (!Array.isArray(medsTimers)) {
-    medsTimers = [];
-  }
-  medsTimers.forEach(function (id) {
-    clearTimeout(id);
-  });
-  medsTimers = [];
-}
-
-function computeMedsSchedule(){
-  const mToday = medsFor(TODAY);
-  if (!mToday.day) return { nightDueAt: null, nextDayPreAt: null };
-  const dayLoggedAt = new Date(mToday.day);
-  const nightDueAt = new Date(dayLoggedAt.getTime() + 12*60*60*1000);
-  const nextDaySameTime = new Date(dayLoggedAt.getTime() + 24*60*60*1000);
-  const nextDayPreAt = new Date(nextDaySameTime.getTime() - 5*60*1000);
-  return { nightDueAt, nextDayPreAt };
-}
-
-function scheduleMedsReminders(){
-  clearMedsTimers();
-  const bar = document.getElementById('medsReminder'); if (!bar) return;
-
-  function show(msg, sub=''){
-    bar.innerHTML = `${msg}${sub ? `<small>${sub}</small>` : ''} <button onclick="scrollToMeds()">Go to Meds</button>`;
-    bar.style.display = 'block';
-  }
-
-  const { nightDueAt, nextDayPreAt } = computeMedsSchedule();
-  const now = new Date();
-  const mNow = medsFor(TODAY);
-
-  // Night due (12h after day)
-  if (nightDueAt && !mNow.night) {
-    if (now >= nightDueAt) {
-      show('Reminder: Night dose due', 'It’s been ~12 hours since your Day dose.');
-    } else {
-      medsTimers.push(setTimeout(function (){
-        const m = medsFor(isoToday());
-        if (!m.night) show('Reminder: Night dose due', 'It’s been ~12 hours since your Day dose.');
-      }, nightDueAt - now));
-    }
-  }
-
-  // Next-day pre-reminder (5 minutes before usual time)
-  if (nextDayPreAt) {
-    if (now >= nextDayPreAt && !mNow.day) {
-      show('Reminder: Day dose in ~5 min', 'This is your usual time based on yesterday.');
-    } else {
-      medsTimers.push(setTimeout(function (){
-        const m = medsFor(isoToday());
-        if (!m.day) show('Reminder: Day dose in ~5 min', 'This is your usual time based on yesterday.');
-      }, Math.max(0, nextDayPreAt - now)));
-    }
-  }
-}
-
-function updateMedsReminder(){
-  const bar = document.getElementById('medsReminder'); if(!bar) return;
-  const m = medsFor(TODAY);
-  const missing = []; if(!m.day) missing.push('Day dose'); if(!m.night) missing.push('Night dose');
-  const hasTimedMsg = bar.style.display === 'block' && bar.querySelector('button');
-  if (missing.length === 0){ bar.style.display='none'; bar.innerHTML=''; return; }
-  if (!hasTimedMsg){
-    const msg = `Reminder: ${missing.join(' & ')} not logged`;
-    bar.innerHTML = `${msg}<small>                           </small> <button onclick="scrollToMeds()">Go to Meds</button>`;
-    bar.style.display='block';
-  }
-}
-function scrollToMeds(){ const el=document.getElementById('medsCard'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
-
-/* ===== Tasks ===== */
-function addTask(){
-  const name=document.getElementById('taskInput').value.trim();
-  const prio=document.getElementById('prioSelect').value;
-  if(!name) return;
-  const t={id:'t_'+Math.random().toString(36).slice(2,8),name,prio,done:false,stars:0,createdAt:new Date().toISOString()};
-  ensureDay(viewing).unshift(t);
-  save(LS_KEY,days);
-  document.getElementById('taskInput').value=''; renderAll(); tpRenderDatalist('');
-}
-function toggleDone(dayKey,id,el){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.done=el.checked; t.timeCompleted=t.done?new Date().toISOString():''; save(LS_KEY,days); renderAll(); }
-function setStars(dayKey,id,s){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.stars=s; save(LS_KEY,days); renderAll(); }
-function editTask(dayKey,id){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; const name=prompt('Edit task',t.name); if(name===null) return; const prio=prompt('Priority (low/med/high)', t.prio)||t.prio; t.name=name.trim(); t.prio=['low','med','high'].includes(prio)?prio:t.prio; save(LS_KEY,days); renderAll(); }
-function delTask(dayKey,id){ if(!confirm('Delete task?')) return; days[dayKey]=ensureDay(dayKey).filter(x=>x.id!==id); save(LS_KEY,days); renderAll(); }
-function clearCompleted(){ days[viewing]=ensureDay(viewing).filter(x=>!x.done); save(LS_KEY,days); renderAll(); }
-function shiftDay(d){ const dt=new Date(viewing); dt.setDate(dt.getDate()+d); viewing=dt.toISOString().slice(0,10); renderAll(); }
-
-/* Manual carry-over */
-function manualCarryOver(){
-  const list=ensureDay(viewing); const incomplete=list.filter(t=>!t.done);
-  if(!incomplete.length){ alert('No incomplete tasks to carry.'); return; }
-  const tomorrowIso = isoOffset(viewing, +1);
-  ensureDay(tomorrowIso).unshift(...incomplete.map(t=>({
-    ...t, id:'t_'+Math.random().toString(36).slice(2,8), createdAt:new Date().toISOString()
-  })));
-  days[viewing] = list.filter(t=>t.done); // remove from source
-  save(LS_KEY,days); renderAll();
-  alert(`Carried ${incomplete.length} task(s) to ${fmtHumanDate(tomorrowIso)}.`);
-}
-
-/* Auto carry-over with warning banner */
-function autoCarryForwardIfNewDay(){
-  const lastOpen = load(LS_LAST_OPEN,'');
-  const today = isoToday();
-  let carried = 0;
-  if(lastOpen && lastOpen !== today){
-    const prev = ensureDay(lastOpen).filter(t=>!t.done);
-    if(prev.length){
-      const dest = ensureDay(today);
-      dest.unshift(...prev.map(t=>({...t, id:'t_'+Math.random().toString(36).slice(2,8), createdAt:new Date().toISOString()})));
-      days[lastOpen] = ensureDay(lastOpen).filter(t=>t.done);
-      carried = prev.length; save(LS_KEY, days);
-    }
-  }
-  save(LS_LAST_OPEN, today);
-  localStorage.setItem(LS_LAST_CARRY_COUNT, String(carried));
-}
-function showCarryBannerIfAny(){
-  const cnt = parseInt(localStorage.getItem(LS_LAST_CARRY_COUNT)||'0',10);
-  const bar = document.getElementById('carryWarn');
-  if(!bar) return;
-  if(cnt>0){ bar.style.display='block'; bar.textContent = `⚠️ ${cnt} incomplete task(s) were automatically carried over to today.`; }
-  else { bar.style.display='none'; }
-}
-
-/* Render Tasks area */
-
-  function renderAll(){
-  const todayLabel = document.getElementById('todayLabel');
-  if (todayLabel) {
-    todayLabel.textContent = fmtHumanDate(TODAY);
-  }
-
-  const viewingLabel = document.getElementById('viewingLabel');
-  if (viewingLabel) {
-    viewingLabel.textContent = fmtHumanDate(viewing);
-  }
-
-  const list = ensureDay(viewing);
-  const ul = document.getElementById('taskList');
-
-  if (ul) {
-    ul.innerHTML = '';
-    list.forEach(t => {
-      const li = document.createElement('li');
-      li.className = 'task';
-
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.checked = t.done;
-      cb.onchange = e => toggleDone(viewing, t.id, e.target);
-
-      const center = document.createElement('div');
-      const prioc = t.prio === 'low' ? 'p-low'
-                  : t.prio === 'med' ? 'p-med'
-                  : 'p-high';
-      const completedMeta =
-        (t.done && t.timeCompleted)
-          ? `<div class="meta">✔ completed ${fmtDateTime(t.timeCompleted)}</div>`
-          : '';
-
-      center.innerHTML = `
-        <div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">
-          ${escapeHtml(t.name)}
-        </div>
-        <div><span class="priority ${prioc}">${t.prio}</span></div>
-        ${completedMeta}
-      `;
-
-      const stars = document.createElement('div');
-      stars.className = 'stars';
-      for (let s = 1; s <= 3; s++) {
-        const b = document.createElement('button');
-        b.textContent = '★';
-        if (t.stars >= s) b.classList.add('on');
-        b.onclick = () => setStars(viewing, t.id, s === t.stars ? 0 : s);
-        stars.appendChild(b);
-      }
-
-      const act = document.createElement('div');
-      act.className = 'actions';
-      const eBtn = document.createElement('button');
-      eBtn.textContent = '✎';
-      eBtn.onclick = () => editTask(viewing, t.id);
-      const dBtn = document.createElement('button');
-      dBtn.textContent = '×';
-      dBtn.className = 'del';
-      dBtn.onclick = () => delTask(viewing, t.id);
-      act.appendChild(eBtn);
-      act.appendChild(dBtn);
-
-      li.appendChild(cb);
-      li.appendChild(center);
-      li.appendChild(stars);
-      li.appendChild(act);
-      ul.appendChild(li);
-    });
-  }
-
-  const total = list.length;
-  const done = list.filter(x => x.done).length;
-  const pct  = total ? Math.round(done / total * 100) : 0;
-  const q    = list.filter(x => x.done).reduce((a,b)=>a+(b.stars||0),0);
-  const qPct = done ? Math.round((q / (done * 3)) * 100) : 0;
-
-  const doneSummary = document.getElementById('doneSummary');
-  if (doneSummary) {
-    doneSummary.textContent = `${done} / ${total} tasks done (${pct}%)`;
-  }
-
-  const qualitySummary = document.getElementById('qualitySummary');
-  if (qualitySummary) {
-    qualitySummary.textContent = `Quality ${qPct}%`;
-  }
-
-  const kpiRow = document.getElementById('kpiRow');
-  if (kpiRow && kpiRow.firstElementChild) {
-    kpiRow.firstElementChild.textContent =
-      `${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
-  }
-
-  renderMeds(); // keep meds card fresh
-}
-
-
-/* ===== History tab ===== */
-function renderHistory(){
-  const wrap=document.getElementById('histList'); if(!wrap) return;
-  const q=document.getElementById('histSearch').value.trim().toLowerCase();
-  const spanSel=document.getElementById('histSpan').value;
-  let keys=Object.keys(days||{});
-  if(spanSel!=='all'){
-    const span=parseInt(spanSel,10);
-    const min=new Date(); min.setDate(min.getDate()-span);
-    keys=keys.filter(k=>new Date(k)>=min);
-  }
-  keys.sort((a,b)=>new Date(b)-new Date(a));
-  if(q){
-    keys=keys.filter(k=>{
-      if(k.includes(q)) return true;
-      const arr=days[k]||[];
-      return arr.some(t=>(t.name||'').toLowerCase().includes(q));
-    });
-  }
-  wrap.innerHTML='';
-  if(!keys.length){ wrap.innerHTML='<div class="muted">No history found.</div>'; return; }
-  keys.forEach(k=>{
-    const arr=days[k]||[];
-    const total=arr.length, done=arr.filter(t=>t.done).length;
-    const pct=total?Math.round(done/total*100):0;
-    const qsum=arr.filter(t=>t.done).reduce((a,b)=>a+(b.stars||0),0);
-    const qPct=done?Math.round((qsum/(done*3))*100):0;
-
-    const row=document.createElement('div'); row.className='hist-row';
-    const left=document.createElement('div');
-    left.innerHTML=`<div style="font-weight:700">${fmtHumanDate(k)}</div>
-                    <div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>`;
-    const right=document.createElement('div');
-    const btn=document.createElement('button'); btn.textContent='Open'; btn.onclick=()=>{ viewing=k; showTab('tasks'); renderAll(); };
-    right.appendChild(btn);
-    row.appendChild(left); row.appendChild(right);
-    wrap.appendChild(row);
-  });
-}
-
-/* ===== Backup & Restore (V6.4 hardened) ===== */
-(function () {
-  function buildBackupPayload() {
-    const dump = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (/^tp_/.test(k)) {
-        dump[k] = localStorage.getItem(k);
-      }
-    }
-    dump[LS_KEY]  = JSON.stringify(days || {});
-    dump[LS_MEDS] = JSON.stringify(meds || {});
-    dump[LS_SYNC] = localStorage.getItem(LS_SYNC) || '';
-    dump[LS_TAB]  = localStorage.getItem(LS_TAB)  || 'tasks';
-    dump[LS_LAST_OPEN]        = localStorage.getItem(LS_LAST_OPEN) || isoToday();
-    dump[LS_LAST_CARRY_COUNT] = localStorage.getItem(LS_LAST_CARRY_COUNT) || '0';
-
-    return {
-      app: 'taskpulse',
-      flavor: 'v8.0',
-      exportedAt: new Date().toISOString(),
-      dump
-    };
-  }
-
-  window.tpDownloadBackup = function () {
-    try {
-      const payload = buildBackupPayload();
-      const blob = new Blob(
-        [JSON.stringify(payload, null, 2)],
-        { type: 'application/json' }
-      );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'taskpulse_backup.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-
-      localStorage.setItem('tp_last_backup', new Date().toLocaleString());
-      tpUpdateLastBackupLabel();
-      setStatus('Backup downloaded.');
-    } catch (e) {
-      console.error('[TaskPulse] Backup failed:', e);
-      setStatus('Backup failed: ' + e.message);
-      alert('Backup failed: ' + e.message);
-    }
-  };
-
-  const fi = document.getElementById('tpRestoreFile');
-  if (fi) {
-    fi.addEventListener('change', async (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (!f) return;
-
-      try {
-        const text = await f.text();
-        const data = JSON.parse(text);
-
-        if (data && data.dump) {
-          Object.entries(data.dump).forEach(([k, v]) => {
-            if (/^tp_/.test(k)) {
-              localStorage.setItem(k, v);
-            }
-          });
-        }
-
-        setStatus('Restore complete. Reloading…');
-        setTimeout(() => location.reload(), 600);
-      } catch (err) {
-        console.error('[TaskPulse] Restore failed:', err);
-        setStatus('Restore failed: ' + err.message);
-        alert('Restore failed: ' + err.message);
-      } finally {
-        e.target.value = '';
-      }
-    });
-  }
-
-  function setStatus(msg) {
-    const el = document.getElementById('tpBackupStatus');
-    if (el) el.textContent = msg;
-  }
-})();
-
-function tpUpdateLastBackupLabel() {
-  const el = document.getElementById('tpLastBackup');
-  if (!el) return;
-  el.textContent =
-    `Last backup: ${localStorage.getItem('tp_last_backup') || 'none'}`;
-}
-
-/* ===== Predictive text ===== */
-var SUGGEST_MAX=10;
-function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
-function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b) => (b.count - a.count)||(b.last - a.last)).map(v=> v.name); }
-function tpGetSuggestions(prefix){ const ranked=tpRankedNames(tpCollectTaskStats()); const p=(prefix||'').trim().toLowerCase(); if(!p) return ranked.slice(0,SUGGEST_MAX); const pref=ranked.filter(n=>n.toLowerCase().startsWith(p)); if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX); const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p)); return [...pref,...rest].slice(0,SUGGEST_MAX); }
-function tpRenderDatalist(prefix){ const dl=document.getElementById('taskSuggestions'); if(!dl) return; const opts=tpGetSuggestions(prefix); dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join(''); }
-
-/* ===== Utils ===== */
-function isoToday(){ return new Date().toISOString().slice(0,10); }
-function isoOffset(iso, days){ const d=new Date(iso); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
-function ensureDay(iso){ if(!days[iso]) days[iso]=[]; return days[iso]; }
-function load(k,def){ try{ return JSON.parse(localStorage.getItem(k)||'null') ?? def; }catch(e){return def;} }
-function fmtHumanDate(iso){ const d=new Date(iso); return d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); }
-function fmtDateTime(iso){ try{ const d=new Date(iso); const date=d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); const time=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); return `${date} · ${time}`; }catch{ return ''; } }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m])); }
-</script>
-
-<!-- ===== Task Pulse — Firebase Sync (days + meds, auto code) ===== -->
-<script>
-const TP_UID = (localStorage.getItem('tp_uid') || (() => {
-  const v = 'u_' + Math.random().toString(36).slice(2,10);
-  localStorage.setItem('tp_uid', v);
-  return v;
-})());
-let syncRef = null, syncOff = null, writeTimer = null;
-
-/* Status badge */
-function setSyncBadge(text, kind=''){ const el=document.getElementById('syncState'); if(!el) return; el.textContent=text; el.className='badge ' + (kind||''); }
-
-/* Auto-generate + manage sync code */
-const SYNC_PREFIX = 'grp-';
-function randomCode(len=6){ const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let out=''; for(let i=0;i<len;i++) out+=chars[Math.floor(Math.random()*chars.length)]; return out; }
-function ensureSyncCode(){
-  let code = localStorage.getItem(LS_SYNC);
-  if(!code || !code.trim()){ code = SYNC_PREFIX + randomCode(6); localStorage.setItem(LS_SYNC, code); }
-  const inp=document.getElementById('syncCode'); if(inp) inp.value=code;
-  if (isFirebaseReady()) { attachSync(code); }
-}
-function copySyncCode(){ const i=document.getElementById('syncCode'); if(!i||!i.value) return; navigator.clipboard.writeText(i.value).then(()=>alert('Sync code copied')); }
-function newSyncCode(){
-  if(!confirm('Generate a new sync code? Devices must use this new code.')) return;
-  const code=SYNC_PREFIX+randomCode(6); localStorage.setItem(LS_SYNC,code);
-  const inp=document.getElementById('syncCode'); if(inp) inp.value=code;
-  if(typeof syncOff==='function' && syncOff) syncOff();
-  if (isFirebaseReady()) attachSync(code);
-  alert('New code generated.');
-}
-function saveSyncCode(){ const i=document.getElementById('syncCode'); if(!i) return; const v=(i.value||'').trim(); if(!v) return; localStorage.setItem(LS_SYNC,v); alert('Sync code saved.'); if(typeof syncOff==='function' && syncOff) syncOff(); if(isFirebaseReady()) attachSync(v); }
-
-/* Core sync */
-function isFirebaseReady(){ return (window.firebase && firebase.apps && firebase.apps.length); }
-function notifyLocalChanged(){ debouncedPush(); }
-function debouncedPush(){
-  if(!syncRef) return;
-  clearTimeout(writeTimer);
-  writeTimer = setTimeout(()=>{
-    syncRef.set({days, meds, _meta:{by:TP_UID, at:Date.now()}}).catch(console.warn);
-  }, 250);
-}
-function attachSync(code){
-  if(!isFirebaseReady()) { setSyncBadge('Local-only'); return; }
-  if(!code) return;
-
-  if(syncOff){ syncOff(); syncOff=null; }
-  syncRef = firebase.database().ref(`taskpulse/${code}`);
-  setSyncBadge(`Sync: ${code}`, 'good');
-
-  // initial merge/seed
-  syncRef.get().then(snap=>{
-    const val = snap.val();
-    if(val && (val.days || val.meds)){
-      days = mergeDays(days, val.days||{});
-      meds = mergeMeds(meds, val.meds||{});
-      baseSave(LS_KEY, days); baseSave(LS_MEDS, meds);
-      renderAll(); renderMeds();
-    } else {
-      debouncedPush();
-    }
-  }).catch(e=>{ console.warn(e); setSyncBadge('Sync error', 'warn'); });
-
-  const handler = syncRef.on('value', snap=>{
-    const val = snap.val(); if(!val) return;
-    if(val._meta && val._meta.by===TP_UID) return; // ignore our echo
-    if(val.days){ days = mergeDays(days, val.days); baseSave(LS_KEY, days); }
-    if(val.meds){ meds = mergeMeds(meds, val.meds); baseSave(LS_MEDS, meds); }
-    renderAll(); renderMeds();
-  });
-  syncOff = () => syncRef.off('value', handler);
-}
-function mergeDays(localDays, remoteDays){
-  const out={...(localDays||{})};
-  for(const d of Object.keys(remoteDays||{})){
-    if(!out[d]) { out[d]=remoteDays[d]; continue; }
-    const L=out[d]||[], R=remoteDays[d]||[];
-    const stamp = arr => arr.reduce((m,t)=>Math.max(m, new Date(t.timeCompleted||t.createdAt||0).getTime()), 0);
-    out[d] = (stamp(R)>stamp(L)) ? R : L;
-  }
-  return out;
-}
-function mergeMeds(localM, remoteM){
-  const out={...(localM||{})};
-  for(const day of Object.keys(remoteM||{})){
-    const r=remoteM[day]||{}, l=out[day]||{day:'',night:''};
-    const pick = (a,b)=>{ const ta=a?Date.parse(a):0, tb=b?Date.parse(b):0; return (tb>ta)?b:a; };
-    out[day] = { day: pick(l.day, r.day), night: pick(l.night, r.night) };
-  }
-  return out;
-}
-
-/* Hook save() so every local task change pushes; meds push from toggleMeds() */
-const prevSave = save;
-save = function(k,v){ prevSave(k,v); if(k===LS_KEY) notifyLocalChanged(); };
-</script>
-
-<script>
-/* Service worker for PWA */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-}
-</script>
-</body>
-</html>
+  .meds-btn-taken{
+    background:radial-gradient(circle at 20% 0%,#29f3aa 0,#1d8c64 40%,#061b18 80%);
+    border-color:#39f5b8;
+    box-shadow:0 0
