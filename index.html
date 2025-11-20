@@ -434,52 +434,31 @@
     <div id="tab-tasks" class="tabpage active">
 
       <!-- Medication card -->
-      <section class="card" id="medsCard">
-        <h3 style="margin:0 0 8px">Medication — Today</h3>
-        <div class="row" style="gap:8px">
-          <button id="btnMedsDay"   class="btn-ghost" onclick="toggleMeds('day')"  title="Log/undo Day dose"></button>
-          <button id="btnMedsNight" class="btn-ghost" onclick="toggleMeds('night')" title="Log/undo Night dose"></button>
-        </div>
-        <div class="muted" id="medsMeta" style="margin-top:6px;font-size:12px;"></div>
-      </section>
+    <section class="card meds-card" id="medsCard">
+  <div class="meds-head">
+    <div class="meds-head-title">Medication — Today</div>
+    <div class="meds-head-tag">TLE routine</div>
+  </div>
 
-      <section class="card">
-        <h3 style="margin:0 0 8px">Today's Tasks</h3>
-        <div class="row" style="margin-bottom:6px">
-          <input id="taskInput" type="text" placeholder="Add task…" list="taskSuggestions" autocomplete="off" />
-          <datalist id="taskSuggestions"></datalist>
-          <select id="prioSelect">
-            <option value="low">low</option>
-            <option value="med">med</option>
-            <option value="high">high</option>
-          </select>
-          <button class="primary" onclick="addTask()">Add</button>
-        </div>
-        <div class="row" style="justify-content:space-between">
-          <button class="btn-ghost" onclick="manualCarryOver()" title="Move all incomplete tasks to tomorrow">Carry incomplete → tomorrow</button>
-          <button class="btn-danger" onclick="clearCompleted()">Clear completed</button>
-        </div>
-      </section>
+  <div class="meds-row">
+    <button id="btnMedsDay"
+            class="meds-btn"
+            onclick="toggleMeds('day')"
+            title="Log/undo Day dose">
+      <!-- content filled by renderMeds() -->
+    </button>
 
-      <section class="card">
-        <div class="row" style="justify-content:space-between">
-          <div>
-            <div class="muted" style="font-size:12px;">Viewing</div>
-            <div id="viewingLabel" style="font-weight:600;font-size:13px;">—</div>
-          </div>
-          <div class="nav">
-            <button class="btn-ghost" onclick="shiftDay(-1)">◀</button>
-            <button class="btn-ghost" onclick="viewing = TODAY; renderAll();">Today</button>
-            <button class="btn-ghost" onclick="shiftDay(+1)">▶</button>
-          </div>
-        </div>
-        <ul id="taskList" class="list" style="margin-top:8px"></ul>
-        <div class="sum">
-          <div id="doneSummary">0 / 0 tasks done (0%)</div>
-          <div id="qualitySummary">Quality 0%</div>
-        </div>
-      </section>
-    </div>
+    <button id="btnMedsNight"
+            class="meds-btn"
+            onclick="toggleMeds('night')"
+            title="Log/undo Night dose">
+      <!-- content filled by renderMeds() -->
+    </button>
+  </div>
+
+  <div class="muted" id="medsMeta"></div>
+</section>
+
 
     <!-- TAB: HISTORY -->
     <div id="tab-history" class="tabpage">
@@ -607,6 +586,7 @@ function toggleMeds(which){
   scheduleMedsReminders();
   notifyLocalChanged(); // push via sync if enabled
 }
+
 function renderMeds(){
   const m = medsFor(TODAY);
   const btnDay   = document.getElementById('btnMedsDay');
@@ -614,10 +594,23 @@ function renderMeds(){
   const meta     = document.getElementById('medsMeta');
 
   if(btnDay){
-    btnDay.textContent = m.day ? `✔ Day dose — ${fmtDateTime(m.day)}` : 'Day Dose';
+    const isTaken = !!m.day;
+    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    btnDay.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
+    btnDay.innerHTML = `
+      <span class="meds-btn-title">Day dose</span>
+      <span class="meds-btn-sub">${timeTxt}</span>
+    `;
   }
+
   if(btnNight){
-    btnNight.textContent = m.night ? `✔ Night dose — ${fmtDateTime(m.night)}` : 'Night Dose';
+    const isTaken = !!m.night;
+    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    btnNight.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
+    btnNight.innerHTML = `
+      <span class="meds-btn-title">Night dose</span>
+      <span class="meds-btn-sub">${timeTxt}</span>
+    `;
   }
 
   if(meta){
@@ -629,6 +622,10 @@ function renderMeds(){
   updateMedsReminder();
   scheduleMedsReminders();
 }
+
+
+
+  
 
 /* Timed Meds Reminders */
 var medsTimers = [];
