@@ -69,7 +69,39 @@
     margin:0 auto;
     padding:4px var(--pad) calc(40px + env(safe-area-inset-bottom));
   }
+ <!-- Tabs -->
+<div class="tabs">
+  <div class="tabbar">
+    <button
+      id="btnTabTasks"
+      class="active"
+      data-tab="tasks"
+      onclick="showTab('tasks')">
+      Tasks
+    </button>
 
+    <button
+      id="btnTabHistory"
+      data-tab="history"
+      onclick="showTab('history')">
+      History
+    </button>
+
+    <button
+      id="btnTabSettings"
+      data-tab="settings"
+      onclick="showTab('settings')">
+      Settings
+    </button>
+  </div>
+</div>
+
+<!-- TAB: TASKS -->
+<div id="tab-tasks"
+     class="tabpage active"
+     data-tab-page="tasks">
+  <!-- your tasks content -->
+</div>
   /* Header / brand */
   .hero-header{
     display:flex;
@@ -174,39 +206,7 @@
   .tabpage{display:none}
   .tabpage.active{display:block}
 
-  <!-- Tabs -->
-<div class="tabs">
-  <div class="tabbar">
-    <button
-      id="btnTabTasks"
-      class="active"
-      data-tab="tasks"
-      onclick="showTab('tasks')">
-      Tasks
-    </button>
-
-    <button
-      id="btnTabHistory"
-      data-tab="history"
-      onclick="showTab('history')">
-      History
-    </button>
-
-    <button
-      id="btnTabSettings"
-      data-tab="settings"
-      onclick="showTab('settings')">
-      Settings
-    </button>
-  </div>
-</div>
-
-<!-- TAB: TASKS -->
-<div id="tab-tasks"
-     class="tabpage active"
-     data-tab-page="tasks">
-  <!-- your tasks content -->
-</div>
+ 
 
 <!-- TAB: HISTORY -->
 <div id="tab-history"
