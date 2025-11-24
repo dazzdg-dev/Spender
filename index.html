@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Smart V8.4</title>
+<title>Task Pulse Smart V8.5</title>
 
 <link rel="preload" as="image" href="taskpulse-splash-hex.jpeg" />
 <link rel="manifest" href="manifest.json" />
@@ -111,7 +111,7 @@
   .badge.good{border-color:#3bd47a;color:#7fffb3;}
   .badge.warn{border-color:#e7a74c;color:#ffd78a;}
 
-  /* KPI pill row */
+  /* KPI pill */
   .kpi-pill{
     margin:6px 0 10px;
     padding:7px 10px;
@@ -276,6 +276,33 @@
   }
   .nav{display:flex;gap:4px;justify-content:flex-end;}
 
+  /* Focus lane */
+  .focus-lane{
+    margin-top:8px;
+    padding:6px 8px;
+    border-radius:12px;
+    background:#0b1022;
+    border:1px dashed #2c3a68;
+    font-size:12px;
+  }
+  .focus-chips{
+    margin-top:4px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+  }
+  .focus-chip{
+    padding:2px 8px;
+    border-radius:999px;
+    background:#182447;
+    font-size:11px;
+    max-width:160px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .focus-toggle.on{color:#7fffb3;text-shadow:0 0 6px rgba(127,255,179,.7);}
+
   /* History list */
   .hist-row{
     border-radius:12px;
@@ -291,6 +318,21 @@
   .hist-row button{
     border-radius:999px;
     padding:6px 10px;
+  }
+
+  .tag-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+    margin:4px 0 8px;
+    font-size:11px;
+  }
+  .tag-chip{
+    padding:2px 8px;
+    border-radius:999px;
+    background:#101528;
+    border:1px solid #27324b;
+    cursor:pointer;
   }
 
   /* Banners */
@@ -354,58 +396,85 @@
     gap:8px;
     margin-bottom:6px;
   }
+  .meds-btn{
+    flex:1 1 150px;
+    min-width:0;
+    border-radius:14px;
+    padding:10px 14px;
+    background:#060817;
+    border:1px solid #2b3653;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    color:#e9f2ff;
+  }
+  .meds-btn-title{
+    font-size:13px;
+    font-weight:600;
+    color:#f5f8ff;
+  }
+  .meds-btn-sub{
+    font-size:11px;
+    color:#a7b8d9;
+  }
+  .meds-btn-note{
+    font-size:11px;
+    color:#d0fff1;
+    margin-top:2px;
+  }
+  .meds-btn-taken{
+    background:linear-gradient(90deg,#09d9a3 0%, #027b60 45%, #021621 100%);
+    border-color:#35f3b4;
+    box-shadow:0 0 16px rgba(53,243,180,0.45);
+    color:#f6fffe;
+  }
+  .meds-btn-taken .meds-btn-title{color:#ffffff;}
 
-  /* ==== Meds pill visibility override (V8.4) ==== */
+  .meds-streak{
+    margin-top:4px;
+    font-size:11px;
+    color:#a7b0cf;
+  }
+  .meds-week{
+    margin-top:6px;
+    display:flex;
+    gap:4px;
+  }
+  .meds-week-day{
+    flex:1;
+    padding:4px 0;
+    border-radius:8px;
+    text-align:center;
+    font-size:10px;
+    background:#060817;
+    border:1px solid #27324b;
+    color:#8fa3d7;
+  }
+  .meds-week-day.full{
+    background:linear-gradient(135deg,#09d9a3,#027b60);
+    color:#ffffff;
+    border-color:#35f3b4;
+  }
+  .meds-week-day.partial{
+    border-color:#e7a74c;
+    color:#ffe08a;
+  }
+  .meds-week-day.missed{
+    opacity:.35;
+  }
+  .meds-week-day span{display:block;}
+  .mw-label{font-size:9px;}
+  .mw-dot{font-size:12px;}
 
-/* Base state */
-.meds-btn,
-#btnMedsDay,
-#btnMedsNight{
-  flex: 1 1 150px;
-  min-width: 0;
-  border-radius: 14px;
-  padding: 10px 14px;
-  background: #050814 !important;      /* dark navy */
-  border: 1px solid #2b3653 !important;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  color: #e9f2ff !important;           /* high contrast */
-}
-
-/* Title + subtext */
-.meds-btn-title{
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff !important;
-}
-.meds-btn-sub{
-  font-size: 11px;
-  color: #b9c7ec !important;
-}
-
-/* Taken state – glow, but darker so text pops */
-.meds-btn.meds-btn-taken{
-  background: linear-gradient(
-    90deg,
-    #07b88a 0%,
-    #038264 45%,
-    #03141e 100%
-  ) !important;
-  border-color: #35f3b4 !important;
-  box-shadow: 0 0 18px rgba(53,243,180,0.5);
-  color: #ffffff !important;
-}
-
-.meds-btn.meds-btn-taken .meds-btn-title{
-  color: #ffffff !important;
-}
-.meds-btn.meds-btn-taken .meds-btn-sub{
-  color: #e1fff6 !important;
-}
-
-
+  .meds-refill{
+    margin-top:6px;
+    font-size:11px;
+    color:#a7b0cf;
+  }
+  .meds-refill-warn{
+    color:#ffd78a;
+  }
 
   /* Splash */
   #splash{
@@ -456,7 +525,6 @@
   }
   .hide-splash #splash{display:none;}
 
-  /* Mobile tweaks */
   @media (max-width:600px){
     .shell{padding:14px 10px 12px;}
     .hero-header{flex-direction:column;align-items:flex-start;gap:8px;}
@@ -471,7 +539,7 @@
 <!-- Splash -->
 <div id="splash"><div class="label">
   <h2>Task Pulse Smart</h2>
-  <div class="sub">Focus · Sync · Achieve (V8.3)</div>
+  <div class="sub">Focus · Sync · Achieve (V8.5)</div>
   <div class="foot">Powered by Daryl G</div>
 </div></div>
 
@@ -482,7 +550,7 @@
         <div class="logo-pill">TP</div>
         <div>
           <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily focus advisor · V8.3</div>
+          <div class="brand-sub">Daily focus advisor · V8.5 Insight</div>
         </div>
       </div>
       <div class="top-right">
@@ -520,16 +588,19 @@
           <button id="btnMedsNight" class="meds-btn" onclick="toggleMeds('night')" title="Log/undo Night dose"></button>
         </div>
         <div class="muted" id="medsMeta"></div>
+        <div id="medsStreak" class="meds-streak"></div>
+        <div id="medsWeek" class="meds-week"></div>
+        <div id="medsRefill" class="meds-refill"></div>
       </section>
 
       <section class="card">
         <h3 style="margin:0 0 8px">Today's Tasks</h3>
         <div class="row" style="margin-bottom:8px">
-          <input id="taskInput" type="text" placeholder="Add task…" list="taskSuggestions" autocomplete="off" />
+          <input id="taskInput" type="text" placeholder="Add task… (use #tag)" list="taskSuggestions" autocomplete="off" />
           <datalist id="taskSuggestions"></datalist>
           <select id="prioSelect">
             <option value="low">low</option>
-            <option value="med">med</option>
+            <option value="med" selected>med</option>
             <option value="high">high</option>
           </select>
           <button class="primary" onclick="addTask()">Add</button>
@@ -551,6 +622,9 @@
             <button class="btn-ghost" onclick="shiftDay(+1)">▶</button>
           </div>
         </div>
+
+        <div id="focusLane" class="focus-lane" style="display:none;"></div>
+
         <ul id="taskList" class="list" style="margin-top:8px"></ul>
         <div class="sum">
           <div id="doneSummary">0 / 0 tasks done (0%)</div>
@@ -561,10 +635,18 @@
 
     <!-- TAB: HISTORY -->
     <div id="tab-history" class="tabpage">
+      <section class="card" id="weeklyReviewCard">
+        <h3 style="margin:0 0 6px">Weekly Review</h3>
+        <div id="weeklyReviewBody" class="muted" style="font-size:13px;">
+          Not enough data yet.
+        </div>
+      </section>
+
       <section class="card">
-        <h3 style="margin:0 0 8px">History</h3>
+        <h3 style="margin:0 0 4px">History</h3>
+        <div id="tagChips" class="tag-chips"></div>
         <div class="row" style="gap:6px;margin-bottom:6px">
-          <input id="histSearch" type="text" placeholder="Search text or YYYY-MM-DD…" oninput="renderHistory()" />
+          <input id="histSearch" type="text" placeholder="Search text, #tag or YYYY-MM-DD…" oninput="renderHistory()" />
           <select id="histSpan" onchange="renderHistory()">
             <option value="7">Last 7 days</option>
             <option value="14">Last 14 days</option>
@@ -592,20 +674,40 @@
         </div>
       </section>
 
+      <section class="card">
+        <h3 style="margin:0 0 8px">Meds Settings</h3>
+        <div class="row" style="margin-bottom:6px">
+          <input id="medsStockInput" type="number" min="0" placeholder="Tablets on hand" style="flex:1 1 140px" />
+          <input id="medsDailyInput" type="number" min="1" placeholder="Doses per day" style="flex:1 1 120px" />
+          <button class="primary" onclick="saveMedsSettings()">Save</button>
+        </div>
+        <div id="medsSettingsHint" class="muted" style="font-size:12px;">
+          Used to estimate refill timing based on your Day/Night schedule.
+        </div>
+      </section>
+
       <section class="card" id="backupCard">
         <h3 style="margin:0 0 8px">Backup &amp; Restore</h3>
         <div class="row" style="align-items:center">
-          <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳  Download Backup</button>
+          <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳ Download Backup</button>
           <input id="tpRestoreFile" type="file" accept="application/json" style="display:none" />
-          <button id="btnRestore" class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱  Import Backup</button>
+          <button id="btnRestore" class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱ Import Backup</button>
         </div>
         <div id="tpBackupStatus" class="muted" style="margin-top:6px;font-size:12px;"></div>
+      </section>
+
+      <section class="card">
+        <h3 style="margin:0 0 8px">Safe Reset</h3>
+        <p class="muted" style="font-size:12px;margin-bottom:6px;">
+          Clear all tasks, meds and settings on this device. Backups you downloaded stay safe.
+        </p>
+        <button class="btn-danger" onclick="tpSafeReset()">Reset app (keep backups)</button>
       </section>
     </div>
   </div>
 
   <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V8.3 · Powered by D Gounder
+    Task Pulse Smart V8.5 · Powered by D Gounder
   </footer>
 </div>
 
@@ -613,24 +715,39 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-/* config placeholder – unchanged */
+/* Paste your firebaseConfig + initializeApp if using sync */
 </script>
 
 <script>
-/* ========= Core state & utilities ========= */
+/* ========= Core state & schema ========= */
 const LS_KEY='tp_days_v1', LS_SYNC='tp_sync_code', LS_TAB='tp_last_tab';
 const LS_LAST_OPEN='tp_last_open', LS_LAST_CARRY_COUNT='tp_last_carry_count';
 const LS_MEDS='tp_meds_v1';
-const TODAY=isoToday(); let days=load(LS_KEY,{}); let meds=load(LS_MEDS,{}); let viewing=TODAY;
+const LS_MEDS_STOCK='tp_meds_stock', LS_MEDS_DAILY='tp_meds_daily';
+const SCHEMA_KEY='tp_schema_version', SCHEMA_VERSION=2;
+
+/* simple schema bump hook (no migration needed yet) */
+(function(){
+  const current=parseInt(localStorage.getItem(SCHEMA_KEY)||'1',10);
+  if(current < SCHEMA_VERSION){
+    // placeholder for future migrations
+  }
+  localStorage.setItem(SCHEMA_KEY,String(SCHEMA_VERSION));
+})();
+
+const TODAY=isoToday();
+let days=load(LS_KEY,{});
+let meds=load(LS_MEDS,{});
+let viewing=TODAY;
 
 /* Auto-save safety net */
 let tpDirty=false;
 function baseSave(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-let save = function(k,v){
+let save=function(k,v){
   try{ baseSave(k,v); tpDirty=false; }catch(e){ console.warn('save failed, will retry', e); tpDirty=true; }
 };
-setInterval(()=>{ if(!tpDirty) return; try{ baseSave(LS_KEY, days); tpDirty=false; }catch(e){} }, 4000);
-window.addEventListener('beforeunload',()=>{ try{ baseSave(LS_KEY, days); baseSave(LS_MEDS, meds); }catch{} });
+setInterval(()=>{ if(!tpDirty) return; try{ baseSave(LS_KEY, days); tpDirty=false; }catch(e){} },4000);
+window.addEventListener('beforeunload',()=>{ try{ baseSave(LS_KEY,days); baseSave(LS_MEDS,meds);}catch{} });
 
 window.addEventListener('load',()=>{ setTimeout(()=>document.body.classList.add('hide-splash'),1800); });
 
@@ -639,10 +756,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   ensureSyncCode();
   tpUpdateLastBackupLabel(); tpRenderDatalist('');
   renderHistory();
+  renderWeeklyReview();
   showCarryBannerIfAny();
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
+
+  const stockInp=document.getElementById('medsStockInput');
+  const dailyInp=document.getElementById('medsDailyInput');
+  if(stockInp) stockInp.value = localStorage.getItem(LS_MEDS_STOCK) || '';
+  if(dailyInp) dailyInp.value = localStorage.getItem(LS_MEDS_DAILY) || '';
 });
 
 autoCarryForwardIfNewDay();
@@ -659,23 +782,38 @@ function showTab(id){
   if(btn) btn.classList.add('active');
 
   localStorage.setItem(LS_TAB,id);
-  if(id==='history') renderHistory();
+  if(id==='history'){ renderHistory(); renderWeeklyReview(); }
 }
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 /* ===== Medication ===== */
-function medsFor(iso){ if(!meds[iso]) meds[iso]={day:'', night:''}; return meds[iso]; }
+function medsFor(iso){
+  if(!meds[iso]) meds[iso]={day:'',night:'',dayNote:'',nightNote:''};
+  meds[iso].dayNote  = meds[iso].dayNote  || '';
+  meds[iso].nightNote= meds[iso].nightNote|| '';
+  return meds[iso];
+}
 function toggleMeds(which){
   const m=medsFor(TODAY);
-  if(m[which]){ if(!confirm('Unmark this dose as taken?')) return; m[which]=''; }
-  else { m[which]=new Date().toISOString(); }
+  const noteKey = which==='day' ? 'dayNote' : 'nightNote';
+
+  if(m[which]){
+    if(!confirm('Unmark this dose as taken?')) return;
+    m[which]='';
+    m[noteKey]='';
+  }else{
+    m[which]=new Date().toISOString();
+    const existing=m[noteKey] || '';
+    const msg = existing ? 'Edit note for this dose (optional):' : 'Add note for this dose (optional):';
+    const note=prompt(msg, existing);
+    if(note!==null) m[noteKey]=note.trim();
+  }
   baseSave(LS_MEDS, meds);
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
   notifyLocalChanged();
 }
-
 function renderMeds(){
   const m = medsFor(TODAY);
   const btnDay   = document.getElementById('btnMedsDay');
@@ -684,21 +822,27 @@ function renderMeds(){
 
   if(btnDay){
     const isTaken = !!m.day;
-    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    const timeTxt = isTaken ? `🌅 Day · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    const note    = m.dayNote;
+    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
     btnDay.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
     btnDay.innerHTML = `
-      <span class="meds-btn-title">Day dose</span>
+      <span class="meds-btn-title">🌅 Day dose</span>
       <span class="meds-btn-sub">${timeTxt}</span>
+      ${noteLine}
     `;
   }
 
   if(btnNight){
     const isTaken = !!m.night;
-    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    const timeTxt = isTaken ? `🌙 Night · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    const note    = m.nightNote;
+    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
     btnNight.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
     btnNight.innerHTML = `
-      <span class="meds-btn-title">Night dose</span>
+      <span class="meds-btn-title">🌙 Night dose</span>
       <span class="meds-btn-sub">${timeTxt}</span>
+      ${noteLine}
     `;
   }
 
@@ -708,12 +852,73 @@ function renderMeds(){
     meta.textContent = `${a}   •   ${b}`;
   }
 
+  renderMedsExtras();
+}
+
+/* streak + chart + refill */
+function computeMedsStreaks(){
+  const keys = Object.keys(meds||{}).sort();
+  let best=0, current=0;
+  let prevIso=null;
+  keys.forEach(k=>{
+    const m=medsFor(k);
+    const full = !!(m.day && m.night);
+    if(!full){ current=0; prevIso=null; return; }
+    if(prevIso){
+      const expected = isoOffset(prevIso,1);
+      if(k===expected) current++; else current=1;
+    }else current=1;
+    prevIso=k;
+    if(current>best) best=current;
+  });
+  return {current,best};
+}
+function renderMedsExtras(){
+  const streakEl=document.getElementById('medsStreak');
+  const weekEl=document.getElementById('medsWeek');
+  const refillEl=document.getElementById('medsRefill');
+
+  if(streakEl){
+    const {current,best}=computeMedsStreaks();
+    streakEl.textContent = `Adherence streak: ${current||0} day(s) • Best: ${best||0}`;
+  }
+
+  if(weekEl){
+    const blocks=[];
+    for(let i=6;i>=0;i--){
+      const iso=isoOffset(TODAY,-i);
+      const m=medsFor(iso);
+      let state='missed';
+      if(m.day || m.night) state='partial';
+      if(m.day && m.night) state='full';
+      const label=new Date(iso).toLocaleDateString(undefined,{weekday:'short'});
+      const symbol = state==='full'?'●●':state==='partial'?'●':'–';
+      blocks.push(`<div class="meds-week-day ${state}">
+        <span class="mw-label">${label}</span>
+        <span class="mw-dot">${symbol}</span>
+      </div>`);
+    }
+    weekEl.innerHTML=blocks.join('');
+  }
+
+  if(refillEl){
+    const stock = parseInt(localStorage.getItem(LS_MEDS_STOCK)||'0',10);
+    const daily = parseInt(localStorage.getItem(LS_MEDS_DAILY)||'0',10);
+    if(stock>0 && daily>0){
+      const daysLeft = Math.floor(stock/daily);
+      refillEl.textContent = `Approx. ${daysLeft} day(s) of meds remaining.`;
+      refillEl.className = 'meds-refill' + (daysLeft<=7?' meds-refill-warn':'');
+    }else{
+      refillEl.textContent = 'Refill: set tablets on hand & doses/day in Settings to get refill nudges.';
+      refillEl.className='meds-refill';
+    }
+  }
+
   updateMedsReminder();
   scheduleMedsReminders();
 }
 
-/* Timed Meds Reminders */
-var medsTimers = [];
+var medsTimers=[];
 function clearMedsTimers(){
   if(!Array.isArray(medsTimers)) medsTimers=[];
   medsTimers.forEach(id=>clearTimeout(id));
@@ -777,24 +982,71 @@ function updateMedsReminder(){
 }
 function scrollToMeds(){ const el=document.getElementById('medsCard'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
 
-/* ===== Tasks ===== */
+/* ===== Tasks & Focus ===== */
+function parseTags(name){
+  const tags=[];
+  name.split(/\s+/).forEach(w=>{
+    if(w.startsWith('#') && w.length>1){
+      tags.push(w.slice(1).toLowerCase());
+    }
+  });
+  return tags;
+}
 function addTask(){
-  const name=document.getElementById('taskInput').value.trim();
+  const input=document.getElementById('taskInput');
+  const name=(input.value||'').trim();
   const prio=document.getElementById('prioSelect').value;
   if(!name) return;
-  const t={id:'t_'+Math.random().toString(36).slice(2,8),name,prio,done:false,stars:0,createdAt:new Date().toISOString()};
+  const t={
+    id:'t_'+Math.random().toString(36).slice(2,8),
+    name,
+    prio,
+    done:false,
+    stars:0,
+    createdAt:new Date().toISOString(),
+    focus:false,
+    tags:parseTags(name)
+  };
   ensureDay(viewing).unshift(t);
   save(LS_KEY,days);
-  document.getElementById('taskInput').value=''; renderAll(); tpRenderDatalist('');
+  input.value='';
+  renderAll(); tpRenderDatalist('');
 }
-function toggleDone(dayKey,id,el){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.done=el.checked; t.timeCompleted=t.done?new Date().toISOString():''; save(LS_KEY,days); renderAll(); }
-function setStars(dayKey,id,s){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.stars=s; save(LS_KEY,days); renderAll(); }
-function editTask(dayKey,id){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; const name=prompt('Edit task',t.name); if(name===null) return; const prio=prompt('Priority (low/med/high)', t.prio)||t.prio; t.name=name.trim(); t.prio=['low','med','high'].includes(prio)?prio:t.prio; save(LS_KEY,days); renderAll(); }
-function delTask(dayKey,id){ if(!confirm('Delete task?')) return; days[dayKey]=ensureDay(dayKey).filter(x=>x.id!==id); save(LS_KEY,days); renderAll(); }
+function toggleDone(dayKey,id,el){
+  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
+  t.done=el.checked;
+  t.timeCompleted=t.done?new Date().toISOString():'';
+  save(LS_KEY,days); renderAll();
+}
+function setStars(dayKey,id,s){
+  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
+  t.stars=s;
+  save(LS_KEY,days); renderAll();
+}
+function toggleFocus(dayKey,id){
+  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
+  t.focus=!t.focus;
+  save(LS_KEY,days); renderAll();
+}
+function editTask(dayKey,id){
+  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
+  const name=prompt('Edit task',t.name);
+  if(name===null) return;
+  const prio=prompt('Priority (low/med/high)', t.prio)||t.prio;
+  t.name=name.trim();
+  t.prio=['low','med','high'].includes(prio)?prio:t.prio;
+  t.tags=parseTags(t.name);
+  save(LS_KEY,days); renderAll();
+}
+function delTask(dayKey,id){
+  if(!confirm('Delete task?')) return;
+  days[dayKey]=ensureDay(dayKey).filter(x=>x.id!==id);
+  save(LS_KEY,days); renderAll();
+}
 function clearCompleted(){ days[viewing]=ensureDay(viewing).filter(x=>!x.done); save(LS_KEY,days); renderAll(); }
 function shiftDay(d){ const dt=new Date(viewing); dt.setDate(dt.getDate()+d); viewing=dt.toISOString().slice(0,10); renderAll(); }
 
-/* Manual carry-over + auto carry remain same as before... (for brevity not re-commented) */
+/* Manual + auto carry */
 function manualCarryOver(){
   const list=ensureDay(viewing); const incomplete=list.filter(t=>!t.done);
   if(!incomplete.length){ alert('No incomplete tasks to carry.'); return; }
@@ -830,7 +1082,7 @@ function showCarryBannerIfAny(){
   else { bar.style.display='none'; }
 }
 
-/* Render Tasks */
+/* Render Tasks + Focus lane */
 function renderAll(){
   const todayLabel=document.getElementById('todayLabel');
   if(todayLabel) todayLabel.textContent=fmtHumanDate(TODAY);
@@ -843,31 +1095,84 @@ function renderAll(){
     ul.innerHTML='';
     list.forEach(t=>{
       const li=document.createElement('li'); li.className='task';
-      const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=t.done; cb.onchange=e=>toggleDone(viewing,t.id,e.target);
+
+      const cb=document.createElement('input');
+      cb.type='checkbox';
+      cb.checked=t.done;
+      cb.onchange=e=>toggleDone(viewing,t.id,e.target);
+
       const center=document.createElement('div');
       const prioc=t.prio==='low'?'p-low':t.prio==='med'?'p-med':'p-high';
       const completedMeta=(t.done&&t.timeCompleted)?`<div class="meta">✔ completed ${fmtDateTime(t.timeCompleted)}</div>`:'';
-      center.innerHTML=`<div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">${escapeHtml(t.name)}</div><div><span class="priority ${prioc}">${t.prio}</span></div>${completedMeta}`;
+      const tagText = (t.tags && t.tags.length)
+        ? `<span style="font-size:11px;color:#9fb0d0;">${t.tags.map(x=>'#'+escapeHtml(x)).join(' ')}</span>`
+        : '';
+      center.innerHTML=
+        `<div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">
+           ${escapeHtml(t.name)}
+         </div>
+         <div>
+           <span class="priority ${prioc}">${t.prio}</span>
+           ${tagText}
+         </div>
+         ${completedMeta}`;
+
       const stars=document.createElement('div'); stars.className='stars';
-      for(let s=1;s<=3;s++){const b=document.createElement('button'); b.textContent='★'; if(t.stars>=s) b.classList.add('on'); b.onclick=()=>setStars(viewing,t.id,s===t.stars?0:s); stars.appendChild(b);}
-      const act=document.createElement('div'); act.className='actions'; const e=document.createElement('button'); e.textContent='✎'; e.onclick=()=>editTask(viewing,t.id); const d=document.createElement('button'); d.textContent='×'; d.className='del'; d.onclick=()=>delTask(viewing,t.id); act.appendChild(e); act.appendChild(d);
-      li.appendChild(cb); li.appendChild(center); li.appendChild(stars); li.appendChild(act); ul.appendChild(li);
+      for(let s=1;s<=3;s++){
+        const b=document.createElement('button');
+        b.textContent='★';
+        if(t.stars>=s) b.classList.add('on');
+        b.onclick=()=>setStars(viewing,t.id,s===t.stars?0:s);
+        stars.appendChild(b);
+      }
+
+      const act=document.createElement('div'); act.className='actions';
+      const f=document.createElement('button');
+      f.textContent='🎯';
+      f.title=t.focus?'Remove from Focus lane':'Add to Focus lane';
+      if(t.focus) f.classList.add('focus-toggle','on'); else f.classList.add('focus-toggle');
+      f.onclick=()=>toggleFocus(viewing,t.id);
+      const e=document.createElement('button'); e.textContent='✎'; e.onclick=()=>editTask(viewing,t.id);
+      const d=document.createElement('button'); d.textContent='×'; d.className='del'; d.onclick=()=>delTask(viewing,t.id);
+      act.appendChild(f); act.appendChild(e); act.appendChild(d);
+
+      li.appendChild(cb); li.appendChild(center); li.appendChild(stars); li.appendChild(act);
+      ul.appendChild(li);
     });
   }
-  const total=list.length, done=list.filter(x=>x.done).length; const pct=total?Math.round(done/total*100):0;
-  const q=list.filter(x=>x.done).reduce((a,b)=>a+(b.stars||0),0); const qPct=done?Math.round((q/(done*3))*100):0;
+
+  const total=list.length, done=list.filter(x=>x.done).length;
+  const pct=total?Math.round(done/total*100):0;
+  const q=list.filter(x=>x.done).reduce((a,b)=>a+(b.stars||0),0);
+  const qPct=done?Math.round((q/(done*3))*100):0;
   const doneSummary=document.getElementById('doneSummary'); if(doneSummary) doneSummary.textContent=`${done} / ${total} tasks done (${pct}%)`;
   const qualitySummary=document.getElementById('qualitySummary'); if(qualitySummary) qualitySummary.textContent=`Quality ${qPct}%`;
   const kpiRow=document.getElementById('kpiRow'); if(kpiRow&&kpiRow.firstElementChild) kpiRow.firstElementChild.textContent=`${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
+
+  // Focus lane
+  const focusLane=document.getElementById('focusLane');
+  if(focusLane){
+    const focus=list.filter(t=>t.focus);
+    if(!focus.length){
+      focusLane.style.display='none';
+    }else{
+      focusLane.style.display='block';
+      const doneF=focus.filter(t=>t.done).length;
+      const pctF=Math.round(doneF/focus.length*100);
+      const chips=focus.slice(0,6).map(t=>`<span class="focus-chip">${escapeHtml(t.name)}</span>`).join('');
+      focusLane.innerHTML=
+        `<div>🎯 Focus lane: ${doneF}/${focus.length} done (${pctF}%)</div>
+         <div class="focus-chips">${chips}</div>`;
+    }
+  }
+
   renderMeds();
 }
 
-/* History, backup, sync, utils, service worker same as previous v8.1
-   (I kept their logic but trimmed comments above to keep this answer readable) */
-
+/* ===== History, tags, weekly review ===== */
 function renderHistory(){
   const wrap=document.getElementById('histList'); if(!wrap) return;
-  const q=document.getElementById('histSearch').value.trim().toLowerCase();
+  const q=(document.getElementById('histSearch').value||'').trim().toLowerCase();
   const spanSel=document.getElementById('histSpan').value;
   let keys=Object.keys(days||{});
   if(spanSel!=='all'){
@@ -878,13 +1183,17 @@ function renderHistory(){
   keys.sort((a,b)=>new Date(b)-new Date(a));
   if(q){
     keys=keys.filter(k=>{
-      if(k.includes(q)) return true;
+      if(k.toLowerCase().includes(q)) return true;
       const arr=days[k]||[];
-      return arr.some(t=>(t.name||'').toLowerCase().includes(q));
+      return arr.some(t=>{
+        const nm=(t.name||'').toLowerCase();
+        const tags=(t.tags||[]).join(' ').toLowerCase();
+        return nm.includes(q) || tags.includes(q);
+      });
     });
   }
   wrap.innerHTML='';
-  if(!keys.length){ wrap.innerHTML='<div class="muted">No history found.</div>'; return; }
+  if(!keys.length){ wrap.innerHTML='<div class="muted">No history found.</div>'; renderTagChips(); return; }
   keys.forEach(k=>{
     const arr=days[k]||[];
     const total=arr.length, done=arr.filter(t=>t.done).length;
@@ -893,14 +1202,68 @@ function renderHistory(){
     const qPct=done?Math.round((qsum/(done*3))*100):0;
     const row=document.createElement('div'); row.className='hist-row';
     const left=document.createElement('div');
-    left.innerHTML=`<div style="font-weight:700">${fmtHumanDate(k)}</div><div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>`;
+    left.innerHTML=`<div style="font-weight:700">${fmtHumanDate(k)}</div>
+                    <div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>`;
     const right=document.createElement('div');
     const btn=document.createElement('button'); btn.textContent='Open'; btn.onclick=()=>{ viewing=k; showTab('tasks'); renderAll(); };
-    right.appendChild(btn); row.appendChild(left); row.appendChild(right); wrap.appendChild(row);
+    right.appendChild(btn);
+    row.appendChild(left); row.appendChild(right);
+    wrap.appendChild(row);
   });
+
+  renderTagChips();
+}
+function renderTagChips(){
+  const host=document.getElementById('tagChips'); if(!host) return;
+  const stats=new Map();
+  Object.keys(days||{}).forEach(d=>{
+    (days[d]||[]).forEach(t=>{
+      (t.tags||[]).forEach(tag=>{
+        const key=tag.toLowerCase();
+        stats.set(key,(stats.get(key)||0)+1);
+      });
+    });
+  });
+  const entries=Array.from(stats.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  if(!entries.length){ host.innerHTML=''; return; }
+  host.innerHTML=entries.map(([tag,count])=>
+    `<button class="tag-chip" onclick="setHistoryTag('${tag}')">#${escapeHtml(tag)} (${count})</button>`
+  ).join('');
+}
+function setHistoryTag(tag){
+  const input=document.getElementById('histSearch');
+  input.value='#'+tag;
+  renderHistory();
+}
+function renderWeeklyReview(){
+  const body=document.getElementById('weeklyReviewBody'); if(!body) return;
+  let totalTasks=0, doneTasks=0, focusTasks=0;
+  let daysFullMeds=0, daysAnyMeds=0;
+  for(let i=0;i<7;i++){
+    const iso=isoOffset(TODAY,-i);
+    const list=ensureDay(iso);
+    totalTasks += list.length;
+    doneTasks  += list.filter(t=>t.done).length;
+    focusTasks += list.filter(t=>t.focus).length;
+    const m=medsFor(iso);
+    const any = !!(m.day || m.night);
+    const full= !!(m.day && m.night);
+    if(any) daysAnyMeds++;
+    if(full) daysFullMeds++;
+  }
+  if(totalTasks===0 && daysAnyMeds===0){
+    body.textContent='Not enough data for this week yet. Start logging tasks and meds to see your review.';
+    return;
+  }
+  const pctTasks = totalTasks ? Math.round(doneTasks/totalTasks*100) : 0;
+  body.innerHTML=
+    `Tasks (7 days): <strong>${doneTasks}/${totalTasks}</strong> completed (${pctTasks}%).
+     <br/>Focus tasks marked: <strong>${focusTasks}</strong>.
+     <br/>Meds: <strong>${daysFullMeds}/7</strong> days with both doses logged
+     (${daysAnyMeds} day(s) with at least one dose).`;
 }
 
-/* Backup */
+/* ===== Backup & Reset ===== */
 (function () {
   function buildBackupPayload() {
     const dump = {};
@@ -915,14 +1278,15 @@ function renderHistory(){
     dump[LS_LAST_OPEN]        = localStorage.getItem(LS_LAST_OPEN) || isoToday();
     dump[LS_LAST_CARRY_COUNT] = localStorage.getItem(LS_LAST_CARRY_COUNT) || '0';
 
-    return { app:'taskpulse', flavor:'v8.3', exportedAt:new Date().toISOString(), dump };
+    return { app:'taskpulse', flavor:'v8.5', exportedAt:new Date().toISOString(), dump };
   }
   window.tpDownloadBackup=function(){
     try{
       const payload=buildBackupPayload();
       const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=url; a.download='taskpulse_backup.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      const a=document.createElement('a'); a.href=url; a.download='taskpulse_backup.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       localStorage.setItem('tp_last_backup', new Date().toLocaleString());
       tpUpdateLastBackupLabel();
       setStatus('Backup downloaded.');
@@ -957,27 +1321,94 @@ function renderHistory(){
     if(el) el.textContent=msg;
   }
 })();
+
 function tpUpdateLastBackupLabel(){
   const el=document.getElementById('tpLastBackup');
   if(!el) return;
   el.textContent=`Last backup: ${localStorage.getItem('tp_last_backup')||'none'}`;
 }
 
+function tpSafeReset(){
+  if(!confirm('This will clear all Task Pulse data on this device (backups you downloaded stay safe). Continue?')) return;
+  const keep=['tp_last_backup'];
+  const toDelete=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(/^tp_/.test(k) && !keep.includes(k)) toDelete.push(k);
+  }
+  toDelete.forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+
+/* Meds settings */
+function saveMedsSettings(){
+  const stockInp=document.getElementById('medsStockInput');
+  const dailyInp=document.getElementById('medsDailyInput');
+  const stock=parseInt(stockInp.value||'0',10);
+  const daily=parseInt(dailyInp.value||'0',10);
+  if(isFinite(stock)) localStorage.setItem(LS_MEDS_STOCK,String(stock));
+  if(isFinite(daily) && daily>0) localStorage.setItem(LS_MEDS_DAILY,String(daily));
+  renderMedsExtras();
+}
+
 /* Predictive text + utils */
 var SUGGEST_MAX=10;
-function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
-function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b) => (b.count - a.count)||(b.last - a.last)).map(v=> v.name); }
-function tpGetSuggestions(prefix){ const ranked=tpRankedNames(tpCollectTaskStats()); const p=(prefix||'').trim().toLowerCase(); if(!p) return ranked.slice(0,SUGGEST_MAX); const pref=ranked.filter(n=>n.toLowerCase().startsWith(p)); if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX); const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p)); return [...pref,...rest].slice(0,SUGGEST_MAX); }
-function tpRenderDatalist(prefix){ const dl=document.getElementById('taskSuggestions'); if(!dl) return; const opts=tpGetSuggestions(prefix); dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join(''); }
+function tpCollectTaskStats(){
+  const stats=new Map();
+  for(const dk of Object.keys(days||{})){
+    for(const t of (days[dk]||[])){
+      const nm=(t.name||'').trim(); if(!nm) continue;
+      const key=nm.toLowerCase();
+      const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime();
+      if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0});
+      const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);
+    }
+  }
+  return stats;
+}
+function tpRankedNames(stats){
+  return Array.from(stats.values()).sort((a,b)=>(b.count-a.count)||(b.last-a.last)).map(v=>v.name);
+}
+function tpGetSuggestions(prefix){
+  const ranked=tpRankedNames(tpCollectTaskStats());
+  const p=(prefix||'').trim().toLowerCase();
+  if(!p) return ranked.slice(0,SUGGEST_MAX);
+  const pref=ranked.filter(n=>n.toLowerCase().startsWith(p));
+  if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX);
+  const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p));
+  return [...pref,...rest].slice(0,SUGGEST_MAX);
+}
+function tpRenderDatalist(prefix){
+  const dl=document.getElementById('taskSuggestions'); if(!dl) return;
+  const opts=tpGetSuggestions(prefix);
+  dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join('');
+}
+
+/* Utils */
 function isoToday(){ return new Date().toISOString().slice(0,10); }
-function isoOffset(iso, days){ const d=new Date(iso); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
+function isoOffset(iso, days){
+  const d=new Date(iso); d.setHours(12,0,0,0);
+  d.setDate(d.getDate()+days);
+  return d.toISOString().slice(0,10);
+}
 function ensureDay(iso){ if(!days[iso]) days[iso]=[]; return days[iso]; }
 function load(k,def){ try{ return JSON.parse(localStorage.getItem(k)||'null') ?? def; }catch(e){return def;} }
 function fmtHumanDate(iso){ const d=new Date(iso); return d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); }
-function fmtDateTime(iso){ try{ const d=new Date(iso); const date=d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); const time=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); return `${date} · ${time}`; }catch{ return ''; } }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m])); }
+function fmtDateTime(iso){
+  try{
+    const d=new Date(iso);
+    const date=d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'});
+    const time=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    return `${date} · ${time}`;
+  }catch{ return ''; }
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>(
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m]
+  ));
+}
 
-/* Sync (same as before) */
+/* ===== Sync ===== */
 const TP_UID=(localStorage.getItem('tp_uid')||(()=>{const v='u_'+Math.random().toString(36).slice(2,10);localStorage.setItem('tp_uid',v);return v;})());
 let syncRef=null,syncOff=null,writeTimer=null;
 function setSyncBadge(text,kind=''){ const el=document.getElementById('syncState'); if(!el) return; el.textContent=text; el.className='badge '+(kind||''); }
@@ -1017,7 +1448,7 @@ function attachSync(code){
     if(val && (val.days||val.meds)){
       days=mergeDays(days,val.days||{}); meds=mergeMeds(meds,val.meds||{});
       baseSave(LS_KEY,days); baseSave(LS_MEDS,meds);
-      renderAll(); renderMeds();
+      renderAll();
     }else{
       debouncedPush();
     }
@@ -1027,7 +1458,7 @@ function attachSync(code){
     if(val._meta && val._meta.by===TP_UID) return;
     if(val.days){ days=mergeDays(days,val.days); baseSave(LS_KEY,days); }
     if(val.meds){ meds=mergeMeds(meds,val.meds); baseSave(LS_MEDS,meds); }
-    renderAll(); renderMeds();
+    renderAll();
   });
   syncOff=()=>syncRef.off('value',handler);
 }
@@ -1044,9 +1475,9 @@ function mergeDays(localDays,remoteDays){
 function mergeMeds(localM,remoteM){
   const out={...(localM||{})};
   for(const day of Object.keys(remoteM||{})){
-    const r=remoteM[day]||{}, l=out[day]||{day:'',night:''};
+    const r=remoteM[day]||{}, l=out[day]||{day:'',night:'',dayNote:'',nightNote:''};
     const pick=(a,b)=>{ const ta=a?Date.parse(a):0, tb=b?Date.parse(b):0; return (tb>ta)?b:a; };
-    out[day]={day:pick(l.day,r.day), night:pick(l.night,r.night)};
+    out[day]={day:pick(l.day,r.day), night:pick(l.night,r.night), dayNote:l.dayNote||r.dayNote||'', nightNote:l.nightNote||r.nightNote||''};
   }
   return out;
 }
