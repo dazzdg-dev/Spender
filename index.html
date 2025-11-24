@@ -354,25 +354,49 @@
     gap:8px;
     margin-bottom:6px;
   }
-  .meds-btn{
-    flex:1 1 150px;
-    min-width:0;
-    border-radius:14px;
-    padding:10px 12px;
-    background:#050814;
-    border:1px solid #27324b;
-    text-align:left;
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-  }
-  .meds-btn-title{font-size:13px;font-weight:600;}
-  .meds-btn-sub{font-size:11px;color:#a7b0cf;}
-  .meds-btn-taken{
-    background:radial-gradient(circle at 20% 0%,#29f3aa 0,#1d8c64 40%,#061b18 80%);
-    border-color:#39f5b8;
-    box-shadow:0 0 16px rgba(57,245,184,0.6);
-  }
+ /* Base meds button – darker, higher contrast text */
+.meds-btn{
+  flex:1 1 150px;
+  min-width:0;
+  border-radius:14px;
+  padding:10px 14px;
+  background:#060817;              /* deep navy */
+  border:1px solid #2b3653;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  color:#e9f2ff;                   /* high-contrast text */
+}
+
+/* Title + subtext */
+.meds-btn-title{
+  font-size:13px;
+  font-weight:600;
+  color:#f5f8ff;                   /* bright, readable */
+}
+
+.meds-btn-sub{
+  font-size:11px;
+  color:#a7b8d9;                   /* softer but still clear */
+}
+
+/* “Taken” state – glow but with a darker edge so text pops */
+.meds-btn-taken{
+  background:linear-gradient(90deg,#09d9a3 0%, #027b60 45%, #021621 100%);
+  border-color:#35f3b4;
+  box-shadow:0 0 16px rgba(53,243,180,0.45);
+  color:#f6fffe;
+}
+
+.meds-btn-taken .meds-btn-title{
+  color:#ffffff;
+}
+
+.meds-btn-taken .meds-btn-sub{
+  color:#d0fff1;
+}
+
 
   /* Splash */
   #splash{
