@@ -354,48 +354,57 @@
     gap:8px;
     margin-bottom:6px;
   }
- /* Base meds button – darker, higher contrast text */
-.meds-btn{
-  flex:1 1 150px;
-  min-width:0;
-  border-radius:14px;
-  padding:10px 14px;
-  background:#060817;              /* deep navy */
-  border:1px solid #2b3653;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  color:#e9f2ff;                   /* high-contrast text */
+
+  /* ==== Meds pill visibility override (V8.4) ==== */
+
+/* Base state */
+.meds-btn,
+#btnMedsDay,
+#btnMedsNight{
+  flex: 1 1 150px;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: #050814 !important;      /* dark navy */
+  border: 1px solid #2b3653 !important;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #e9f2ff !important;           /* high contrast */
 }
 
 /* Title + subtext */
 .meds-btn-title{
-  font-size:13px;
-  font-weight:600;
-  color:#f5f8ff;                   /* bright, readable */
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff !important;
 }
-
 .meds-btn-sub{
-  font-size:11px;
-  color:#a7b8d9;                   /* softer but still clear */
+  font-size: 11px;
+  color: #b9c7ec !important;
 }
 
-/* “Taken” state – glow but with a darker edge so text pops */
-.meds-btn-taken{
-  background:linear-gradient(90deg,#09d9a3 0%, #027b60 45%, #021621 100%);
-  border-color:#35f3b4;
-  box-shadow:0 0 16px rgba(53,243,180,0.45);
-  color:#f6fffe;
+/* Taken state – glow, but darker so text pops */
+.meds-btn.meds-btn-taken{
+  background: linear-gradient(
+    90deg,
+    #07b88a 0%,
+    #038264 45%,
+    #03141e 100%
+  ) !important;
+  border-color: #35f3b4 !important;
+  box-shadow: 0 0 18px rgba(53,243,180,0.5);
+  color: #ffffff !important;
 }
 
-.meds-btn-taken .meds-btn-title{
-  color:#ffffff;
+.meds-btn.meds-btn-taken .meds-btn-title{
+  color: #ffffff !important;
+}
+.meds-btn.meds-btn-taken .meds-btn-sub{
+  color: #e1fff6 !important;
 }
 
-.meds-btn-taken .meds-btn-sub{
-  color:#d0fff1;
-}
 
 
   /* Splash */
