@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Smart V8.5</title>
+<title>Task Pulse Smart V8.6</title>
 
 <link rel="preload" as="image" href="taskpulse-splash-hex.jpeg" />
 <link rel="manifest" href="manifest.json" />
@@ -111,7 +111,7 @@
   .badge.good{border-color:#3bd47a;color:#7fffb3;}
   .badge.warn{border-color:#e7a74c;color:#ffd78a;}
 
-  /* KPI pill */
+  /* KPI pill row */
   .kpi-pill{
     margin:6px 0 10px;
     padding:7px 10px;
@@ -276,33 +276,6 @@
   }
   .nav{display:flex;gap:4px;justify-content:flex-end;}
 
-  /* Focus lane */
-  .focus-lane{
-    margin-top:8px;
-    padding:6px 8px;
-    border-radius:12px;
-    background:#0b1022;
-    border:1px dashed #2c3a68;
-    font-size:12px;
-  }
-  .focus-chips{
-    margin-top:4px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:4px;
-  }
-  .focus-chip{
-    padding:2px 8px;
-    border-radius:999px;
-    background:#182447;
-    font-size:11px;
-    max-width:160px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-  }
-  .focus-toggle.on{color:#7fffb3;text-shadow:0 0 6px rgba(127,255,179,.7);}
-
   /* History list */
   .hist-row{
     border-radius:12px;
@@ -320,22 +293,7 @@
     padding:6px 10px;
   }
 
-  .tag-chips{
-    display:flex;
-    flex-wrap:wrap;
-    gap:4px;
-    margin:4px 0 8px;
-    font-size:11px;
-  }
-  .tag-chip{
-    padding:2px 8px;
-    border-radius:999px;
-    background:#101528;
-    border:1px solid #27324b;
-    cursor:pointer;
-  }
-
-  /* Carry banner */
+  /* Banners */
   #carryWarn{
     display:none;
     margin:6px 0 0 0;
@@ -346,33 +304,74 @@
     font-size:11px;
     color:#f0d5ff;
   }
-
-  /* Meds reminder – warm version */
   #medsReminder{
     display:none;
     margin:8px 0 0 0;
     padding:10px 12px;
     border-radius:12px;
-    border:1px solid #ff9d3b;
-    background:#2a1b0d;
-    color:#ffd8a2;
-    font-weight:500;
+    border:1px solid #3e4a13;
+    background:#161d07;
+    color:#d8ee8a;
+    font-weight:600;
   }
   #medsReminder small{
     display:block;
+    color:#b9c66a;
+    font-weight:400;
     margin-top:4px;
-    font-size:11px;
-    color:#ffe1ad;
   }
   #medsReminder button{
-    margin-left:10px;
+    margin-left:6px;
     border-radius:9px;
-    border:1px solid #ffce7a;
-    background:#3a220a;
-    color:#ffe7c2;
+    border:1px solid #ff9d3b;
+    background:#2a1b0d;
+    color:#ffd8a2;
     padding:6px 14px;
     font-size:0.86rem;
     box-shadow:0 0 10px rgba(255,140,40,0.35);
+  }
+
+  /* Countdown + meds detail */
+  .meds-countdown{
+    margin-top:4px;
+    font-size:11px;
+    color:#9fd2ff;
+  }
+  .meds-countdown.pulse{
+    animation:medsCountdownPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes medsCountdownPulse{
+    0%{opacity:0.75;}
+    50%{opacity:1;}
+    100%{opacity:0.75;}
+  }
+  .meds-detail{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:8px;
+    border-top:1px solid rgba(255,255,255,0.04);
+    padding-top:6px;
+  }
+  .meds-detail-column{
+    flex:1 1 150px;
+    min-width:0;
+  }
+  .meds-detail-title{
+    font-size:12px;
+    font-weight:600;
+    margin-bottom:4px;
+    color:#e9ecf5;
+  }
+  .meds-detail-list{
+    list-style:none;
+    padding:0;
+    margin:0;
+    font-size:11px;
+    color:#a7b0cf;
+  }
+  .meds-detail-list li{
+    padding:1px 0;
   }
 
   /* Meds card */
@@ -420,100 +419,21 @@
     font-size:11px;
     color:#a7b8d9;
   }
-  .meds-btn-note{
-    font-size:11px;
-    color:#d0fff1;
-    margin-top:2px;
-  }
   .meds-btn-taken{
-    background:linear-gradient(90deg,#09d9a3 0%, #027b60 45%, #021621 100%);
-    border-color:#35f3b4;
-    box-shadow:0 0 16px rgba(53,243,180,0.45);
+    background:linear-gradient(120deg,#17c790 0%,#0b5740 45%,#050a11 100%);
+    border-color:#2fe0a3;
+    box-shadow:0 0 10px rgba(27,199,144,0.35);
     color:#f6fffe;
   }
   .meds-btn-taken .meds-btn-title{color:#ffffff;}
-
-  .meds-streak{
-    margin-top:4px;
-    font-size:11px;
-    color:#a7b0cf;
+  .meds-btn-taken .meds-btn-sub{
+    color:#d0fff1;
+    animation:medsStampGlow 2.4s ease-in-out infinite;
   }
-  .meds-week{
-    margin-top:6px;
-    display:flex;
-    gap:4px;
-  }
-  .meds-week-day{
-    flex:1;
-    padding:4px 0;
-    border-radius:8px;
-    text-align:center;
-    font-size:10px;
-    background:#060817;
-    border:1px solid #27324b;
-    color:#8fa3d7;
-  }
-  .meds-week-day.full{
-    background:linear-gradient(135deg,#09d9a3,#027b60);
-    color:#ffffff;
-    border-color:#35f3b4;
-  }
-  .meds-week-day.partial{
-    border-color:#e7a74c;
-    color:#ffe08a;
-  }
-  .meds-week-day.missed{
-    opacity:.35;
-  }
-  .meds-week-day span{display:block;}
-  .mw-label{font-size:9px;}
-  .mw-dot{font-size:12px;}
-
-  .meds-refill{
-    margin-top:6px;
-    font-size:11px;
-    color:#a7b0cf;
-  }
-  .meds-refill-warn{
-    color:#ffd78a;
-  }
-
-  /* Meds meta under buttons */
-  .meds-meta{
-    margin-top:4px;
-    font-size:11px;
-    line-height:1.4;
-  }
-  .meds-meta-line{
-    display:flex;
-    gap:4px;
-    align-items:center;
-    opacity:0.9;
-    flex-wrap:wrap;
-  }
-  .meds-meta-label{
-    font-weight:500;
-    color:#c5d0ff;
-  }
-  .meds-meta-streak{
-    color:#a7ffcf;
-  }
-  .meds-meta-count{
-    color:#ffd48c;
-  }
-  .meds-countdown-badge{
-    padding:1px 6px;
-    border-radius:999px;
-    background:#261806;
-    border:1px solid #ffb45b;
-    font-variant-numeric:tabular-nums;
-  }
-  .meds-pulse{
-    animation:medsPulse 1.2s ease-in-out infinite alternate;
-  }
-  @keyframes medsPulse{
-    from{ opacity:0.75; box-shadow:0 0 4px rgba(255,210,120,0.3); }
-    to  { opacity:1;    box-shadow:0 0 10px rgba(255,210,120,0.7); }
+  @keyframes medsStampGlow{
+    0%{opacity:0.9; text-shadow:0 0 0 rgba(210,255,241,0.0);}
+    50%{opacity:1; text-shadow:0 0 10px rgba(210,255,241,0.9);}
+    100%{opacity:0.9; text-shadow:0 0 0 rgba(210,255,241,0.0);}
   }
 
   /* Splash */
@@ -565,6 +485,49 @@
   }
   .hide-splash #splash{display:none;}
 
+  /* Meds meta / streak / charts */
+  .meds-meta{
+    font-size:11px;
+    margin-top:2px;
+  }
+  .meds-streak{
+    margin-top:4px;
+    font-size:11px;
+    color:#9fd2ff;
+  }
+  .meds-weekchart{
+    margin-top:6px;
+    display:flex;
+    gap:4px;
+    align-items:flex-end;
+  }
+  .meds-weekbar{
+    flex:1 1 auto;
+    border-radius:6px 6px 2px 2px;
+    background:linear-gradient(180deg,#46e7b4,#11604b);
+    position:relative;
+    overflow:hidden;
+  }
+  .meds-weekbar.miss{
+    background:linear-gradient(180deg,#ff9ba9,#6b1c29);
+    opacity:.7;
+  }
+  .meds-weekbar-label{
+    position:absolute;
+    bottom:2px;
+    left:0;
+    right:0;
+    text-align:center;
+    font-size:9px;
+    color:#e9ecf5;
+  }
+  .meds-weekcaption{
+    margin-top:4px;
+    font-size:10px;
+    color:#8fa0c9;
+  }
+
+  /* Mobile tweaks */
   @media (max-width:600px){
     .shell{padding:14px 10px 12px;}
     .hero-header{flex-direction:column;align-items:flex-start;gap:8px;}
@@ -579,7 +542,7 @@
 <!-- Splash -->
 <div id="splash"><div class="label">
   <h2>Task Pulse Smart</h2>
-  <div class="sub">Focus · Sync · Achieve (V8.5)</div>
+  <div class="sub">Focus · Sync · Achieve (V8.6)</div>
   <div class="foot">Powered by Daryl G</div>
 </div></div>
 
@@ -590,7 +553,7 @@
         <div class="logo-pill">TP</div>
         <div>
           <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily focus advisor · V8.5 Insight</div>
+          <div class="brand-sub">Daily focus advisor · V8.6 Insight</div>
         </div>
       </div>
       <div class="top-right">
@@ -618,30 +581,42 @@
 
     <!-- TAB: TASKS -->
     <div id="tab-tasks" class="tabpage active">
+      <!-- Medication card -->
       <section class="card meds-card" id="medsCard">
         <div class="meds-head">
           <div class="meds-head-title">Medication — Today</div>
           <div class="meds-head-tag">TLE routine</div>
         </div>
         <div class="meds-row">
-          <button id="btnMedsDay" class="meds-btn" onclick="toggleMeds('day')" title="Log/undo Day dose"></button>
-          <button id="btnMedsNight" class="meds-btn" onclick="toggleMeds('night')" title="Log/undo Night dose"></button>
+          <button
+            id="btnMedsDay"
+            class="meds-btn"
+            onclick="toggleMeds('day')"
+            title="Log/undo Day dose">
+          </button>
+          <button
+            id="btnMedsNight"
+            class="meds-btn"
+            onclick="toggleMeds('night')"
+            title="Log/undo Night dose">
+          </button>
         </div>
         <div class="muted meds-meta" id="medsMeta"></div>
+        <div id="medsCountdownLabel" class="meds-countdown muted"></div>
 
         <div id="medsStreak" class="meds-streak"></div>
-        <div id="medsWeek" class="meds-week"></div>
-        <div id="medsRefill" class="meds-refill"></div>
+        <div id="medsWeek" class="meds-weekchart"></div>
+        <div id="medsRefill" class="meds-weekcaption"></div>
       </section>
 
       <section class="card">
         <h3 style="margin:0 0 8px">Today's Tasks</h3>
         <div class="row" style="margin-bottom:8px">
-          <input id="taskInput" type="text" placeholder="Add task… (use #tag)" list="taskSuggestions" autocomplete="off" />
+          <input id="taskInput" type="text" placeholder="Add task…" list="taskSuggestions" autocomplete="off" />
           <datalist id="taskSuggestions"></datalist>
           <select id="prioSelect">
             <option value="low">low</option>
-            <option value="med" selected>med</option>
+            <option value="med">med</option>
             <option value="high">high</option>
           </select>
           <button class="primary" onclick="addTask()">Add</button>
@@ -663,9 +638,6 @@
             <button class="btn-ghost" onclick="shiftDay(+1)">▶</button>
           </div>
         </div>
-
-        <div id="focusLane" class="focus-lane" style="display:none;"></div>
-
         <ul id="taskList" class="list" style="margin-top:8px"></ul>
         <div class="sum">
           <div id="doneSummary">0 / 0 tasks done (0%)</div>
@@ -676,18 +648,10 @@
 
     <!-- TAB: HISTORY -->
     <div id="tab-history" class="tabpage">
-      <section class="card" id="weeklyReviewCard">
-        <h3 style="margin:0 0 6px">Weekly Review</h3>
-        <div id="weeklyReviewBody" class="muted" style="font-size:13px;">
-          Not enough data yet.
-        </div>
-      </section>
-
       <section class="card">
-        <h3 style="margin:0 0 4px">History</h3>
-        <div id="tagChips" class="tag-chips"></div>
+        <h3 style="margin:0 0 8px">History</h3>
         <div class="row" style="gap:6px;margin-bottom:6px">
-          <input id="histSearch" type="text" placeholder="Search text, #tag or YYYY-MM-DD…" oninput="renderHistory()" />
+          <input id="histSearch" type="text" placeholder="Search text or YYYY-MM-DD…" oninput="renderHistory()" />
           <select id="histSpan" onchange="renderHistory()">
             <option value="7">Last 7 days</option>
             <option value="14">Last 14 days</option>
@@ -725,30 +689,44 @@
         <div id="medsSettingsHint" class="muted" style="font-size:12px;">
           Used to estimate refill timing based on your Day/Night schedule.
         </div>
+        <div class="meds-detail">
+          <div class="meds-detail-column">
+            <div class="meds-detail-title">🌅 Morning dose</div>
+            <ul class="meds-detail-list">
+              <li>Epilim 500 mg × 1</li>
+              <li>Epilim 200 mg × 1</li>
+              <li>Vimcosa × 1</li>
+              <li>Tegretol 200 mg × 1</li>
+              <li>Lamictin 200 mg × 1</li>
+              <li>Lamictin 50 mg × 1</li>
+            </ul>
+          </div>
+          <div class="meds-detail-column">
+            <div class="meds-detail-title">🌙 Night dose</div>
+            <ul class="meds-detail-list">
+              <li>Epilim 500 mg × 2</li>
+              <li>Vimcosa × 1</li>
+              <li>Tegretol 200 mg × 1</li>
+              <li>Cilift 20 mg × 2</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <section class="card" id="backupCard">
         <h3 style="margin:0 0 8px">Backup &amp; Restore</h3>
         <div class="row" style="align-items:center">
-          <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳ Download Backup</button>
+          <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳  Download Backup</button>
           <input id="tpRestoreFile" type="file" accept="application/json" style="display:none" />
-          <button id="btnRestore" class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱ Import Backup</button>
+          <button id="btnRestore" class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱  Import Backup</button>
         </div>
         <div id="tpBackupStatus" class="muted" style="margin-top:6px;font-size:12px;"></div>
-      </section>
-
-      <section class="card">
-        <h3 style="margin:0 0 8px">Safe Reset</h3>
-        <p class="muted" style="font-size:12px;margin-bottom:6px;">
-          Clear all tasks, meds and settings on this device. Backups you downloaded stay safe.
-        </p>
-        <button class="btn-danger" onclick="tpSafeReset()">Reset app (keep backups)</button>
       </section>
     </div>
   </div>
 
   <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V8.5 · Powered by D Gounder
+    Task Pulse Smart V8.6 · Powered by D Gounder
   </footer>
 </div>
 
@@ -756,39 +734,24 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-/* Paste your firebaseConfig + initializeApp if using sync */
+/* config placeholder – unchanged */
 </script>
 
 <script>
-/* ========= Core state & schema ========= */
+/* ========= Core state & utilities ========= */
 const LS_KEY='tp_days_v1', LS_SYNC='tp_sync_code', LS_TAB='tp_last_tab';
 const LS_LAST_OPEN='tp_last_open', LS_LAST_CARRY_COUNT='tp_last_carry_count';
 const LS_MEDS='tp_meds_v1';
-const LS_MEDS_STOCK='tp_meds_stock', LS_MEDS_DAILY='tp_meds_daily';
-const SCHEMA_KEY='tp_schema_version', SCHEMA_VERSION=2;
-
-/* simple schema bump hook (no migration needed yet) */
-(function(){
-  const current=parseInt(localStorage.getItem(SCHEMA_KEY)||'1',10);
-  if(current < SCHEMA_VERSION){
-    // placeholder for future migrations
-  }
-  localStorage.setItem(SCHEMA_KEY,String(SCHEMA_VERSION));
-})();
-
-const TODAY=isoToday();
-let days=load(LS_KEY,{});
-let meds=load(LS_MEDS,{});
-let viewing=TODAY;
+const TODAY=isoToday(); let days=load(LS_KEY,{}); let meds=load(LS_MEDS,{}); let viewing=TODAY;
 
 /* Auto-save safety net */
 let tpDirty=false;
 function baseSave(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-let save=function(k,v){
+let save = function(k,v){
   try{ baseSave(k,v); tpDirty=false; }catch(e){ console.warn('save failed, will retry', e); tpDirty=true; }
 };
-setInterval(()=>{ if(!tpDirty) return; try{ baseSave(LS_KEY, days); tpDirty=false; }catch(e){} },4000);
-window.addEventListener('beforeunload',()=>{ try{ baseSave(LS_KEY,days); baseSave(LS_MEDS,meds);}catch{} });
+setInterval(()=>{ if(!tpDirty) return; try{ baseSave(LS_KEY, days); tpDirty=false; }catch(e){} }, 4000);
+window.addEventListener('beforeunload',()=>{ try{ baseSave(LS_KEY, days); baseSave(LS_MEDS, meds); }catch{} });
 
 window.addEventListener('load',()=>{ setTimeout(()=>document.body.classList.add('hide-splash'),1800); });
 
@@ -797,19 +760,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   ensureSyncCode();
   tpUpdateLastBackupLabel(); tpRenderDatalist('');
   renderHistory();
-  renderWeeklyReview();
   showCarryBannerIfAny();
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
-  renderMedsExtras();
-
-  const stockInp=document.getElementById('medsStockInput');
-  const dailyInp=document.getElementById('medsDailyInput');
-  if(stockInp) stockInp.value = localStorage.getItem(LS_MEDS_STOCK) || '';
-  if(dailyInp) dailyInp.value = localStorage.getItem(LS_MEDS_DAILY) || '';
 });
 
+/* Run auto-carry then first render */
 autoCarryForwardIfNewDay();
 renderAll();
 
@@ -824,63 +781,74 @@ function showTab(id){
   if(btn) btn.classList.add('active');
 
   localStorage.setItem(LS_TAB,id);
-  if(id==='history'){ renderHistory(); renderWeeklyReview(); }
+  if(id==='history') renderHistory();
 }
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 /* ===== Medication ===== */
-function medsFor(iso){
-  if(!meds[iso]) meds[iso]={day:'',night:'',dayNote:'',nightNote:''};
-  meds[iso].dayNote  = meds[iso].dayNote  || '';
-  meds[iso].nightNote= meds[iso].nightNote|| '';
-  return meds[iso];
-}
+let medsCountdownTimerId=null;
+
+function medsFor(iso){ if(!meds[iso]) meds[iso]={day:'', night:''}; return meds[iso]; }
 
 function toggleMeds(which){
   const m=medsFor(TODAY);
-  const noteKey = which==='day' ? 'dayNote' : 'nightNote';
-
   if(m[which]){
     if(!confirm('Unmark this dose as taken?')) return;
     m[which]='';
-    m[noteKey]='';
-  }else{
+  } else {
     m[which]=new Date().toISOString();
-    const existing=m[noteKey] || '';
-    const msg = existing ? 'Edit note for this dose (optional):' : 'Add note for this dose (optional):';
-    const note=prompt(msg, existing);
-    if(note!==null) m[noteKey]=note.trim();
   }
   baseSave(LS_MEDS, meds);
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
-  renderMedsExtras();
   notifyLocalChanged();
 }
 
-/* current + best streak */
-function computeMedsStreak(){
-  let streak = 0;
-  let d = new Date(isoToday());
+function renderMeds(){
+  const m = medsFor(TODAY);
+  const btnDay   = document.getElementById('btnMedsDay');
+  const btnNight = document.getElementById('btnMedsNight');
+  const meta     = document.getElementById('medsMeta');
 
-  while (true){
-    const iso = d.toISOString().slice(0,10);
-    const m = meds[iso];
-    if (!m || !m.day || !m.night) break;
-    streak++;
-    d.setDate(d.getDate() - 1);
+  if(btnDay){
+    const isTaken = !!m.day;
+    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    btnDay.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
+    btnDay.innerHTML = `
+      <span class="meds-btn-title">🌅 Day dose</span>
+      <span class="meds-btn-sub">${timeTxt}</span>
+    `;
   }
 
-  let best = parseInt(localStorage.getItem('tp_meds_best_streak') || '0', 10);
-  if (streak > best){
-    best = streak;
-    localStorage.setItem('tp_meds_best_streak', String(best));
+  if(btnNight){
+    const isTaken = !!m.night;
+    const timeTxt = isTaken ? `Logged · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    btnNight.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
+    btnNight.innerHTML = `
+      <span class="meds-btn-title">🌙 Night dose</span>
+      <span class="meds-btn-sub">${timeTxt}</span>
+    `;
   }
-  return { streak, best };
+
+  if(meta){
+    const a = m.day   ? `Day: ${fmtDateTime(m.day)}`   : 'Day: —';
+    const b = m.night ? `Night: ${fmtDateTime(m.night)}` : 'Night: —';
+    meta.textContent = `${a}   •   ${b}`;
+  }
+
+  renderMedsStreakAndWeek();
+  updateMedsRefill();
+  updateMedsCountdownLabel();
 }
 
-/* schedule objects for countdown + timers */
+/* Timed Meds Reminders */
+var medsTimers = [];
+function clearMedsTimers(){
+  if(!Array.isArray(medsTimers)) medsTimers=[];
+  medsTimers.forEach(id=>clearTimeout(id));
+  medsTimers=[];
+}
 function computeMedsSchedule(){
   const mToday = medsFor(TODAY);
   if (!mToday.day) return { nightDueAt: null, nextDayPreAt: null };
@@ -890,141 +858,6 @@ function computeMedsSchedule(){
   const nextDayPreAt = new Date(nextDaySameTime.getTime() - 5*60*1000);
   return { nightDueAt, nextDayPreAt };
 }
-
-function formatCountdown(ms){
-  if (ms <= 0) return 'due now';
-  const totalMinutes = Math.floor(ms / 60000);
-  const h = Math.floor(totalMinutes / 60);
-  const m = totalMinutes % 60;
-  if (h <= 0) return `${m} min`;
-  return `${h}h ${m.toString().padStart(2,'0')}m`;
-}
-
-function computeMedsCountdownLabel(){
-  const { nightDueAt, nextDayPreAt } = computeMedsSchedule();
-  const m = medsFor(TODAY);
-  let target = null;
-
-  if (m.day && !m.night && nightDueAt){
-    target = nightDueAt;
-  } else if (m.day && m.night && nextDayPreAt){
-    target = nextDayPreAt;
-  } else {
-    return '';
-  }
-  return formatCountdown(target - new Date());
-}
-
-var medsTimers=[];
-var medsCountdownTimer = null;
-
-function clearMedsTimers(){
-  if(!Array.isArray(medsTimers)) medsTimers=[];
-  medsTimers.forEach(id=>clearTimeout(id));
-  medsTimers=[];
-}
-
-function startMedsCountdown(){
-  const label = document.getElementById('medsCountdownText');
-  if (!label) return;
-
-  if (medsCountdownTimer){
-    clearInterval(medsCountdownTimer);
-    medsCountdownTimer = null;
-  }
-
-  function refresh(){
-    const { nightDueAt, nextDayPreAt } = computeMedsSchedule();
-    const m = medsFor(TODAY);
-    let target = null;
-
-    if (m.day && !m.night && nightDueAt){
-      target = nightDueAt;
-    } else if (m.day && m.night && nextDayPreAt){
-      target = nextDayPreAt;
-    } else {
-      label.textContent = '—';
-      label.classList.remove('meds-pulse');
-      return;
-    }
-
-    const diff = target - new Date();
-    label.textContent = formatCountdown(diff);
-
-    if (diff <= 0 || diff < 15 * 60 * 1000){
-      label.classList.add('meds-pulse');
-    } else {
-      label.classList.remove('meds-pulse');
-    }
-  }
-
-  refresh();
-  medsCountdownTimer = setInterval(refresh, 60000);
-}
-
-function renderMeds(){
-  const m = medsFor(TODAY);
-  const btnDay   = document.getElementById('btnMedsDay');
-  const btnNight = document.getElementById('btnMedsNight');
-  const meta     = document.getElementById('medsMeta');
-
-  // Buttons
-  if (btnDay){
-    const taken = !!m.day;
-    const timeTxt = taken ? `🌅 Day · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
-    const note = m.dayNote;
-    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
-    btnDay.className = 'meds-btn' + (taken ? ' meds-btn-taken' : '');
-    btnDay.innerHTML = `
-      <span class="meds-btn-title">🌅 Day dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-      ${noteLine}
-    `;
-  }
-
-  if (btnNight){
-    const taken = !!m.night;
-    const timeTxt = taken ? `🌙 Night · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
-    const note = m.nightNote;
-    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
-    btnNight.className = 'meds-btn' + (taken ? ' meds-btn-taken' : '');
-    btnNight.innerHTML = `
-      <span class="meds-btn-title">🌙 Night dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-      ${noteLine}
-    `;
-  }
-
-  // Meta block
-  if (meta){
-    const dayTxt   = m.day   ? fmtDateTime(m.day)   : '—';
-    const nightTxt = m.night ? fmtDateTime(m.night) : '—';
-    const { streak, best } = computeMedsStreak();
-    const countdownLabel = computeMedsCountdownLabel();
-
-    meta.innerHTML = `
-      <div class="meds-meta-line">
-        <span class="meds-meta-label">Log:</span>
-        <span>🌅 Day: ${dayTxt}</span>
-        <span>•</span>
-        <span>🌙 Night: ${nightTxt}</span>
-      </div>
-      <div class="meds-meta-line meds-meta-streak">
-        Adherence streak: <strong>${streak}</strong> day(s) · Best: <strong>${best}</strong>
-      </div>
-      <div class="meds-meta-line meds-meta-count">
-        Next dose in
-        <span id="medsCountdownText" class="meds-countdown-badge">${countdownLabel || '—'}</span>
-      </div>
-    `;
-  }
-
-  updateMedsReminder();
-  scheduleMedsReminders();
-  renderMedsExtras();
-  startMedsCountdown();
-}
-
 function scheduleMedsReminders(){
   clearMedsTimers();
   const bar = document.getElementById('medsReminder'); if (!bar) return;
@@ -1060,160 +893,184 @@ function scheduleMedsReminders(){
     }
   }
 }
-
 function updateMedsReminder(){
-  const bar = document.getElementById('medsReminder'); 
-  if(!bar) return;
-
+  const bar = document.getElementById('medsReminder'); if(!bar) return;
   const m = medsFor(TODAY);
-  const missing = [];
-  if(!m.day)   missing.push('Day dose');
-  if(!m.night) missing.push('Night dose');
-
+  const missing = []; if(!m.day) missing.push('Day dose'); if(!m.night) missing.push('Night dose');
   const hasTimedMsg = bar.style.display === 'block' && bar.querySelector('button');
-
-  if (missing.length === 0){
-    bar.style.display='none';
-    bar.innerHTML='';
-    return;
-  }
-
+  if (missing.length === 0){ bar.style.display='none'; bar.innerHTML=''; return; }
   if (!hasTimedMsg){
-    const msgCore = missing.length === 1
-      ? `${missing[0]} not logged`
-      : `Day & Night doses not logged`;
-
-    bar.innerHTML = `
-      <strong>⚠ Meds log</strong> — ${msgCore}
-      <small>Update this once you’ve actually taken your dose.</small>
-      <button onclick="scrollToMeds()">Go to Meds</button>
-    `;
+    const msg = `Reminder: ${missing.join(' & ')} not logged`;
+    bar.innerHTML = `${msg}<small></small> <button onclick="scrollToMeds()">Go to Meds</button>`;
     bar.style.display='block';
   }
 }
+function scrollToMeds(){ const el=document.getElementById('medsCard'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
 
-function scrollToMeds(){
-  const el=document.getElementById('medsCard'); 
-  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+/* Animated next-dose countdown */
+function computeNextDoseTarget(){
+  const todayIso = TODAY;
+  const m = medsFor(todayIso);
+
+  // If Day is logged, countdown to 12h after that = Night window
+  if(m.day && !m.night){
+    return new Date(new Date(m.day).getTime() + 12*60*60*1000);
+  }
+
+  // If both logged, aim next-day Day at ~24h after today's Day
+  if(m.day && m.night){
+    return new Date(new Date(m.day).getTime() + 24*60*60*1000);
+  }
+
+  // If nothing logged yet: no target (we’re waiting for first tap)
+  return null;
 }
 
-/* Week mini-chart + refill + streak label */
-function renderMedsExtras(){
-  const streakHost=document.getElementById('medsStreak');
-  const weekHost=document.getElementById('medsWeek');
-  const refillHost=document.getElementById('medsRefill');
+function formatCountdownDiff(target){
+  const now = new Date();
+  let diff = Math.floor((target - now)/1000);
+  if(diff <= 0) return 'due now';
 
-  // streak label
-  if(streakHost){
-    const {streak,best}=computeMedsStreak();
-    streakHost.textContent=`7-day view · Current streak ${streak} day(s) · Best ${best}`;
+  const h = Math.floor(diff / 3600);
+  diff -= h*3600;
+  const m = Math.floor(diff / 60);
+
+  if(h <= 0 && m <= 0) return 'due now';
+  if(h <= 0) return `in ${m} min`;
+  return `in ${h}h ${m}m`;
+}
+
+function updateMedsCountdownLabel(){
+  const el = document.getElementById('medsCountdownLabel');
+  if(!el) return;
+
+  if(medsCountdownTimerId){
+    clearInterval(medsCountdownTimerId);
+    medsCountdownTimerId = null;
   }
 
-  // week chart
-  if(weekHost){
-    const labels=['S','M','T','W','T','F','S'];
-    weekHost.innerHTML='';
-    for(let i=6;i>=0;i--){
-      const iso=isoOffset(TODAY,-i);
-      const m=medsFor(iso);
-      const any=!!(m.day||m.night);
-      const full=!!(m.day&&m.night);
-      let cls='meds-week-day';
-      if(full) cls+=' full'; else if(any) cls+=' partial'; else cls+=' missed';
-      const d=new Date(iso);
-      const label=labels[d.getDay()];
-      const dot=full?'●':any?'◐':'○';
-      const div=document.createElement('div');
-      div.className=cls;
-      div.innerHTML=`<span class="mw-label">${label}</span><span class="mw-dot">${dot}</span>`;
-      weekHost.appendChild(div);
-    }
-  }
-
-  // refill
-  if(refillHost){
-    const stock=parseInt(localStorage.getItem(LS_MEDS_STOCK)||'0',10);
-    const daily=parseInt(localStorage.getItem(LS_MEDS_DAILY)||'0',10);
-    if(!stock || !daily){
-      refillHost.textContent='Set your stock & daily doses in Settings to see refill timing.';
+  const target = computeNextDoseTarget();
+  if(!target){
+    const m = medsFor(TODAY);
+    if(!m.day && !m.night){
+      el.textContent = 'Next dose: waiting for first tap.';
+    }else if(m.day && !m.night){
+      el.textContent = 'Night dose: timing not available yet.';
     }else{
-      const daysLeft = Math.floor(stock/daily);
-      if(daysLeft <= 0){
-        refillHost.innerHTML='<span class="meds-refill-warn">Refill now: estimate at or below 0 days of meds left.</span>';
-      }else if(daysLeft <= 3){
-        refillHost.innerHTML=`<span class="meds-refill-warn">Refill soon: about ${daysLeft} day(s) of meds left.</span>`;
-      }else{
-        refillHost.textContent=`Approx. ${daysLeft} day(s) of meds on hand at current usage.`;
-      }
+      el.textContent = 'All doses logged for today.';
     }
+    el.classList.remove('pulse');
+    return;
+  }
+
+  const apply = () => {
+    const txt = formatCountdownDiff(target);
+    el.textContent = `Next dose ${txt}`;
+    if(txt.includes('due now')){
+      el.classList.add('pulse');
+    }else{
+      el.classList.remove('pulse');
+    }
+  };
+
+  apply();
+  medsCountdownTimerId = setInterval(apply, 60000);
+}
+
+/* Streak + week mini-chart */
+function renderMedsStreakAndWeek(){
+  const streakEl=document.getElementById('medsStreak');
+  const weekEl=document.getElementById('medsWeek');
+  if(!streakEl || !weekEl) return;
+
+  const today = new Date(TODAY);
+  const labels=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const daysArr=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);
+    d.setDate(today.getDate()-i);
+    const iso=d.toISOString().slice(0,10);
+    const rec=medsFor(iso);
+    const ok=!!rec.day && !!rec.night;
+    daysArr.push({iso, ok, dow:labels[d.getDay()]});
+  }
+
+  // streak from today backwards
+  let streak=0;
+  for(let i=daysArr.length-1;i>=0;i--){
+    if(daysArr[i].ok) streak++;
+    else break;
+  }
+  streakEl.textContent = streak>0
+    ? `Streak: ${streak} full day(s) in a row`
+    : 'Streak: start by logging both doses today';
+
+  weekEl.innerHTML='';
+  daysArr.forEach(d=>{
+    const bar=document.createElement('div');
+    bar.className='meds-weekbar' + (d.ok?'':' miss');
+    bar.style.height = d.ok ? '28px' : '12px';
+    const label=document.createElement('div');
+    label.className='meds-weekbar-label';
+    label.textContent=d.dow;
+    bar.appendChild(label);
+    weekEl.appendChild(bar);
+  });
+}
+
+/* Meds refill hint */
+function saveMedsSettings(){
+  const stockEl=document.getElementById('medsStockInput');
+  const dailyEl=document.getElementById('medsDailyInput');
+  if(!stockEl || !dailyEl) return;
+  const s=parseInt(stockEl.value||'0',10);
+  const d=parseInt(dailyEl.value||'0',10);
+  const payload={stock:isNaN(s)?0:s, daily:isNaN(d)?0:d};
+  localStorage.setItem('tp_meds_settings', JSON.stringify(payload));
+  updateMedsRefill();
+}
+function loadMedsSettings(){
+  try{
+    return JSON.parse(localStorage.getItem('tp_meds_settings')||'null') || {stock:0,daily:0};
+  }catch(e){
+    return {stock:0,daily:0};
+  }
+}
+function updateMedsRefill(){
+  const el=document.getElementById('medsRefill');
+  if(!el) return;
+  const cfg=loadMedsSettings();
+  if(!cfg.stock || !cfg.daily){
+    el.textContent='Refill timing: add stock + doses/day in Meds Settings to see an estimate.';
+    return;
+  }
+  const daysLeft = Math.floor(cfg.stock / cfg.daily);
+  if(daysLeft <= 0){
+    el.textContent='Refill timing: stock looks empty – consider refilling.';
+  }else{
+    el.textContent=`Refill timing: approx ${daysLeft} day(s) of meds remaining at your current schedule.`;
   }
 }
 
-/* ===== Tasks & Focus ===== */
-function parseTags(name){
-  const tags=[];
-  name.split(/\s+/).forEach(w=>{
-    if(w.startsWith('#') && w.length>1){
-      tags.push(w.slice(1).toLowerCase());
-    }
-  });
-  return tags;
-}
+/* ===== Tasks ===== */
 function addTask(){
-  const input=document.getElementById('taskInput');
-  const name=(input.value||'').trim();
+  const name=document.getElementById('taskInput').value.trim();
   const prio=document.getElementById('prioSelect').value;
   if(!name) return;
-  const t={
-    id:'t_'+Math.random().toString(36).slice(2,8),
-    name,
-    prio,
-    done:false,
-    stars:0,
-    createdAt:new Date().toISOString(),
-    focus:false,
-    tags:parseTags(name)
-  };
+  const t={id:'t_'+Math.random().toString(36).slice(2,8),name,prio,done:false,stars:0,createdAt:new Date().toISOString()};
   ensureDay(viewing).unshift(t);
   save(LS_KEY,days);
-  input.value='';
-  renderAll(); tpRenderDatalist('');
+  document.getElementById('taskInput').value=''; renderAll(); tpRenderDatalist('');
 }
-function toggleDone(dayKey,id,el){
-  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
-  t.done=el.checked;
-  t.timeCompleted=t.done?new Date().toISOString():'';
-  save(LS_KEY,days); renderAll();
-}
-function setStars(dayKey,id,s){
-  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
-  t.stars=s;
-  save(LS_KEY,days); renderAll();
-}
-function toggleFocus(dayKey,id){
-  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
-  t.focus=!t.focus;
-  save(LS_KEY,days); renderAll();
-}
-function editTask(dayKey,id){
-  const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return;
-  const name=prompt('Edit task',t.name);
-  if(name===null) return;
-  const prio=prompt('Priority (low/med/high)', t.prio)||t.prio;
-  t.name=name.trim();
-  t.prio=['low','med','high'].includes(prio)?prio:t.prio;
-  t.tags=parseTags(t.name);
-  save(LS_KEY,days); renderAll();
-}
-function delTask(dayKey,id){
-  if(!confirm('Delete task?')) return;
-  days[dayKey]=ensureDay(dayKey).filter(x=>x.id!==id);
-  save(LS_KEY,days); renderAll();
-}
+function toggleDone(dayKey,id,el){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.done=el.checked; t.timeCompleted=t.done?new Date().toISOString():''; save(LS_KEY,days); renderAll(); }
+function setStars(dayKey,id,s){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; t.stars=s; save(LS_KEY,days); renderAll(); }
+function editTask(dayKey,id){ const t=ensureDay(dayKey).find(x=>x.id===id); if(!t) return; const name=prompt('Edit task',t.name); if(name===null) return; const prio=prompt('Priority (low/med/high)', t.prio)||t.prio; t.name=name.trim(); t.prio=['low','med','high'].includes(prio)?prio:t.prio; save(LS_KEY,days); renderAll(); }
+function delTask(dayKey,id){ if(!confirm('Delete task?')) return; days[dayKey]=ensureDay(dayKey).filter(x=>x.id!==id); save(LS_KEY,days); renderAll(); }
 function clearCompleted(){ days[viewing]=ensureDay(viewing).filter(x=>!x.done); save(LS_KEY,days); renderAll(); }
 function shiftDay(d){ const dt=new Date(viewing); dt.setDate(dt.getDate()+d); viewing=dt.toISOString().slice(0,10); renderAll(); }
 
-/* Manual + auto carry */
+/* Manual carry-over + auto carry */
 function manualCarryOver(){
   const list=ensureDay(viewing); const incomplete=list.filter(t=>!t.done);
   if(!incomplete.length){ alert('No incomplete tasks to carry.'); return; }
@@ -1249,7 +1106,7 @@ function showCarryBannerIfAny(){
   else { bar.style.display='none'; }
 }
 
-/* Render Tasks + Focus lane */
+/* Render Tasks */
 function renderAll(){
   const todayLabel=document.getElementById('todayLabel');
   if(todayLabel) todayLabel.textContent=fmtHumanDate(TODAY);
@@ -1262,84 +1119,29 @@ function renderAll(){
     ul.innerHTML='';
     list.forEach(t=>{
       const li=document.createElement('li'); li.className='task';
-
-      const cb=document.createElement('input');
-      cb.type='checkbox';
-      cb.checked=t.done;
-      cb.onchange=e=>toggleDone(viewing,t.id,e.target);
-
+      const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=t.done; cb.onchange=e=>toggleDone(viewing,t.id,e.target);
       const center=document.createElement('div');
       const prioc=t.prio==='low'?'p-low':t.prio==='med'?'p-med':'p-high';
       const completedMeta=(t.done&&t.timeCompleted)?`<div class="meta">✔ completed ${fmtDateTime(t.timeCompleted)}</div>`:'';
-      const tagText = (t.tags && t.tags.length)
-        ? `<span style="font-size:11px;color:#9fb0d0;">${t.tags.map(x=>'#'+escapeHtml(x)).join(' ')}</span>`
-        : '';
-      center.innerHTML=
-        `<div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">
-           ${escapeHtml(t.name)}
-         </div>
-         <div>
-           <span class="priority ${prioc}">${t.prio}</span>
-           ${tagText}
-         </div>
-         ${completedMeta}`;
-
+      center.innerHTML=`<div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">${escapeHtml(t.name)}</div><div><span class="priority ${prioc}">${t.prio}</span></div>${completedMeta}`;
       const stars=document.createElement('div'); stars.className='stars';
-      for(let s=1;s<=3;s++){
-        const b=document.createElement('button');
-        b.textContent='★';
-        if(t.stars>=s) b.classList.add('on');
-        b.onclick=()=>setStars(viewing,t.id,s===t.stars?0:s);
-        stars.appendChild(b);
-      }
-
-      const act=document.createElement('div'); act.className='actions';
-      const f=document.createElement('button');
-      f.textContent='🎯';
-      f.title=t.focus?'Remove from Focus lane':'Add to Focus lane';
-      if(t.focus) f.classList.add('focus-toggle','on'); else f.classList.add('focus-toggle');
-      f.onclick=()=>toggleFocus(viewing,t.id);
-      const e=document.createElement('button'); e.textContent='✎'; e.onclick=()=>editTask(viewing,t.id);
-      const d=document.createElement('button'); d.textContent='×'; d.className='del'; d.onclick=()=>delTask(viewing,t.id);
-      act.appendChild(f); act.appendChild(e); act.appendChild(d);
-
-      li.appendChild(cb); li.appendChild(center); li.appendChild(stars); li.appendChild(act);
-      ul.appendChild(li);
+      for(let s=1;s<=3;s++){const b=document.createElement('button'); b.textContent='★'; if(t.stars>=s) b.classList.add('on'); b.onclick=()=>setStars(viewing,t.id,s===t.stars?0:s); stars.appendChild(b);}
+      const act=document.createElement('div'); act.className='actions'; const e=document.createElement('button'); e.textContent='✎'; e.onclick=()=>editTask(viewing,t.id); const d=document.createElement('button'); d.textContent='×'; d.className='del'; d.onclick=()=>delTask(viewing,t.id); act.appendChild(e); act.appendChild(d);
+      li.appendChild(cb); li.appendChild(center); li.appendChild(stars); li.appendChild(act); ul.appendChild(li);
     });
   }
-
-  const total=list.length, done=list.filter(x=>x.done).length;
-  const pct=total?Math.round(done/total*100):0;
-  const q=list.filter(x=>x.done).reduce((a,b)=>a+(b.stars||0),0);
-  const qPct=done?Math.round((q/(done*3))*100):0;
+  const total=list.length, done=list.filter(x=>x.done).length; const pct=total?Math.round(done/total*100):0;
+  const q=list.filter(x=>x.done).reduce((a,b)=>a+(b.stars||0),0); const qPct=done?Math.round((q/(done*3))*100):0;
   const doneSummary=document.getElementById('doneSummary'); if(doneSummary) doneSummary.textContent=`${done} / ${total} tasks done (${pct}%)`;
   const qualitySummary=document.getElementById('qualitySummary'); if(qualitySummary) qualitySummary.textContent=`Quality ${qPct}%`;
   const kpiRow=document.getElementById('kpiRow'); if(kpiRow&&kpiRow.firstElementChild) kpiRow.firstElementChild.textContent=`${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
-
-  // Focus lane
-  const focusLane=document.getElementById('focusLane');
-  if(focusLane){
-    const focus=list.filter(t=>t.focus);
-    if(!focus.length){
-      focusLane.style.display='none';
-    }else{
-      focusLane.style.display='block';
-      const doneF=focus.filter(t=>t.done).length;
-      const pctF=Math.round(doneF/focus.length*100);
-      const chips=focus.slice(0,6).map(t=>`<span class="focus-chip">${escapeHtml(t.name)}</span>`).join('');
-      focusLane.innerHTML=
-        `<div>🎯 Focus lane: ${doneF}/${focus.length} done (${pctF}%)</div>
-         <div class="focus-chips">${chips}</div>`;
-    }
-  }
-
   renderMeds();
 }
 
-/* ===== History, tags, weekly review ===== */
+/* History */
 function renderHistory(){
   const wrap=document.getElementById('histList'); if(!wrap) return;
-  const q=(document.getElementById('histSearch').value||'').trim().toLowerCase();
+  const q=document.getElementById('histSearch').value.trim().toLowerCase();
   const spanSel=document.getElementById('histSpan').value;
   let keys=Object.keys(days||{});
   if(spanSel!=='all'){
@@ -1350,17 +1152,13 @@ function renderHistory(){
   keys.sort((a,b)=>new Date(b)-new Date(a));
   if(q){
     keys=keys.filter(k=>{
-      if(k.toLowerCase().includes(q)) return true;
+      if(k.includes(q)) return true;
       const arr=days[k]||[];
-      return arr.some(t=>{
-        const nm=(t.name||'').toLowerCase();
-        const tags=(t.tags||[]).join(' ').toLowerCase();
-        return nm.includes(q) || tags.includes(q);
-      });
+      return arr.some(t=>(t.name||'').toLowerCase().includes(q));
     });
   }
   wrap.innerHTML='';
-  if(!keys.length){ wrap.innerHTML='<div class="muted">No history found.</div>'; renderTagChips(); return; }
+  if(!keys.length){ wrap.innerHTML='<div class="muted">No history found.</div>'; return; }
   keys.forEach(k=>{
     const arr=days[k]||[];
     const total=arr.length, done=arr.filter(t=>t.done).length;
@@ -1369,69 +1167,14 @@ function renderHistory(){
     const qPct=done?Math.round((qsum/(done*3))*100):0;
     const row=document.createElement('div'); row.className='hist-row';
     const left=document.createElement('div');
-    left.innerHTML=`<div style="font-weight:700">${fmtHumanDate(k)}</div>
-                    <div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>`;
+    left.innerHTML=`<div style="font-weight:700">${fmtHumanDate(k)}</div><div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>`;
     const right=document.createElement('div');
     const btn=document.createElement('button'); btn.textContent='Open'; btn.onclick=()=>{ viewing=k; showTab('tasks'); renderAll(); };
-    right.appendChild(btn);
-    row.appendChild(left); row.appendChild(right);
-    wrap.appendChild(row);
+    right.appendChild(btn); row.appendChild(left); row.appendChild(right); wrap.appendChild(row);
   });
-
-  renderTagChips();
 }
 
-function renderTagChips(){
-  const host=document.getElementById('tagChips'); if(!host) return;
-  const stats=new Map();
-  Object.keys(days||{}).forEach(d=>{
-    (days[d]||[]).forEach(t=>{
-      (t.tags||[]).forEach(tag=>{
-        const key=tag.toLowerCase();
-        stats.set(key,(stats.get(key)||0)+1);
-      });
-    });
-  });
-  const entries=Array.from(stats.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  if(!entries.length){ host.innerHTML=''; return; }
-  host.innerHTML=entries.map(([tag,count])=>
-    `<button class="tag-chip" onclick="setHistoryTag('${tag}')">#${escapeHtml(tag)} (${count})</button>`
-  ).join('');
-}
-function setHistoryTag(tag){
-  const input=document.getElementById('histSearch');
-  input.value='#'+tag;
-  renderHistory();
-}
-function renderWeeklyReview(){
-  const body=document.getElementById('weeklyReviewBody'); if(!body) return;
-  let totalTasks=0, doneTasks=0, focusTasks=0;
-  let daysFullMeds=0, daysAnyMeds=0;
-  for(let i=0;i<7;i++){
-    const iso=isoOffset(TODAY,-i);
-    const list=ensureDay(iso);
-    totalTasks += list.length;
-    doneTasks  += list.filter(t=>t.done).length;
-    focusTasks += list.filter(t=>t.focus).length;
-    const m=medsFor(iso);
-    const any = !!(m.day || m.night);
-    const full= !!(m.day && m.night);
-    if(any) daysAnyMeds++;
-    if(full) daysFullMeds++;
-  }
-  if(totalTasks===0 && daysAnyMeds===0){
-    body.textContent='Not enough data for this week yet. Start logging tasks and meds to see your review.';
-    return;
-  }
-  const pctTasks = totalTasks ? Math.round(doneTasks/totalTasks*100) : 0;
-  body.innerHTML=
-    `Tasks (7 days): <strong>${doneTasks}/${totalTasks}</strong> completed (${pctTasks}%).
-     <br/>Focus tasks marked: <strong>${focusTasks}</strong>.
-     <br/>Meds: <strong>${daysFullMeds}/7</strong> days with both doses logged
-     (${daysAnyMeds} day(s) with at least one dose).`;
-}
-
-/* ===== Backup & Reset ===== */
+/* Backup */
 (function () {
   function buildBackupPayload() {
     const dump = {};
@@ -1446,15 +1189,14 @@ function renderWeeklyReview(){
     dump[LS_LAST_OPEN]        = localStorage.getItem(LS_LAST_OPEN) || isoToday();
     dump[LS_LAST_CARRY_COUNT] = localStorage.getItem(LS_LAST_CARRY_COUNT) || '0';
 
-    return { app:'taskpulse', flavor:'v8.5', exportedAt:new Date().toISOString(), dump };
+    return { app:'taskpulse', flavor:'v8.6', exportedAt:new Date().toISOString(), dump };
   }
   window.tpDownloadBackup=function(){
     try{
       const payload=buildBackupPayload();
       const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=url; a.download='taskpulse_backup.json';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      const a=document.createElement('a'); a.href=url; a.download='taskpulse_backup.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       localStorage.setItem('tp_last_backup', new Date().toLocaleString());
       tpUpdateLastBackupLabel();
       setStatus('Backup downloaded.');
@@ -1489,94 +1231,27 @@ function renderWeeklyReview(){
     if(el) el.textContent=msg;
   }
 })();
-
 function tpUpdateLastBackupLabel(){
   const el=document.getElementById('tpLastBackup');
   if(!el) return;
   el.textContent=`Last backup: ${localStorage.getItem('tp_last_backup')||'none'}`;
 }
 
-function tpSafeReset(){
-  if(!confirm('This will clear all Task Pulse data on this device (backups you downloaded stay safe). Continue?')) return;
-  const keep=['tp_last_backup'];
-  const toDelete=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(/^tp_/.test(k) && !keep.includes(k)) toDelete.push(k);
-  }
-  toDelete.forEach(k=>localStorage.removeItem(k));
-  location.reload();
-}
-
-/* Meds settings */
-function saveMedsSettings(){
-  const stockInp=document.getElementById('medsStockInput');
-  const dailyInp=document.getElementById('medsDailyInput');
-  const stock=parseInt(stockInp.value||'0',10);
-  const daily=parseInt(dailyInp.value||'0',10);
-  if(isFinite(stock)) localStorage.setItem(LS_MEDS_STOCK,String(stock));
-  if(isFinite(daily) && daily>0) localStorage.setItem(LS_MEDS_DAILY,String(daily));
-  renderMedsExtras();
-}
-
 /* Predictive text + utils */
 var SUGGEST_MAX=10;
-function tpCollectTaskStats(){
-  const stats=new Map();
-  for(const dk of Object.keys(days||{})){
-    for(const t of (days[dk]||[])){
-      const nm=(t.name||'').trim(); if(!nm) continue;
-      const key=nm.toLowerCase();
-      const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime();
-      if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0});
-      const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);
-    }
-  }
-  return stats;
-}
-function tpRankedNames(stats){
-  return Array.from(stats.values()).sort((a,b)=>(b.count-a.count)||(b.last-a.last)).map(v=>v.name);
-}
-function tpGetSuggestions(prefix){
-  const ranked=tpRankedNames(tpCollectTaskStats());
-  const p=(prefix||'').trim().toLowerCase();
-  if(!p) return ranked.slice(0,SUGGEST_MAX);
-  const pref=ranked.filter(n=>n.toLowerCase().startsWith(p));
-  if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX);
-  const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p));
-  return [...pref,...rest].slice(0,SUGGEST_MAX);
-}
-function tpRenderDatalist(prefix){
-  const dl=document.getElementById('taskSuggestions'); if(!dl) return;
-  const opts=tpGetSuggestions(prefix);
-  dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join('');
-}
-
-/* Utils */
+function tpCollectTaskStats(){ const stats=new Map(); for(const dk of Object.keys(days||{})){ for(const t of (days[dk]||[])){ const nm=(t.name||'').trim(); if(!nm) continue; const key=nm.toLowerCase(); const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime(); if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0}); const s=stats.get(key); s.count++; s.last=Math.max(s.last,last);} } return stats; }
+function tpRankedNames(stats){ return Array.from(stats.values()).sort((a,b) => (b.count - a.count)||(b.last - a.last)).map(v=> v.name); }
+function tpGetSuggestions(prefix){ const ranked=tpRankedNames(tpCollectTaskStats()); const p=(prefix||'').trim().toLowerCase(); if(!p) return ranked.slice(0,SUGGEST_MAX); const pref=ranked.filter(n=>n.toLowerCase().startsWith(p)); if(pref.length>=SUGGEST_MAX) return pref.slice(0,SUGGEST_MAX); const rest=ranked.filter(n=>!n.toLowerCase().startsWith(p)&&n.toLowerCase().includes(p)); return [...pref,...rest].slice(0,SUGGEST_MAX); }
+function tpRenderDatalist(prefix){ const dl=document.getElementById('taskSuggestions'); if(!dl) return; const opts=tpGetSuggestions(prefix); dl.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join(''); }
 function isoToday(){ return new Date().toISOString().slice(0,10); }
-function isoOffset(iso, days){
-  const d=new Date(iso); d.setHours(12,0,0,0);
-  d.setDate(d.getDate()+days);
-  return d.toISOString().slice(0,10);
-}
+function isoOffset(iso, days){ const d=new Date(iso); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
 function ensureDay(iso){ if(!days[iso]) days[iso]=[]; return days[iso]; }
 function load(k,def){ try{ return JSON.parse(localStorage.getItem(k)||'null') ?? def; }catch(e){return def;} }
 function fmtHumanDate(iso){ const d=new Date(iso); return d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); }
-function fmtDateTime(iso){
-  try{
-    const d=new Date(iso);
-    const date=d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'});
-    const time=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
-    return `${date} · ${time}`;
-  }catch{ return ''; }
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m=>(
-    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m]
-  ));
-}
+function fmtDateTime(iso){ try{ const d=new Date(iso); const date=d.toLocaleDateString(undefined,{day:'2-digit',month:'2-digit',year:'numeric'}); const time=d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); return `${date} · ${time}`; }catch{ return ''; } }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m])); }
 
-/* ===== Sync ===== */
+/* Sync (same as before) */
 const TP_UID=(localStorage.getItem('tp_uid')||(()=>{const v='u_'+Math.random().toString(36).slice(2,10);localStorage.setItem('tp_uid',v);return v;})());
 let syncRef=null,syncOff=null,writeTimer=null;
 function setSyncBadge(text,kind=''){ const el=document.getElementById('syncState'); if(!el) return; el.textContent=text; el.className='badge '+(kind||''); }
@@ -1616,7 +1291,7 @@ function attachSync(code){
     if(val && (val.days||val.meds)){
       days=mergeDays(days,val.days||{}); meds=mergeMeds(meds,val.meds||{});
       baseSave(LS_KEY,days); baseSave(LS_MEDS,meds);
-      renderAll();
+      renderAll(); renderMeds();
     }else{
       debouncedPush();
     }
@@ -1626,7 +1301,7 @@ function attachSync(code){
     if(val._meta && val._meta.by===TP_UID) return;
     if(val.days){ days=mergeDays(days,val.days); baseSave(LS_KEY,days); }
     if(val.meds){ meds=mergeMeds(meds,val.meds); baseSave(LS_MEDS,meds); }
-    renderAll();
+    renderAll(); renderMeds();
   });
   syncOff=()=>syncRef.off('value',handler);
 }
@@ -1643,9 +1318,9 @@ function mergeDays(localDays,remoteDays){
 function mergeMeds(localM,remoteM){
   const out={...(localM||{})};
   for(const day of Object.keys(remoteM||{})){
-    const r=remoteM[day]||{}, l=out[day]||{day:'',night:'',dayNote:'',nightNote:''};
+    const r=remoteM[day]||{}, l=out[day]||{day:'',night:''};
     const pick=(a,b)=>{ const ta=a?Date.parse(a):0, tb=b?Date.parse(b):0; return (tb>ta)?b:a; };
-    out[day]={day:pick(l.day,r.day), night:pick(l.night,r.night), dayNote:l.dayNote||r.dayNote||'', nightNote:l.nightNote||r.nightNote||''};
+    out[day]={day:pick(l.day,r.day), night:pick(l.night,r.night)};
   }
   return out;
 }
