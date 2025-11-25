@@ -335,7 +335,7 @@
     cursor:pointer;
   }
 
-  /* Banners */
+  /* Carry banner */
   #carryWarn{
     display:none;
     margin:6px 0 0 0;
@@ -346,112 +346,36 @@
     font-size:11px;
     color:#f0d5ff;
   }
+
+  /* Meds reminder – warm version */
   #medsReminder{
     display:none;
     margin:8px 0 0 0;
     padding:10px 12px;
     border-radius:12px;
-    border:1px solid #3e4a13;
-    background:#161d07;
-    color:#d8ee8a;
-    font-weight:600;
-  }
-  #medsReminder small{
-    display:block;
-    color:#b9c66a;
-    font-weight:400;
-    margin-top:4px;
-  }
-  #medsReminder button{
-    margin-left:6px;
-    border-radius:9px;
     border:1px solid #ff9d3b;
     background:#2a1b0d;
     color:#ffd8a2;
+    font-weight:500;
+  }
+  #medsReminder small{
+    display:block;
+    margin-top:4px;
+    font-size:11px;
+    color:#ffe1ad;
+  }
+  #medsReminder button{
+    margin-left:10px;
+    border-radius:9px;
+    border:1px solid #ffce7a;
+    background:#3a220a;
+    color:#ffe7c2;
     padding:6px 14px;
     font-size:0.86rem;
     box-shadow:0 0 10px rgba(255,140,40,0.35);
   }
 
   /* Meds card */
-
-  /* Meds meta under the buttons */
-.meds-meta{
-  margin-top:4px;
-  font-size:11px;
-  line-height:1.4;
-}
-
-.meds-meta-line{
-  display:flex;
-  gap:4px;
-  align-items:center;
-  opacity:0.85;
-}
-
-.meds-meta-label{
-  font-weight:500;
-  color:#c5d0ff;
-}
-
-.meds-meta-streak{
-  color:#a7ffcf;
-}
-
-.meds-meta-count{
-  color:#ffd48c;
-}
-
-/* Countdown highlight */
-.meds-countdown-badge{
-  padding:1px 6px;
-  border-radius:999px;
-  background:#261806;
-  border:1px solid #ffb45b;
-  font-variant-numeric:tabular-nums;
-}
-
-/* Soft pulse when dose is almost due / due */
-.meds-pulse{
-  animation:medsPulse 1.2s ease-in-out infinite alternate;
-}
-
-@keyframes medsPulse{
-  from{ opacity:0.75; box-shadow:0 0 4px rgba(255,210,120,0.3); }
-  to  { opacity:1;    box-shadow:0 0 10px rgba(255,210,120,0.7); }
-}
-
-/* Updated reminder banner – warmer, readable */
-#medsReminder{
-  display:none;
-  margin:8px 0 0 0;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid #ff9d3b;
-  background:#2a1b0d;
-  color:#ffd8a2;
-  font-weight:500;
-}
-
-#medsReminder small{
-  display:block;
-  margin-top:4px;
-  font-size:11px;
-  color:#ffe1ad;
-}
-
-#medsReminder button{
-  margin-left:10px;
-  border-radius:9px;
-  border:1px solid #ffce7a;
-  background:#3a220a;
-  color:#ffe7c2;
-  padding:6px 14px;
-  font-size:0.86rem;
-  box-shadow:0 0 10px rgba(255,140,40,0.35);
-}
-
-  
   .meds-card{padding:10px 10px 10px;}
   .meds-head{
     display:flex;
@@ -552,6 +476,44 @@
   }
   .meds-refill-warn{
     color:#ffd78a;
+  }
+
+  /* Meds meta under buttons */
+  .meds-meta{
+    margin-top:4px;
+    font-size:11px;
+    line-height:1.4;
+  }
+  .meds-meta-line{
+    display:flex;
+    gap:4px;
+    align-items:center;
+    opacity:0.9;
+    flex-wrap:wrap;
+  }
+  .meds-meta-label{
+    font-weight:500;
+    color:#c5d0ff;
+  }
+  .meds-meta-streak{
+    color:#a7ffcf;
+  }
+  .meds-meta-count{
+    color:#ffd48c;
+  }
+  .meds-countdown-badge{
+    padding:1px 6px;
+    border-radius:999px;
+    background:#261806;
+    border:1px solid #ffb45b;
+    font-variant-numeric:tabular-nums;
+  }
+  .meds-pulse{
+    animation:medsPulse 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes medsPulse{
+    from{ opacity:0.75; box-shadow:0 0 4px rgba(255,210,120,0.3); }
+    to  { opacity:1;    box-shadow:0 0 10px rgba(255,210,120,0.7); }
   }
 
   /* Splash */
@@ -840,6 +802,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
+  renderMedsExtras();
 
   const stockInp=document.getElementById('medsStockInput');
   const dailyInp=document.getElementById('medsDailyInput');
@@ -872,6 +835,7 @@ function medsFor(iso){
   meds[iso].nightNote= meds[iso].nightNote|| '';
   return meds[iso];
 }
+
 function toggleMeds(which){
   const m=medsFor(TODAY);
   const noteKey = which==='day' ? 'dayNote' : 'nightNote';
@@ -891,70 +855,12 @@ function toggleMeds(which){
   renderMeds();
   updateMedsReminder();
   scheduleMedsReminders();
+  renderMedsExtras();
   notifyLocalChanged();
 }
-function {
-  const m = medsFor(TODAY);
-  const btnDay   = document.getElementById('btnMedsDay');
-  const btnNight = document.getElementById('btnMedsNight');
-  const meta     = document.getElementById('medsMeta');
 
-  if(btnDay){
-    const isTaken = !!m.day;
-    const timeTxt = isTaken ? `🌅 Day · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
-    const note    = m.dayNote;
-    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
-    btnDay.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
-    btnDay.innerHTML = `
-      <span class="meds-btn-title">🌅 Day dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-      ${noteLine}
-    `;
-  }
-
-  if(btnNight){
-    const isTaken = !!m.night;
-    const timeTxt = isTaken ? `🌙 Night · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
-    const note    = m.nightNote;
-    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
-    btnNight.className = 'meds-btn' + (isTaken ? ' meds-btn-taken' : '');
-    btnNight.innerHTML = `
-      <span class="meds-btn-title">🌙 Night dose</span>
-      <span class="meds-btn-sub">${timeTxt}</span>
-      ${noteLine}
-    `;
-  }
-
-  if(meta){
-    const a = m.day   ? `Day: ${fmtDateTime(m.day)}`   : 'Day: —';
-    const b = m.night ? `Night: ${fmtDateTime(m.night)}` : 'Night: —';
-    meta.textContent = `${a}   •   ${b}`;
-  }
-
-  renderMedsExtras();
-}
-
-/* streak + chart + refill */
-function computeMedsStreaks(){
-  const keys = Object.keys(meds||{}).sort();
-  let best=0, current=0;
-  let prevIso=null;
-  keys.forEach(k=>{
-    const m=medsFor(k);
-    const full = !!(m.day && m.night);
-    if(!full){ current=0; prevIso=null; return; }
-    if(prevIso){
-      const expected = isoOffset(prevIso,1);
-      if(k===expected) current++; else current=1;
-    }else current=1;
-    prevIso=k;
-    if(current>best) best=current;
-  });
-  return {current,best};
-}
-
-  function computeMedsStreak(){
-  // Current streak = consecutive days (backwards) where both doses are logged
+/* current + best streak */
+function computeMedsStreak(){
   let streak = 0;
   let d = new Date(isoToday());
 
@@ -974,20 +880,15 @@ function computeMedsStreaks(){
   return { streak, best };
 }
 
-// Static label used for initial render (in case JS interval hasn’t ticked yet)
-function computeMedsCountdownLabel(){
-  const { nightDueAt, nextDayPreAt } = computeMedsSchedule();
-  const m = medsFor(TODAY);
-
-  let target = null;
-  if (m.day && !m.night && nightDueAt){
-    target = nightDueAt;                 // waiting for Night dose
-  } else if (m.day && m.night && nextDayPreAt){
-    target = nextDayPreAt;               // early reminder for tomorrow’s Day
-  } else {
-    return '';
-  }
-  return formatCountdown(target - new Date());
+/* schedule objects for countdown + timers */
+function computeMedsSchedule(){
+  const mToday = medsFor(TODAY);
+  if (!mToday.day) return { nightDueAt: null, nextDayPreAt: null };
+  const dayLoggedAt = new Date(mToday.day);
+  const nightDueAt = new Date(dayLoggedAt.getTime() + 12*60*60*1000);
+  const nextDaySameTime = new Date(dayLoggedAt.getTime() + 24*60*60*1000);
+  const nextDayPreAt = new Date(nextDaySameTime.getTime() - 5*60*1000);
+  return { nightDueAt, nextDayPreAt };
 }
 
 function formatCountdown(ms){
@@ -999,7 +900,30 @@ function formatCountdown(ms){
   return `${h}h ${m.toString().padStart(2,'0')}m`;
 }
 
-// Live animated countdown (updates the badge every minute)
+function computeMedsCountdownLabel(){
+  const { nightDueAt, nextDayPreAt } = computeMedsSchedule();
+  const m = medsFor(TODAY);
+  let target = null;
+
+  if (m.day && !m.night && nightDueAt){
+    target = nightDueAt;
+  } else if (m.day && m.night && nextDayPreAt){
+    target = nextDayPreAt;
+  } else {
+    return '';
+  }
+  return formatCountdown(target - new Date());
+}
+
+var medsTimers=[];
+var medsCountdownTimer = null;
+
+function clearMedsTimers(){
+  if(!Array.isArray(medsTimers)) medsTimers=[];
+  medsTimers.forEach(id=>clearTimeout(id));
+  medsTimers=[];
+}
+
 function startMedsCountdown(){
   const label = document.getElementById('medsCountdownText');
   if (!label) return;
@@ -1028,7 +952,6 @@ function startMedsCountdown(){
     label.textContent = formatCountdown(diff);
 
     if (diff <= 0 || diff < 15 * 60 * 1000){
-      // inside 15 minutes window → gently pulse
       label.classList.add('meds-pulse');
     } else {
       label.classList.remove('meds-pulse');
@@ -1036,45 +959,46 @@ function startMedsCountdown(){
   }
 
   refresh();
-  medsCountdownTimer = setInterval(refresh, 60000); // tick every minute
+  medsCountdownTimer = setInterval(refresh, 60000);
 }
 
-
-
-
-  
-  function renderMeds(){
+function renderMeds(){
   const m = medsFor(TODAY);
   const btnDay   = document.getElementById('btnMedsDay');
   const btnNight = document.getElementById('btnMedsNight');
   const meta     = document.getElementById('medsMeta');
 
-  // --- Buttons ---
+  // Buttons
   if (btnDay){
     const taken = !!m.day;
-    const timeTxt = taken ? `Logged · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    const timeTxt = taken ? `🌅 Day · ${fmtDateTime(m.day)}` : 'Tap to log your Day dose';
+    const note = m.dayNote;
+    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
     btnDay.className = 'meds-btn' + (taken ? ' meds-btn-taken' : '');
     btnDay.innerHTML = `
       <span class="meds-btn-title">🌅 Day dose</span>
       <span class="meds-btn-sub">${timeTxt}</span>
+      ${noteLine}
     `;
   }
 
   if (btnNight){
     const taken = !!m.night;
-    const timeTxt = taken ? `Logged · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    const timeTxt = taken ? `🌙 Night · ${fmtDateTime(m.night)}` : 'Tap to log your Night dose';
+    const note = m.nightNote;
+    const noteLine = note ? `<span class="meds-btn-note">📝 ${escapeHtml(note.slice(0,50))}${note.length>50?'…':''}</span>` : '';
     btnNight.className = 'meds-btn' + (taken ? ' meds-btn-taken' : '');
     btnNight.innerHTML = `
       <span class="meds-btn-title">🌙 Night dose</span>
       <span class="meds-btn-sub">${timeTxt}</span>
+      ${noteLine}
     `;
   }
 
-  // --- Meta block under buttons ---
+  // Meta block
   if (meta){
     const dayTxt   = m.day   ? fmtDateTime(m.day)   : '—';
     const nightTxt = m.night ? fmtDateTime(m.night) : '—';
-
     const { streak, best } = computeMedsStreak();
     const countdownLabel = computeMedsCountdownLabel();
 
@@ -1097,27 +1021,10 @@ function startMedsCountdown(){
 
   updateMedsReminder();
   scheduleMedsReminders();
-  startMedsCountdown();   // kick / refresh the animated countdown
+  renderMedsExtras();
+  startMedsCountdown();
 }
 
-
-var medsTimers=[];
-  var medsCountdownTimer = null;
-
-function clearMedsTimers(){
-  if(!Array.isArray(medsTimers)) medsTimers=[];
-  medsTimers.forEach(id=>clearTimeout(id));
-  medsTimers=[];
-}
-function computeMedsSchedule(){
-  const mToday = medsFor(TODAY);
-  if (!mToday.day) return { nightDueAt: null, nextDayPreAt: null };
-  const dayLoggedAt = new Date(mToday.day);
-  const nightDueAt = new Date(dayLoggedAt.getTime() + 12*60*60*1000);
-  const nextDaySameTime = new Date(dayLoggedAt.getTime() + 24*60*60*1000);
-  const nextDayPreAt = new Date(nextDaySameTime.getTime() - 5*60*1000);
-  return { nightDueAt, nextDayPreAt };
-}
 function scheduleMedsReminders(){
   clearMedsTimers();
   const bar = document.getElementById('medsReminder'); if (!bar) return;
@@ -1154,7 +1061,7 @@ function scheduleMedsReminders(){
   }
 }
 
-  function updateMedsReminder(){
+function updateMedsReminder(){
   const bar = document.getElementById('medsReminder'); 
   if(!bar) return;
 
@@ -1185,9 +1092,63 @@ function scheduleMedsReminders(){
   }
 }
 
+function scrollToMeds(){
+  const el=document.getElementById('medsCard'); 
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
 
+/* Week mini-chart + refill + streak label */
+function renderMedsExtras(){
+  const streakHost=document.getElementById('medsStreak');
+  const weekHost=document.getElementById('medsWeek');
+  const refillHost=document.getElementById('medsRefill');
 
-  
+  // streak label
+  if(streakHost){
+    const {streak,best}=computeMedsStreak();
+    streakHost.textContent=`7-day view · Current streak ${streak} day(s) · Best ${best}`;
+  }
+
+  // week chart
+  if(weekHost){
+    const labels=['S','M','T','W','T','F','S'];
+    weekHost.innerHTML='';
+    for(let i=6;i>=0;i--){
+      const iso=isoOffset(TODAY,-i);
+      const m=medsFor(iso);
+      const any=!!(m.day||m.night);
+      const full=!!(m.day&&m.night);
+      let cls='meds-week-day';
+      if(full) cls+=' full'; else if(any) cls+=' partial'; else cls+=' missed';
+      const d=new Date(iso);
+      const label=labels[d.getDay()];
+      const dot=full?'●':any?'◐':'○';
+      const div=document.createElement('div');
+      div.className=cls;
+      div.innerHTML=`<span class="mw-label">${label}</span><span class="mw-dot">${dot}</span>`;
+      weekHost.appendChild(div);
+    }
+  }
+
+  // refill
+  if(refillHost){
+    const stock=parseInt(localStorage.getItem(LS_MEDS_STOCK)||'0',10);
+    const daily=parseInt(localStorage.getItem(LS_MEDS_DAILY)||'0',10);
+    if(!stock || !daily){
+      refillHost.textContent='Set your stock & daily doses in Settings to see refill timing.';
+    }else{
+      const daysLeft = Math.floor(stock/daily);
+      if(daysLeft <= 0){
+        refillHost.innerHTML='<span class="meds-refill-warn">Refill now: estimate at or below 0 days of meds left.</span>';
+      }else if(daysLeft <= 3){
+        refillHost.innerHTML=`<span class="meds-refill-warn">Refill soon: about ${daysLeft} day(s) of meds left.</span>`;
+      }else{
+        refillHost.textContent=`Approx. ${daysLeft} day(s) of meds on hand at current usage.`;
+      }
+    }
+  }
+}
+
 /* ===== Tasks & Focus ===== */
 function parseTags(name){
   const tags=[];
@@ -1419,6 +1380,7 @@ function renderHistory(){
 
   renderTagChips();
 }
+
 function renderTagChips(){
   const host=document.getElementById('tagChips'); if(!host) return;
   const stats=new Map();
