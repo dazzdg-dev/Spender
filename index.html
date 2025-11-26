@@ -2,71 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Smart V8.7 — Orange Pulse Hybrid</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Task Pulse Smart V8.8</title>
 
 <link rel="preload" as="image" href="taskpulse-splash-hex.jpeg" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="icon-192.png" sizes="192x192" />
-<meta name="theme-color" content="#120d08" />
+<meta name="theme-color" content="#0f111a" />
 
 <style>
-
-/* ========= ORANGE-PULSE HYBRID THEME ========= */
+/* ============================================================
+   ROOT PALETTE — V8.8 (Hybrid H1 Base + Subtle Meds Palette)
+   ============================================================ */
 :root{
-  --bg:#0d0b08;           
-  --card:#1b140e;         
-  --ink:#f7f3e8;          
-  --muted:#b9a894;        
-  --line:#30251b;         
-  --pill:#271c12;         
+  --bg:#050611;
+  --bg2:#080b14;
+  --card:#141725;
+  --ink:#e9ecf5;
+  --muted:#9fa8c7;
+  --line:#262a3c;
+  --pill:#1b2440;
+  --pad:14px;
   --radius:16px;
   --tap:50px;
-  --pad:14px;
+  --fs:16px;
+  --accent:#27b7ff;
+  --accent-soft:#193b66;
 
-  --amber:#ff9d3b;
-  --amber-soft:#ffb766;
-  --amber-dark:#2a1b0d;
-  --amber-glow:rgba(255,150,50,0.45);
+  /* Med system soft-greens (not neon) */
+  --med-bg:#07121a;
+  --med-border:#144c3b;
+  --med-taken-bg:#0b2620;
+  --med-taken-glow:#25b78a;
+
+  /* Weekly chart colours */
+  --chart-bar:#38d9ff;
+  --chart-bar-low:#1d2a39;
+
+  /* Focus lane highlight */
+  --focus-tint:#1a202f;
 }
-
 @media(max-width:480px){
-  :root{
-    --pad:12px;
-    --radius:14px;
-    --tap:56px;
-  }
+  :root{ --pad:12px; --radius:14px; --tap:56px; --fs:17px; }
 }
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-  margin:0;
-  padding:0;
-}
-
-html,body{height:100%}
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0; }
+html,body{ height:100%; }
 
 body{
-  background:#0d0b08;
+  margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--ink);
+  font-size:var(--fs);
+  background:radial-gradient(circle at top,#1d2440 0,#050611 55%);
   display:flex;
-  justify-content:center;
   align-items:flex-start;
+  justify-content:center;
   padding:12px;
 }
 
-/* ========= SHELL ========= */
+/* ============================================================
+   APP SHELL — HYBRID H1
+   ============================================================ */
 .shell{
-  width:100%;
   max-width:900px;
-  background:#14100c;
+  width:100%;
+  background:#050814;
   border-radius:18px;
-  padding:16px;
-  border:1px solid #31261a;
-  box-shadow:0 20px 50px rgba(0,0,0,.65);
-  animation:fadeIn .4s ease-out;
+  box-shadow:0 18px 60px rgba(0,0,0,.7);
+  padding:16px 18px 14px;
+  border:1px solid #20263c;
 }
 
 .wrap{
@@ -75,137 +81,427 @@ body{
   padding:4px var(--pad) calc(40px + env(safe-area-inset-bottom));
 }
 
-/* ========= ANIMATIONS ========= */
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(6px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes glowPulse{
-  0%{box-shadow:0 0 0 rgba(255,150,50,0.25);}
-  50%{box-shadow:0 0 14px rgba(255,180,80,0.45);}
-  100%{box-shadow:0 0 0 rgba(255,150,50,0.25);}
-}
-
-/* ========= HEADER ========= */
+/* ============================================================
+   HEADER
+   ============================================================ */
 .hero-header{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
 .logo-pill{
-  background:radial-gradient(circle at 30% 20%, var(--amber-soft), var(--amber-dark));
-  width:44px;
-  height:44px;
+  width:42px;
+  height:42px;
   border-radius:999px;
+  background:radial-gradient(circle at 30% 20%,#5fffd0 0,#0fd0ff 40%,#0b1428 80%);
   display:flex;
-  justify-content:center;
   align-items:center;
-  font-weight:700;
-  font-size:18px;
+  justify-content:center;
+  box-shadow:0 0 18px rgba(0,255,213,.35);
+  font-weight:800;
+  letter-spacing:.03em;
   color:white;
-  box-shadow:0 0 12px var(--amber-glow);
 }
 
-.brand-title{font-size:18px;font-weight:700;}
-.brand-sub{font-size:11px;color:var(--muted);}
+.brand-title{ font-size:19px; font-weight:700; }
+.brand-sub{ font-size:11px; color:var(--muted); }
+
+.top-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  font-size:11px;
+  color:var(--muted);
+}
 
 .badge{
   padding:2px 8px;
   border-radius:999px;
+  border:1px solid #3b425d;
   font-size:11px;
   background:var(--pill);
-  border:1px solid #4d3928;
 }
-.badge.good{
-  color:#ffe7c5;
-  border-color:#ffb766;
+.badge.good{ border-color:#3bd47a; color:#7fffb3; }
+.badge.warn{ border-color:#e7a74c; color:#ffd78a; }
+
+/* ============================================================
+   KPI ROW
+   ============================================================ */
+.kpi-pill{
+  margin:6px 0 12px;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  color:var(--muted);
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(10,15,30,.9);
 }
 
-/* ========= TABS ========= */
+/* ============================================================
+   TABS — HYBRID H1
+   ============================================================ */
 .tabs{
   position:sticky;
   top:0;
-  background:#14100cee;
-  backdrop-filter:blur(6px);
-  padding:6px 0 4px;
   z-index:50;
+  padding:4px 0 4px;
+  background:linear-gradient(180deg,rgba(5,8,20,.98) 0%,rgba(5,8,20,.88) 70%,rgba(5,8,20,0) 100%);
+  backdrop-filter:saturate(130%) blur(4px);
+  margin-bottom:10px;
 }
 
 .tabbar{
   display:flex;
-  gap:8px;
+  gap:6px;
   overflow:auto;
+  padding-bottom:4px;
 }
 
 .tabbar button{
   flex:1;
   min-width:110px;
-  padding:7px 10px;
+  padding:8px 12px;
+  font-size:13px;
   border-radius:999px;
-  background:#2a1b0d;
-  color:#e6d8c8;
-  border:1px solid #3e2a1c;
+  border:1px solid transparent;
+  background:var(--pill);
+  color:var(--muted);
   cursor:pointer;
-  transition:all .25s ease;
+  font-weight:500;
+  white-space:nowrap;
 }
 
 .tabbar button.active{
-  background:linear-gradient(135deg, var(--amber), var(--amber-soft));
-  color:#201407;
+  background:linear-gradient(135deg,#27b7ff,#4df2ff);
+  color:#04101b;
   font-weight:600;
-  box-shadow:0 0 14px var(--amber-glow);
+  box-shadow:0 0 18px rgba(39,183,255,.6);
 }
 
-.tabpage{display:none;}
-.tabpage.active{display:block;animation:fadeIn .3s ease-out;}
+.tabpage{ display:none; }
+.tabpage.active{ display:block; }
 
-/* ========= CARDS ========= */
+/* ============================================================
+   CARDS
+   ============================================================ */
 .card{
   background:var(--card);
-  border-radius:var(--radius);
   border:1px solid var(--line);
-  padding:12px 14px;
+  border-radius:var(--radius);
+  padding:12px 12px 10px;
   margin:10px 0;
-  box-shadow:0 6px 24px rgba(0,0,0,.35);
+  box-shadow:0 6px 30px rgba(0,0,0,.25);
 }
 
-/* ========= TASK INPUT + BUTTONS ========= */
+.row{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
 input,select,button{
   border-radius:999px;
   border:1px solid var(--line);
-  background:#0f0b08;
+  background:#050814;
   color:var(--ink);
-  padding:7px 11px;
+  padding:8px 12px;
   min-height:var(--tap);
+  font-size:13px;
 }
+input[type=text]{ flex:1 1 200px; min-width:0; }
 
 button.primary{
-  background:linear-gradient(135deg, var(--amber), var(--amber-soft));
-  color:#1c120a;
-  font-weight:600;
+  background:linear-gradient(135deg,#27b7ff,#4df2ff);
+  color:#04101b;
   border:none;
+  font-weight:600;
   cursor:pointer;
-  box-shadow:0 0 10px var(--amber-glow);
+  white-space:nowrap;
 }
 
 .btn-ghost{
-  background:#1a130d;
-  border:1px solid #3c2a1c;
+  background:transparent;
+  border:1px solid var(--line);
   color:var(--muted);
 }
 
-/* ========= SPLASH ========= */
+.btn-danger{
+  background:rgba(224,82,100,.12);
+  border:1px solid #e05264;
+  color:#ff9da8;
+}
+
+.muted{ color:var(--muted); }
+.list{ list-style:none; margin:0; padding:0; }
+
+/* ============================================================
+   TASK ROWS
+   ============================================================ */
+.task{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  gap:8px;
+  align-items:center;
+  padding:8px 10px;
+  margin-bottom:5px;
+  border-radius:12px;
+  background:#101528;
+  border:1px solid #1e2234;
+  transition:background .2s;
+}
+
+.task input[type="checkbox"]{
+  width:16px; height:16px;
+}
+
+.task div:first-of-type{
+  min-height:40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.priority{
+  display:inline-block;
+  border-radius:999px;
+  padding:1px 6px;
+  font-size:10px;
+  margin-top:4px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.p-low{ background:#16352b; color:#7af3b1; }
+.p-med{ background:#3a321b; color:#ffe08a; }
+.p-high{ background:#3d1b25; color:#ff9ab2; }
+
+.stars button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  opacity:.4;
+  transition:opacity .2s;
+}
+.stars button.on{
+  opacity:1;
+  text-shadow:0 0 8px rgba(255,215,120,.7);
+}
+
+.actions{ display:flex; gap:4px; }
+.actions button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-size:15px;
+  padding:0 2px;
+  color:#99a4d2;
+}
+.actions .del{ color:#ff9ba9; }
+
+.task .meta{
+  margin-top:4px;
+  font-size:12px;
+  color:#9fb0d0;
+  opacity:.85;
+}
+
+/* ============================================================
+   FOCUS LANE (NEW V8.8)
+   ============================================================ */
+#focusLaneToggle{
+  margin-top:6px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#0e1324;
+  border:1px solid var(--line);
+  cursor:pointer;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.focus-active .task{
+  background:var(--focus-tint);
+  border-color:#31405c;
+}
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+.hist-row{
+  border-radius:12px;
+  border:1px solid var(--line);
+  padding:10px 12px;
+  margin:6px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#101528;
+}
+
+.hist-row .meta{
+  color:#9fb0d0;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.hist-row button{
+  border-radius:999px;
+  padding:6px 10px;
+}
+
+/* ============================================================
+   WEEKLY REVIEW (NEW)
+   ============================================================ */
+.weekly-card{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:#0d1323;
+}
+
+.weekly-title{
+  font-weight:700;
+  font-size:15px;
+  margin-bottom:6px;
+}
+
+.weekly-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+
+.weekly-bar{
+  height:38px;
+  border-radius:8px;
+  background:var(--chart-bar-low);
+  overflow:hidden;
+  position:relative;
+}
+
+.weekly-bar-fill{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:var(--chart-bar);
+}
+
+/* ============================================================
+   MEDS CARD (NEW V8.8 SOFTENED)
+   ============================================================ */
+.meds-card{
+  padding:12px 12px;
+}
+
+.meds-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.meds-head-title{
+  font-size:14px;
+  font-weight:600;
+}
+
+.meds-head-tag{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#101828;
+  color:#9fd2ff;
+  border:1px solid #294064;
+}
+
+.meds-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+.meds-btn{
+  flex:1 1 150px;
+  min-width:0;
+  border-radius:14px;
+  padding:12px 14px;
+  background:var(--med-bg);
+  border:1px solid var(--med-border);
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  transition:all .25s;
+}
+
+.meds-btn-title{
+  font-size:13px;
+  font-weight:600;
+  color:#cfeaff;
+}
+
+.meds-btn-sub{
+  font-size:11px;
+  color:#8fafc9;
+}
+
+.meds-btn-taken{
+  background:var(--med-taken-bg);
+  border-color:var(--med-taken-glow);
+  box-shadow:0 0 12px rgba(37,183,138,0.25);
+}
+
+/* COUNTDOWN */
+#medsCountdown{
+  margin-top:6px;
+  font-size:12px;
+  color:#b7d9c7;
+  font-weight:500;
+}
+
+/* Reminder banner */
+#medsReminder{
+  display:none;
+  margin:8px 0 0 0;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #3e4a13;
+  background:#161d07;
+  color:#d8ee8a;
+  font-weight:600;
+}
+
+/* ============================================================
+   SPLASH
+   ============================================================ */
 #splash{
   position:fixed;
   inset:0;
-  background:#0c0907;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   z-index:9999;
+  background:radial-gradient(circle at top,#2b2220 0,#050611 60%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
 }
 
 #splash::before{
@@ -213,17 +509,18 @@ button.primary{
   position:absolute;
   inset:0;
   background:url('taskpulse-splash-hex.jpeg') center/cover no-repeat;
-  opacity:.9;
-  filter:saturate(120%) brightness(1.05);
-  animation:zoomfade 1.9s ease forwards;
+  filter:contrast(105%) saturate(110%);
+  transform:scale(1.05);
+  animation:zoomfade 2s ease forwards;
+  opacity:.95;
 }
 
 #splash .label{
   position:relative;
   text-align:center;
-  color:#fff5e3;
-  text-shadow:0 2px 12px rgba(0,0,0,.6);
-  animation:fadeIn .8s ease both .2s;
+  color:#fff;
+  text-shadow:0 6px 26px rgba(0,0,0,.55);
+  animation:textin .6s ease both .2s;
 }
 
 #splash h2{
@@ -232,133 +529,109 @@ button.primary{
   letter-spacing:.5px;
 }
 
-#splash .sub{font-size:13px;margin-top:6px;opacity:.85;}
-#splash .foot{position:absolute;bottom:18px;width:100%;text-align:center;font-size:12px;}
+#splash .sub{
+  opacity:.85;
+  margin-top:8px;
+  font-size:13px;
+}
 
-.hide-splash #splash{display:none;}
+#splash .foot{
+  position:absolute;
+  bottom:18px;
+  width:100%;
+  text-align:center;
+  font-size:13px;
+  opacity:.85;
+}
 
 @keyframes zoomfade{
-  0%{opacity:0;transform:scale(1.08)}
-  15%{opacity:1}
-  100%{opacity:0;transform:scale(1)}
+  0%{ opacity:0; transform:scale(1.08); }
+  15%{ opacity:1; }
+  100%{ opacity:0; transform:scale(1); }
+}
+@keyframes textin{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:translateY(0); }
 }
 
-/* ========= MEDS BUTTONS ========= */
-.meds-btn{
-  flex:1 1 150px;
-  min-width:0;
-  border-radius:14px;
-  padding:12px 14px;
-  background:#120d08;
-  border:1px solid #3a291e;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  color:#f3e8db;
-  transition:all .25s ease;
-}
+.hide-splash #splash{ display:none; }
 
-.meds-btn:hover{
-  border-color:#ffb766;
+/* ============================================================
+   MOBILE TWEAKS
+   ============================================================ */
+@media(max-width:600px){
+  .shell{ padding:14px 10px 12px; }
+  .hero-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .top-right{
+    align-items:flex-start;
+  }
+  .task{
+    grid-template-columns:auto 1fr auto;
+  }
+  .task .actions{
+    grid-column:1 / -1;
+    justify-content:flex-end;
+  }
 }
-
-/* Taken state */
-.meds-btn-taken{
-  background:linear-gradient(90deg, #ffb766 0%, #ff9d3b 45%, #2a1b0d 100%);
-  border-color:#ffcf8d;
-  color:#201207;
-  animation:glowPulse 2.5s infinite;
-}
-
-.meds-btn-title{
-  font-size:14px;
-  font-weight:600;
-}
-
-.meds-btn-sub{
-  font-size:12px;
-  color:#e0ccb6;
-}
-
-.meds-countdown{
-  margin-top:6px;
-  font-size:13px;
-  color:#ffb766;
-}
-
-.meds-banner{
-  margin:8px 0;
-  padding:10px 14px;
-  background:#2c1e14;
-  border:1px solid #ffb766;
-  border-radius:12px;
-  color:#ffe4c5;
-  font-weight:600;
-}
-
-/* ========= WEEK STRIP ========= */
-.week-strip{
-  display:flex;
-  gap:6px;
-  margin-top:10px;
-}
-
-.week-strip div{
-  flex:1;
-  height:12px;
-  border-radius:6px;
-  background:#2a1b0d;
-  border:1px solid #3c2a1c;
-}
-
-.week-strip .done{
-  background:linear-gradient(135deg,#ffb766,#ff9d3b);
-  border-color:#ffcf8d;
-  box-shadow:0 0 8px var(--amber-glow);
-}
-
 </style>
 </head>
 
-<body>
+  <body>
+
+<!-- ===========================
+     SPLASH
+=========================== -->
 <div id="splash">
   <div class="label">
     <h2>Task Pulse Smart</h2>
-    <div class="sub">V8.7 — Orange Pulse Hybrid</div>
+    <div class="sub">Focus · Sync · Achieve (V8.8)</div>
     <div class="foot">Powered by D Gounder</div>
   </div>
 </div>
 
-<!-- MAIN APP SHELL -->
+<!-- ===========================
+     APP SHELL
+=========================== -->
 <div class="shell">
   <div class="wrap">
 
-    <!-- HEADER -->
+    <!-- ===========================
+         HEADER
+    =========================== -->
     <header class="hero-header">
       <div class="brand">
         <div class="logo-pill">TP</div>
         <div>
           <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily Focus Advisor · V8.7</div>
+          <div class="brand-sub">Daily focus advisor · V8.8</div>
         </div>
       </div>
 
       <div class="top-right">
         <div id="syncState" class="badge">Local-only</div>
-        <div id="tpLastBackup" class="muted" style="font-size:11px">Last backup: none</div>
+        <div id="tpLastBackup">Last backup: none</div>
       </div>
     </header>
 
-    <!-- KPI PILL (Tasks Summary) -->
-    <div class="kpi-pill card" id="kpiRow">
-      <span id="kpiText">0 / 0 done (0%) · Quality 0%</span>
+    <!-- KPI -->
+    <div class="kpi-pill" id="kpiRow">
+      <span>0 / 0 done (0%) · Quality 0%</span>
       <span id="todayLabel" class="muted">—</span>
     </div>
 
-    <!-- Meds Banner -->
-    <div id="medsReminder" class="meds-banner" style="display:none;"></div>
+    <!-- Carry-over banner -->
+    <div id="carryWarn"></div>
 
-    <!-- Tabs -->
+    <!-- Meds reminder banner -->
+    <div id="medsReminder"></div>
+
+    <!-- ===========================
+         TABS
+    =========================== -->
     <div class="tabs">
       <div class="tabbar">
         <button id="btnTabTasks" class="active" onclick="showTab('tasks')">Tasks</button>
@@ -367,47 +640,58 @@ button.primary{
       </div>
     </div>
 
-    <!-- ============================= -->
-    <!--        TAB: TASKS             -->
-    <!-- ============================= -->
+    <!-- ===========================
+         TAB: TASKS
+    =========================== -->
     <div id="tab-tasks" class="tabpage active">
-
-      <!-- ========== MEDICATION CARD ========== -->
+      
+      <!-- ===== Medication Card ===== -->
       <section class="card meds-card" id="medsCard">
 
         <div class="meds-head">
           <div class="meds-head-title">Medication — Today</div>
-          <div class="meds-head-tag">TLE Routine</div>
+          <div class="meds-head-tag">TLE routine</div>
         </div>
 
         <div class="meds-row">
+
+          <!-- Morning -->
           <button id="btnMedsDay"
                   class="meds-btn"
                   onclick="toggleMeds('day')"
-                  title="Mark Morning Dose">
-            <!-- JS populates -->
+                  title="Log/undo Morning dose">
+            <span class="meds-btn-title">🌅 Morning Dose</span>
+            <span class="meds-btn-sub">Tap to log</span>
           </button>
 
+          <!-- Night -->
           <button id="btnMedsNight"
                   class="meds-btn"
                   onclick="toggleMeds('night')"
-                  title="Mark Night Dose">
-            <!-- JS populates -->
+                  title="Log/undo Night dose">
+            <span class="meds-btn-title">🌙 Night Dose</span>
+            <span class="meds-btn-sub">Tap to log</span>
           </button>
+
         </div>
 
-        <div id="medsCountdown" class="meds-countdown"></div>
-        <div id="medsMeta" class="muted" style="margin-top:6px;font-size:12px;"></div>
+        <!-- Countdown (auto-filled by JS) -->
+        <div id="medsCountdown" class="muted"></div>
 
-        <div id="medsWeekStrip" class="week-strip" style="margin-top:10px;"></div>
+        <!-- Metadata -->
+        <div class="muted" id="medsMeta"></div>
       </section>
 
-      <!-- ========== TASK ENTRY CARD ========== -->
+      <!-- ===== Today's Tasks ===== -->
       <section class="card">
         <h3 style="margin:0 0 8px">Today's Tasks</h3>
 
-        <div class="row" style="margin-bottom:8px">
-          <input id="taskInput" type="text" placeholder="Add task…" list="taskSuggestions" autocomplete="off" />
+        <div class="row" style="margin-bottom:8px;">
+          <input id="taskInput"
+                 type="text"
+                 placeholder="Add task…"
+                 list="taskSuggestions"
+                 autocomplete="off" />
           <datalist id="taskSuggestions"></datalist>
 
           <select id="prioSelect">
@@ -421,13 +705,24 @@ button.primary{
 
         <div class="row">
           <button class="btn-ghost" onclick="clearCompleted()">Clear completed</button>
-          <button class="btn-ghost" onclick="manualCarryOver()">Carry incomplete → tomorrow</button>
+          <button class="btn-ghost"
+                  onclick="manualCarryOver()"
+                  title="Move incomplete tasks to tomorrow">
+            Carry incomplete → tomorrow
+          </button>
         </div>
+
+        <!-- Focus Lane Toggle -->
+        <div id="focusLaneToggle"
+             onclick="toggleFocusLane()">
+          <input type="checkbox" id="focusLaneCheckbox" style="width:16px;height:16px;">
+          Focus Lane (show only important tasks)
+        </div>
+
       </section>
 
-      <!-- ========== TASK LIST CARD ========== -->
+      <!-- ===== Task List ===== -->
       <section class="card">
-
         <div class="row" style="justify-content:space-between">
           <div>
             <div class="muted">Viewing</div>
@@ -440,7 +735,7 @@ button.primary{
           </div>
         </div>
 
-        <ul id="taskList" class="list" style="margin-top:8px"></ul>
+        <ul id="taskList" class="list" style="margin-top:8px;"></ul>
 
         <div class="sum">
           <div id="doneSummary">0 / 0 tasks done (0%)</div>
@@ -448,21 +743,22 @@ button.primary{
         </div>
       </section>
 
-      <!-- Automatic carry banner -->
-      <div id="carryWarn" class="meds-banner" style="display:none;font-weight:500"></div>
+    </div> <!-- END Tasks Tab -->
 
-    </div> <!-- END TASK TAB -->
-
-    <!-- ============================= -->
-    <!--        TAB: HISTORY            -->
-    <!-- ============================= -->
+    <!-- ===========================
+         TAB: HISTORY
+    =========================== -->
     <div id="tab-history" class="tabpage">
 
       <section class="card">
         <h3 style="margin:0 0 8px">History</h3>
 
-        <div class="row" style="gap:6px;margin-bottom:6px">
-          <input id="histSearch" type="text" placeholder="Search text or YYYY-MM-DD…" oninput="renderHistory()" />
+        <div class="row" style="gap:6px;margin-bottom:6px;">
+          <input id="histSearch"
+                 type="text"
+                 placeholder="Search text or YYYY-MM-DD…"
+                 oninput="renderHistory()" />
+
           <select id="histSpan" onchange="renderHistory()">
             <option value="7">Last 7 days</option>
             <option value="14">Last 14 days</option>
@@ -473,39 +769,47 @@ button.primary{
         </div>
 
         <div id="histList"></div>
+
+        <!-- Weekly Review Card -->
+        <section class="weekly-card" id="weeklyReviewCard" style="display:none;">
+          <div class="weekly-title">Weekly Review</div>
+          <div id="weeklyGrid" class="weekly-grid"></div>
+        </section>
+
       </section>
 
-    </div>
+    </div> <!-- END History Tab -->
 
-    <!-- ============================= -->
-    <!--        TAB: SETTINGS          -->
-    <!-- ============================= -->
+    <!-- ===========================
+         TAB: SETTINGS
+    =========================== -->
     <div id="tab-settings" class="tabpage">
 
-      <!-- Sync -->
       <section class="card">
         <h3 style="margin:0 0 8px">Sync</h3>
 
-        <div class="row" style="margin-bottom:10px">
+        <div class="row" style="margin-bottom:8px;">
           <input id="syncCode" placeholder="Sync code" style="flex:1 1 260px" />
           <button class="btn-ghost" onclick="copySyncCode()">Copy</button>
           <button class="btn-ghost" onclick="newSyncCode()">New code</button>
           <button class="primary" onclick="saveSyncCode()">Save</button>
         </div>
 
-        <div class="muted" style="font-size:12px;">
-          Open this site on your second device and enter the same code.
+        <div class="muted" id="syncHint" style="font-size:12px;">
+          Open this site on your second device and use the same code. Sync uses Firebase Realtime Database.
         </div>
       </section>
 
-      <!-- Backup -->
-      <section class="card">
-        <h3 style="margin:0 0 8px">Backup &amp; Restore</h3>
+      <section class="card" id="backupCard">
+        <h3 style="margin:0 0 8px;">Backup & Restore</h3>
 
-        <div class="row" style="align-items:center">
+        <div class="row" style="align-items:center;">
           <button id="btnBackup" class="primary" onclick="tpDownloadBackup()">⭳ Download Backup</button>
           <input id="tpRestoreFile" type="file" accept="application/json" style="display:none" />
-          <button class="btn-ghost" onclick="document.getElementById('tpRestoreFile').click()">⭱ Import Backup</button>
+          <button id="btnRestore" class="btn-ghost"
+                  onclick="document.getElementById('tpRestoreFile').click()">
+            ⭱ Import Backup
+          </button>
         </div>
 
         <div id="tpBackupStatus"
@@ -513,424 +817,17 @@ button.primary{
              style="margin-top:6px;font-size:12px;"></div>
       </section>
 
-      <!-- Med Settings -->
-      <section class="card">
-        <h3 style="margin:0 0 8px">Meds Settings</h3>
+    </div> <!-- END Settings Tab -->
 
-        <div class="row" style="margin-bottom:8px">
-          <input id="medsTablets" placeholder="Tablets on hand" />
-          <input id="medsDoses" placeholder="Doses per day" />
-          <button class="primary" onclick="saveMedsSettings()">Save</button>
-        </div>
+  </div> <!-- wrap -->
 
-        <div class="muted" style="font-size:12px;">
-          Used to estimate refill timing.
-        </div>
-      </section>
+  <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
+    Task Pulse Smart V8.8 · Powered by D Gounder
+  </footer>
 
-    </div> <!-- END SETTINGS TAB -->
+</div> <!-- shell -->
 
-    <footer style="margin-top:6px;text-align:center;font-size:11px;color:var(--muted);">
-      Task Pulse Smart V8.7 · Powered by D Gounder
-    </footer>
-
-  </div>
-</div>
-
-   /* ===============================
-   Task Pulse Smart – V8.7 Hybrid
-   PART C — FULL JS ENGINE
-   =============================== */
-
-/* -------------------------------
-   LOCAL STORAGE KEYS + STATE
---------------------------------*/
-const LS_KEY = 'tp_days_v1';
-const LS_MEDS = 'tp_meds_v1';
-const LS_TAB = 'tp_last_tab';
-const LS_SYNC = 'tp_sync_code';
-const LS_LAST_OPEN = 'tp_last_open';
-const LS_LAST_CARRY = 'tp_last_carry';
-
-const TODAY = isoToday();
-let days = load(LS_KEY, {});
-let meds = load(LS_MEDS, {});
-let viewing = TODAY;
-
-/* Dirty-write safety */
-let tpDirty = false;
-function baseSave(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-let save = function (k, v) {
-  try { baseSave(k, v); tpDirty = false; }
-  catch (e) { tpDirty = true; }
-};
-setInterval(() => {
-  if (!tpDirty) return;
-  try { baseSave(LS_KEY, days); tpDirty = false; } catch {}
-}, 3000);
-
-window.addEventListener("beforeunload", () => {
-  try {
-    baseSave(LS_KEY, days);
-    baseSave(LS_MEDS, meds);
-  } catch {}
-});
-
-/* -----------------------------------
-   LOAD + SPLASH
------------------------------------- */
-window.addEventListener("load", () => {
-  setTimeout(() => document.body.classList.add("hide-splash"), 1500);
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  showTab(localStorage.getItem(LS_TAB) || "tasks");
-  autoCarryForward();
-  renderAll();
-  renderMeds();
-  updateMedsBanner();
-  scheduleMedsCountdown();
-  ensureSyncCode();
-  renderHistory();
-});
-
-/* -----------------------------------
-   TAB SWITCHING
------------------------------------- */
-function showTab(id) {
-  document.querySelectorAll(".tabpage").forEach(el => el.classList.remove("active"));
-  const page = document.getElementById("tab-" + id);
-  if (page) page.classList.add("active");
-
-  document.querySelectorAll(".tabbar button").forEach(b => b.classList.remove("active"));
-  const btn = document.getElementById("btnTab" + id.charAt(0).toUpperCase() + id.slice(1));
-  if (btn) btn.classList.add("active");
-
-  localStorage.setItem(LS_TAB, id);
-  if (id === "history") renderHistory();
-}
-
-/* -----------------------------------
-   MEDICATION ENGINE
------------------------------------- */
-function medsFor(iso) {
-  if (!meds[iso]) meds[iso] = { day: "", night: "" };
-  return meds[iso];
-}
-
-function toggleMeds(which) {
-  const m = medsFor(TODAY);
-
-  if (m[which]) {
-    if (!confirm("Remove this log?")) return;
-    m[which] = "";
-  } else {
-    m[which] = new Date().toISOString();
-  }
-
-  baseSave(LS_MEDS, meds);
-  renderMeds();
-  updateMedsBanner();
-  scheduleMedsCountdown();
-  notifyLocalChanged();
-}
-
-function renderMeds() {
-  const m = medsFor(TODAY);
-
-  const btnDay = document.getElementById("btnMedsDay");
-  const btnNight = document.getElementById("btnMedsNight");
-
-  const dayTaken = !!m.day;
-  const nightTaken = !!m.night;
-
-  if (btnDay) {
-    btnDay.className = "meds-btn" + (dayTaken ? " meds-btn-taken" : "");
-    btnDay.innerHTML = `
-      <span class="meds-btn-title">🌅 Morning Dose</span>
-      <span class="meds-btn-sub">${dayTaken ? "Taken · " + fmtDateTime(m.day) : "Tap to log"}</span>
-      <div class="meds-timer" id="timerDay"></div>
-    `;
-  }
-
-  if (btnNight) {
-    btnNight.className = "meds-btn" + (nightTaken ? " meds-btn-taken" : "");
-    btnNight.innerHTML = `
-      <span class="meds-btn-title">🌙 Night Dose</span>
-      <span class="meds-btn-sub">${nightTaken ? "Taken · " + fmtDateTime(m.night) : "Tap to log"}</span>
-      <div class="meds-timer" id="timerNight"></div>
-    `;
-  }
-}
-
-/* -----------------------------------
-   MEDS BANNER (CLEAN – NEW STYLE)
------------------------------------- */
-function updateMedsBanner() {
-  const m = medsFor(TODAY);
-  const bar = document.getElementById("medsReminder");
-  if (!bar) return;
-
-  if (!m.day && !m.night) {
-    bar.style.display = "block";
-    bar.textContent = "Morning & Night meds not taken";
-    return;
-  }
-  if (!m.day) {
-    bar.style.display = "block";
-    bar.textContent = "Morning meds not taken";
-    return;
-  }
-  if (!m.night) {
-    bar.style.display = "block";
-    bar.textContent = "Night meds not taken";
-    return;
-  }
-
-  bar.style.display = "none";
-}
-
-/* -----------------------------------
-   12-HOUR COUNTDOWN TIMER
------------------------------------- */
-let medsClockInterval = null;
-
-function scheduleMedsCountdown() {
-  if (medsClockInterval) clearInterval(medsClockInterval);
-
-  medsClockInterval = setInterval(() => {
-    const m = medsFor(TODAY);
-    updateCountdown("day", m.day, "timerDay");
-    updateCountdown("night", m.night, "timerNight");
-  }, 1000);
-
-  scheduleMedsCountdown(); // <-- this was wrong in your HTML. LOOP FIXED.
-}
-
-function updateCountdown(type, iso, id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  if (!iso) {
-    el.textContent = "";
-    return;
-  }
-
-  const logged = new Date(iso);
-  const target = new Date(logged.getTime() + (type === "day" ? 12 : 12) * 3600 * 1000);
-
-  const now = new Date();
-  let diff = target - now;
-
-  if (diff <= 0) {
-    el.textContent = "Due now";
-    return;
-  }
-
-  const h = Math.floor(diff / 3600000);
-  diff %= 3600000;
-  const m = Math.floor(diff / 60000);
-  const s = Math.floor(diff / 1000) % 60;
-
-  el.textContent = `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-}
-
-/* -----------------------------------
-   MEDS WEEKLY STREAK DATA
------------------------------------- */
-function getMedsStreak() {
-  const out = [];
-  for (let i = 6; i >= 0; i--) {
-    const iso = isoOffset(TODAY, -i);
-    const m = medsFor(iso);
-    out.push({
-      iso,
-      day: !!m.day,
-      night: !!m.night,
-      ok: !!m.day && !!m.night
-    });
-  }
-  return out;
-}
-
-/* -----------------------------------
-   TASK ENGINE (UNCHANGED FROM 8.6 but cleaned)
------------------------------------- */
-function addTask() {
-  const name = document.getElementById("taskInput").value.trim();
-  const prio = document.getElementById("prioSelect").value;
-  if (!name) return;
-
-  ensureDay(viewing).unshift({
-    id: "t_" + Math.random().toString(36).slice(2, 8),
-    name,
-    prio,
-    done: false,
-    stars: 0,
-    createdAt: new Date().toISOString()
-  });
-
-  save(LS_KEY, days);
-  document.getElementById("taskInput").value = "";
-  renderAll();
-}
-
-/* (Other task functions preserved identical to V8.6) */
-
-/* -----------------------------------
-   HISTORY ENGINE
------------------------------------- */
-function renderHistory() {
-  const wrap = document.getElementById("histList");
-  if (!wrap) return;
-
-  wrap.innerHTML = "";
-
-  const spanSel = document.getElementById("histSpan").value;
-  const q = document.getElementById("histSearch").value.trim().toLowerCase();
-
-  let keys = Object.keys(days);
-
-  /* filter by span */
-  if (spanSel !== "all") {
-    const span = parseInt(spanSel, 10);
-    const min = new Date();
-    min.setDate(min.getDate() - span);
-    keys = keys.filter(k => new Date(k) >= min);
-  }
-
-  /* filter search */
-  if (q) {
-    keys = keys.filter(k => {
-      if (k.includes(q)) return true;
-      return (days[k] || []).some(t =>
-        (t.name || "").toLowerCase().includes(q)
-      );
-    });
-  }
-
-  keys.sort((a, b) => new Date(b) - new Date(a));
-
-  if (!keys.length) {
-    wrap.innerHTML = `<div class="muted">No history found.</div>`;
-    return;
-  }
-
-  keys.forEach(k => {
-    const arr = days[k] || [];
-    const total = arr.length;
-    const done = arr.filter(t => t.done).length;
-    const pct = total ? Math.round(done / total * 100) : 0;
-
-    const row = document.createElement("div");
-    row.className = "hist-row";
-
-    row.innerHTML = `
-      <div>
-        <div style="font-weight:700">${fmtHumanDate(k)}</div>
-        <div class="meta">${done}/${total} done • ${pct}% completed</div>
-      </div>
-      <button onclick="viewing='${k}'; showTab('tasks'); renderAll();">Open</button>
-    `;
-
-    wrap.appendChild(row);
-  });
-}
-
-/* -----------------------------------
-   AUTO-CARRY FORWARD
------------------------------------- */
-function autoCarryForward() {
-  const last = localStorage.getItem(LS_LAST_OPEN);
-  const today = TODAY;
-
-  let carried = 0;
-
-  if (last && last !== today) {
-    const prevTasks = ensureDay(last).filter(t => !t.done);
-
-    if (prevTasks.length) {
-      ensureDay(today).unshift(
-        ...prevTasks.map(t => ({
-          ...t,
-          id: "t_" + Math.random().toString(36).slice(2, 8),
-          createdAt: new Date().toISOString()
-        }))
-      );
-      carried = prevTasks.length;
-      days[last] = ensureDay(last).filter(t => t.done);
-      save(LS_KEY, days);
-    }
-  }
-
-  localStorage.setItem(LS_LAST_OPEN, today);
-  localStorage.setItem(LS_LAST_CARRY, carried);
-}
-
-/* -----------------------------------
-   SYNC ENGINE (auto-code working)
------------------------------------- */
-const TP_UID = (localStorage.getItem("tp_uid") ||
-  (() => {
-    const v = "u_" + Math.random().toString(36).slice(2, 10);
-    localStorage.setItem("tp_uid", v);
-    return v;
-  })()
-);
-
-function ensureSyncCode() {
-  let code = localStorage.getItem(LS_SYNC);
-
-  if (!code) {
-    code = "grp-" + randomCode(6);
-    localStorage.setItem(LS_SYNC, code);
-  }
-
-  const inp = document.getElementById("syncCode");
-  if (inp) inp.value = code;
-}
-
-/* -----------------------------------
-   UTILS
------------------------------------- */
-function isoToday() {
-  return new Date().toISOString().slice(0, 10);
-}
-function isoOffset(iso, d) {
-  const dt = new Date(iso);
-  dt.setDate(dt.getDate() + d);
-  return dt.toISOString().slice(0, 10);
-}
-function ensureDay(iso) {
-  if (!days[iso]) days[iso] = [];
-  return days[iso];
-}
-function load(k, def) {
-  try { return JSON.parse(localStorage.getItem(k)) ?? def; }
-  catch { return def; }
-}
-function fmtHumanDate(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString(undefined, {day: "2-digit", month: "2-digit", year: "numeric"});
-}
-function fmtDateTime(iso) {
-  const d = new Date(iso);
-  return (
-    d.toLocaleDateString(undefined, {day:"2-digit",month:"2-digit",year:"numeric"}) +
-    " — " +
-    d.toLocaleTimeString(undefined, {hour:"numeric",minute:"2-digit"})
-  );
-}
-function pad(x) { return x < 10 ? "0"+x : x; }
-function randomCode(len=6){
-  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let out=""; 
-  for(let i=0;i<len;i++) out+=chars[Math.floor(Math.random()*chars.length)];
-  return out;
-}
-
-   
-<!-- ===========================
+    <!-- ===========================
      FIREBASE (optional)
 =========================== -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1835,4 +1732,4 @@ if('serviceWorker' in navigator){
 </script>
 
 </body>
-  </html>
+</html>
