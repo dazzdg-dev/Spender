@@ -930,3 +930,909 @@ function randomCode(len=6){
 }
 
    
+<!-- ===========================
+     FIREBASE (optional)
+=========================== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// Insert your Firebase config here if needed
+</script>
+
+<!-- ===========================
+     CORE ENGINE — V8.8
+=========================== -->
+<script>
+/* ============================================================
+   CONSTANTS & STORAGE KEYS
+============================================================ */
+const LS_KEY          = 'tp_days_v1';
+const LS_SYNC         = 'tp_sync_code';
+const LS_TAB          = 'tp_last_tab';
+const LS_LAST_OPEN    = 'tp_last_open';
+const LS_MEDS         = 'tp_meds_v1';
+const LS_CARRY_COUNT  = 'tp_last_carry_count';
+const LS_FOCUS_MODE   = 'tp_focus_lane';
+const TODAY           = isoToday();
+
+let days = load(LS_KEY, {});
+let meds = load(LS_MEDS, {});
+let viewing = TODAY;
+
+/* Dirty-write system */
+let tpDirty = false;
+function baseSave(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function save(k, v){
+  try { baseSave(k, v); tpDirty = false; }
+  catch(e){ tpDirty = true; }
+}
+setInterval(()=>{ if(tpDirty) baseSave(LS_KEY, days); }, 3000);
+
+window.addEventListener("beforeunload",()=>{
+  baseSave(LS_KEY, days);
+  baseSave(LS_MEDS, meds);
+});
+
+/* ============================================================
+   INITIAL LOAD
+============================================================ */
+window.addEventListener("load",()=>{
+  setTimeout(()=>document.body.classList.add("hide-splash"), 1800);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const last = localStorage.getItem(LS_TAB) || 'tasks';
+  showTab(last);
+
+  ensureSyncCode();
+  tpUpdateLastBackupLabel();
+
+  tpRenderDatalist('');
+  renderHistory();
+
+  showCarryBannerIfAny();
+  renderMeds();
+  updateMedsReminder();
+  updateCountdownLoop();
+
+  autoCarryForwardIfNewDay();
+  renderAll();
+
+  restoreFocusMode();
+});
+
+/* ============================================================
+   UTILS
+============================================================ */
+function isoToday(){ return new Date().toISOString().slice(0,10); }
+function isoOffset(iso, d){ const x=new Date(iso); x.setDate(x.getDate()+d); return x.toISOString().slice(0,10); }
+function load(k, def){ try { return JSON.parse(localStorage.getItem(k) || 'null') ?? def; } catch(e){ return def; } }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;' }[m])); }
+
+function fmtHumanDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{day:'2-digit', month:'2-digit', year:'numeric'});
+}
+function fmtDateTime(iso){
+  try {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString(undefined,{day:'2-digit', month:'2-digit', year:'numeric'})}
+            · ${d.toLocaleTimeString(undefined,{hour:'2-digit', minute:'2-digit'})}`.replace(/\s+/g,' ');
+  } catch { return ''; }
+}
+
+function ensureDay(iso){
+  if(!days[iso]) days[iso] = [];
+  return days[iso];
+}
+function medsFor(iso){
+  if(!meds[iso]) meds[iso] = { day:'', night:'' };
+  return meds[iso];
+}
+
+/* ============================================================
+   TAB SWITCHING
+============================================================ */
+function showTab(id){
+  document.querySelectorAll(".tabpage").forEach(el=>el.classList.remove("active"));
+  document.getElementById("tab-"+id)?.classList.add("active");
+
+  document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("btnTab"+cap(id))?.classList.add("active");
+
+  localStorage.setItem(LS_TAB,id);
+  if(id==='history') renderHistory();
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+/* ============================================================
+   FOCUS LANE (NEW V8.8)
+============================================================ */
+function toggleFocusLane(){
+  const chk = document.getElementById("focusLaneCheckbox");
+  chk.checked = !chk.checked;
+
+  localStorage.setItem(LS_FOCUS_MODE, chk.checked ? '1' : '0');
+  document.body.classList.toggle("focus-active", chk.checked);
+
+  renderAll();
+}
+
+function restoreFocusMode(){
+  const isOn = localStorage.getItem(LS_FOCUS_MODE) === '1';
+  const chk = document.getElementById("focusLaneCheckbox");
+
+  chk.checked = isOn;
+  document.body.classList.toggle("focus-active", isOn);
+}
+
+/* ============================================================
+   MEDICATION — V8.8 (Streak, Countdown, Icons, etc)
+============================================================ */
+function toggleMeds(which){
+  const m = medsFor(TODAY);
+  if(m[which]){
+    if(!confirm("Unmark this dose as taken?")) return;
+    m[which] = '';
+  } else {
+    m[which] = new Date().toISOString();
+  }
+  baseSave(LS_MEDS, meds);
+
+  renderMeds();
+  updateMedsReminder();
+  updateCountdownLoop();
+  notifyLocalChanged();
+}
+
+/* Render meds state */
+function renderMeds(){
+  const m = medsFor(TODAY);
+  const btnDay   = document.getElementById("btnMedsDay");
+  const btnNight = document.getElementById("btnMedsNight");
+  const meta     = document.getElementById("medsMeta");
+
+  // Morning
+  if(btnDay){
+    const taken = !!m.day;
+    const text  = taken ? `Logged · ${fmtDateTime(m.day)}` : "Tap to log";
+    btnDay.className = "meds-btn" + (taken ? " meds-btn-taken" : "");
+    btnDay.querySelector(".meds-btn-sub").textContent = text;
+  }
+
+  // Night
+  if(btnNight){
+    const taken = !!m.night;
+    const text  = taken ? `Logged · ${fmtDateTime(m.night)}` : "Tap to log";
+    btnNight.className = "meds-btn" + (taken ? " meds-btn-taken" : "");
+    btnNight.querySelector(".meds-btn-sub").textContent = text;
+  }
+
+  // Meta row
+  if(meta){
+    const d = m.day   ? `Morning: ${fmtDateTime(m.day)}` : "Morning: —";
+    const n = m.night ? `Night: ${fmtDateTime(m.night)}` :  "Night: —";
+    meta.textContent = `${d}   •   ${n}`;
+  }
+}
+
+/* SIMPLE MED REMINDER (“Morning not taken”) */
+function updateMedsReminder(){
+  const bar = document.getElementById("medsReminder");
+  const m = medsFor(TODAY);
+
+  let msg = "";
+  if(!m.day && !m.night) msg = "Morning & Night Meds not taken";
+  else if(!m.day) msg = "Morning Meds not taken";
+  else if(!m.night) msg = "Night Meds not taken";
+
+  if(msg){
+    bar.textContent = msg;
+    bar.style.display = "block";
+  } else {
+    bar.style.display = "none";
+  }
+}
+
+/* ============================================================
+   COUNTDOWN TIMER (NEW V8.8)
+============================================================ */
+let countdownTimer = null;
+
+function updateCountdownLoop(){
+  clearInterval(countdownTimer);
+
+  countdownTimer = setInterval(updateCountdown, 1000);
+  updateCountdown();
+}
+
+function updateCountdown(){
+  const out = document.getElementById("medsCountdown");
+  if(!out) return;
+
+  const m = medsFor(TODAY);
+  if(!m.day){
+    out.textContent = "⏳ Morning dose pending…";
+    return;
+  }
+
+  const dayLogged = new Date(m.day);
+  const nightDue = new Date(dayLogged.getTime() + 12 * 3600 * 1000);
+  const now = new Date();
+  let diff = Math.max(0, nightDue - now);
+
+  if(diff === 0){
+    out.textContent = "🌙 Night dose is due now";
+    return;
+  }
+
+  const h = Math.floor(diff/3600000);
+  diff %= 3600000;
+  const m2 = Math.floor(diff/60000);
+  const s  = Math.floor((diff%60000)/1000);
+
+  out.textContent = `Next dose in ${h}h ${m2}m ${s}s`;
+}
+
+/* ============================================================
+   TASK ENGINE
+============================================================ */
+function addTask(){
+  const name = document.getElementById("taskInput").value.trim();
+  const prio = document.getElementById("prioSelect").value;
+
+  if(!name) return;
+
+  const t = {
+    id:'t_'+Math.random().toString(36).slice(2,8),
+    name, prio,
+    done:false,
+    stars:0,
+    createdAt:new Date().toISOString()
+  };
+
+  ensureDay(viewing).unshift(t);
+  save(LS_KEY, days);
+
+  document.getElementById("taskInput").value='';
+  renderAll();
+  tpRenderDatalist('');
+}
+
+function toggleDone(dayKey,id,el){
+  const t = ensureDay(dayKey).find(x=>x.id===id);
+  if(!t) return;
+  t.done = el.checked;
+  t.timeCompleted = t.done ? new Date().toISOString() : '';
+  save(LS_KEY, days);
+  renderAll();
+}
+
+function setStars(dayKey,id,s){
+  const t = ensureDay(dayKey).find(x=>x.id===id);
+  if(!t) return;
+  t.stars = s===t.stars ? 0 : s;
+  save(LS_KEY, days);
+  renderAll();
+}
+
+function editTask(dayKey,id){
+  const t = ensureDay(dayKey).find(x=>x.id===id);
+  if(!t) return;
+
+  const name = prompt("Edit task:", t.name);
+  if(name === null) return;
+
+  let prio = prompt("Priority (low/med/high):", t.prio);
+  if(!['low','med','high'].includes(prio)) prio = t.prio;
+
+  t.name = name.trim();
+  t.prio = prio;
+
+  save(LS_KEY, days);
+  renderAll();
+}
+
+function delTask(dayKey,id){
+  if(!confirm("Delete task?")) return;
+  days[dayKey] = ensureDay(dayKey).filter(x=>x.id!==id);
+  save(LS_KEY, days);
+  renderAll();
+}
+
+function clearCompleted(){
+  days[viewing] = ensureDay(viewing).filter(x=>!x.done);
+  save(LS_KEY, days);
+  renderAll();
+}
+
+function shiftDay(d){
+  const dt=new Date(viewing);
+  dt.setDate(dt.getDate()+d);
+  viewing=dt.toISOString().slice(0,10);
+  renderAll();
+}
+
+/* ============================================================
+   AUTO-CARRY + MANUAL CARRY
+============================================================ */
+function manualCarryOver(){
+  const list = ensureDay(viewing);
+  const incom = list.filter(t=>!t.done);
+
+  if(!incom.length){
+    alert("No incomplete tasks to carry.");
+    return;
+  }
+
+  const tomorrow = isoOffset(viewing, +1);
+  ensureDay(tomorrow).unshift(...incom.map(t=>({
+    ...t,
+    id:'t_'+Math.random().toString(36).slice(2,8),
+    createdAt:new Date().toISOString()
+  })));
+
+  days[viewing] = list.filter(t=>t.done);
+
+  save(LS_KEY, days);
+  renderAll();
+
+  alert(`Carried ${incom.length} task(s) to ${fmtHumanDate(tomorrow)}.`);
+}
+
+function autoCarryForwardIfNewDay(){
+  const last = load(LS_LAST_OPEN, '');
+  const today = isoToday();
+
+  let carried = 0;
+
+  if(last && last !== today){
+    const prev = ensureDay(last).filter(t=>!t.done);
+    if(prev.length){
+      const dest = ensureDay(today);
+      dest.unshift(...prev.map(t=>({
+        ...t,
+        id:'t_'+Math.random().toString(36).slice(2,8),
+        createdAt:new Date().toISOString()
+      })));
+
+      days[last] = ensureDay(last).filter(t=>t.done);
+      carried = prev.length;
+      save(LS_KEY, days);
+    }
+  }
+
+  save(LS_LAST_OPEN, today);
+  localStorage.setItem(LS_CARRY_COUNT, carried+'');
+}
+
+function showCarryBannerIfAny(){
+  const cnt = parseInt(localStorage.getItem(LS_CARRY_COUNT)||'0',10);
+  const bar = document.getElementById("carryWarn");
+
+  if(cnt>0){
+    bar.style.display='block';
+    bar.textContent = `⚠️ ${cnt} incomplete task(s) were automatically carried to today.`;
+  } else {
+    bar.style.display='none';
+  }
+}
+
+/* ============================================================
+   RENDER ALL TASKS
+============================================================ */
+function renderAll(){
+  const todayLabel = document.getElementById("todayLabel");
+  if(todayLabel) todayLabel.textContent = fmtHumanDate(TODAY);
+
+  const viewingLabel = document.getElementById("viewingLabel");
+  if(viewingLabel) viewingLabel.textContent = fmtHumanDate(viewing);
+
+  const list = ensureDay(viewing);
+  const ul = document.getElementById("taskList");
+  if(ul){
+    ul.innerHTML='';
+
+    const focus = localStorage.getItem(LS_FOCUS_MODE)==='1';
+
+    list.forEach(t=>{
+      if(focus){
+        const high = t.prio==='high';
+        const starred = t.stars>0;
+        const overdue = (!t.done && viewing !== TODAY);
+        if(!(high || starred || overdue)) return;
+      }
+
+      const li = document.createElement("li");
+      li.className = "task";
+
+      /* checkbox */
+      const cb = document.createElement("input");
+      cb.type="checkbox";
+      cb.checked = t.done;
+      cb.onchange = e=>toggleDone(viewing,t.id,e.target);
+
+      /* center */
+      const center = document.createElement("div");
+      const prioc  = t.prio==='low' ? 'p-low' :
+                     t.prio==='med' ? 'p-med' : 'p-high';
+
+      const doneMeta = (t.done && t.timeCompleted)
+            ? `<div class="meta">✔ ${fmtDateTime(t.timeCompleted)}</div>`
+            : '';
+
+      center.innerHTML = `
+        <div style="font-weight:600;${t.done?'text-decoration:line-through;opacity:.7':''}">
+          ${escapeHtml(t.name)}
+        </div>
+        <div><span class="priority ${prioc}">${t.prio}</span></div>
+        ${doneMeta}
+      `;
+
+      /* stars */
+      const stars = document.createElement("div");
+      stars.className="stars";
+      for(let s=1;s<=3;s++){
+        const b=document.createElement("button");
+        b.textContent='★';
+        if(t.stars>=s) b.classList.add('on');
+        b.onclick=()=>setStars(viewing,t.id,s);
+        stars.appendChild(b);
+      }
+
+      /* actions */
+      const act = document.createElement("div");
+      act.className="actions";
+
+      const eBtn = document.createElement("button");
+      eBtn.textContent='✎';
+      eBtn.onclick=()=>editTask(viewing,t.id);
+
+      const dBtn = document.createElement("button");
+      dBtn.textContent='×';
+      dBtn.className='del';
+      dBtn.onclick=()=>delTask(viewing,t.id);
+
+      act.appendChild(eBtn);
+      act.appendChild(dBtn);
+
+      li.appendChild(cb);
+      li.appendChild(center);
+      li.appendChild(stars);
+      li.appendChild(act);
+
+      ul.appendChild(li);
+    });
+  }
+
+  /* summary */
+  const total = list.length;
+  const done  = list.filter(t=>t.done).length;
+  const pct   = total?Math.round((done/total)*100):0;
+
+  const quality = list.filter(t=>t.done).reduce((a,b)=>a+(b.stars||0),0);
+  const qPct = done?Math.round((quality/(done*3))*100):0;
+
+  document.getElementById("doneSummary").textContent =
+      `${done} / ${total} tasks done (${pct}%)`;
+
+  document.getElementById("qualitySummary").textContent =
+      `Quality ${qPct}%`;
+
+  const kpiRow = document.getElementById("kpiRow");
+  if(kpiRow && kpiRow.firstElementChild){
+    kpiRow.firstElementChild.textContent =
+      `${done} / ${total} done (${pct}%) · Quality ${qPct}%`;
+  }
+
+  renderMeds();
+}
+
+/* ============================================================
+   HISTORY + WEEKLY REVIEW
+============================================================ */
+function renderHistory(){
+  const wrap = document.getElementById("histList");
+  if(!wrap) return;
+
+  const q = document.getElementById("histSearch").value.trim().toLowerCase();
+  const spanSel = document.getElementById("histSpan").value;
+
+  let keys = Object.keys(days||{});
+  if(spanSel!=='all'){
+    const span = parseInt(spanSel,10);
+    const min=new Date();
+    min.setDate(min.getDate()-span);
+    keys = keys.filter(k=>new Date(k)>=min);
+  }
+
+  if(q){
+    keys = keys.filter(k=>{
+      if(k.includes(q)) return true;
+      return (days[k]||[]).some(t=>(t.name||'').toLowerCase().includes(q));
+    });
+  }
+
+  keys.sort((a,b)=>new Date(b)-new Date(a));
+  wrap.innerHTML='';
+
+  if(!keys.length){
+    wrap.innerHTML='<div class="muted">No history found.</div>';
+    return;
+  }
+
+  keys.forEach(k=>{
+    const arr=days[k]||[];
+    const total=arr.length;
+    const done =arr.filter(t=>t.done).length;
+    const pct  = total?Math.round(done/total*100):0;
+
+    const qsum=arr.filter(t=>t.done).reduce((a,b)=>a+(b.stars||0),0);
+    const qPct = done?Math.round((qsum/(done*3))*100):0;
+
+    const row=document.createElement("div");
+    row.className="hist-row";
+
+    const left=document.createElement("div");
+    left.innerHTML=`
+      <div style="font-weight:700">${fmtHumanDate(k)}</div>
+      <div class="meta">${done}/${total} done • ${pct}% · Quality ${qPct}%</div>
+    `;
+
+    const right=document.createElement("div");
+    const btn=document.createElement("button");
+    btn.textContent='Open';
+    btn.onclick=()=>{ viewing=k; showTab('tasks'); renderAll(); };
+
+    right.appendChild(btn);
+    row.appendChild(left);
+    row.appendChild(right);
+    wrap.appendChild(row);
+  });
+
+  renderWeeklyReview(keys);
+}
+
+/* Weekly Review Grid */
+function renderWeeklyReview(dateKeys){
+  const card = document.getElementById("weeklyReviewCard");
+  const grid = document.getElementById("weeklyGrid");
+
+  if(!dateKeys.length){
+    card.style.display="none";
+    return;
+  }
+
+  // show last 7 days
+  const last7 = dateKeys.slice(0,7).reverse();
+  grid.innerHTML = '';
+
+  last7.forEach(k=>{
+    const arr = days[k]||[];
+    const done= arr.filter(t=>t.done).length;
+    const total=arr.length;
+
+    const pct = total?Math.round((done/total)*100):0;
+
+    const bar=document.createElement("div");
+    bar.className='weekly-bar';
+
+    const fill=document.createElement("div");
+    fill.className='weekly-bar-fill';
+    fill.style.height = pct+'%';
+
+    bar.appendChild(fill);
+    grid.appendChild(bar);
+  });
+
+  card.style.display="block";
+}
+
+/* ============================================================
+   BACKUP / RESTORE
+============================================================ */
+function tpUpdateLastBackupLabel(){
+  const el=document.getElementById("tpLastBackup");
+  if(!el) return;
+  el.textContent = "Last backup: " + (localStorage.getItem("tp_last_backup")||"none");
+}
+
+(function(){
+  function buildBackup(){
+    const dump={};
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(/^tp_/.test(k)) dump[k] = localStorage.getItem(k);
+    }
+    // include latest state
+    dump[LS_KEY]  = JSON.stringify(days);
+    dump[LS_MEDS] = JSON.stringify(meds);
+
+    return {
+      app:'taskpulse',
+      flavor:'v8.8',
+      exportedAt:new Date().toISOString(),
+      dump
+    };
+  }
+
+  window.tpDownloadBackup = function(){
+    try{
+      const payload = buildBackup();
+      const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const url  = URL.createObjectURL(blob);
+
+      const a=document.createElement("a");
+      a.href=url;
+      a.download='taskpulse_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+
+      localStorage.setItem("tp_last_backup", new Date().toLocaleString());
+      tpUpdateLastBackupLabel();
+    }
+    catch(e){
+      console.error("Backup failed:", e);
+      alert("Backup failed.");
+    }
+  };
+
+  const fi=document.getElementById("tpRestoreFile");
+  if(fi){
+    fi.addEventListener("change", async e=>{
+      const f=e.target.files[0];
+      if(!f) return;
+
+      try{
+        const text=await f.text();
+        const data=JSON.parse(text);
+        if(data && data.dump){
+          Object.entries(data.dump).forEach(([k,v])=>{
+            if(/^tp_/.test(k)) localStorage.setItem(k,v);
+          });
+        }
+        alert("Restore complete. Reloading…");
+        setTimeout(()=>location.reload(),600);
+      } catch(err){
+        console.error("Restore failed:", err);
+        alert("Restore failed.");
+      } finally {
+        e.target.value='';
+      }
+    });
+  }
+})();
+
+/* ============================================================
+   SYNC ENGINE 2.0 — AUTO CODE GEN
+============================================================ */
+const TP_UID = (localStorage.getItem("tp_uid") || (()=> {
+  const v = "u_" + Math.random().toString(36).slice(2,10);
+  localStorage.setItem("tp_uid", v);
+  return v;
+})());
+
+let syncRef=null, syncOff=null, writeTimer=null;
+
+function setSyncBadge(t,kind=''){
+  const el=document.getElementById("syncState");
+  if(!el) return;
+  el.textContent=t;
+  el.className='badge '+kind;
+}
+
+const PREFIX='grp-';
+function randomCode(len=6){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out=''; for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+
+function ensureSyncCode(){
+  let code = localStorage.getItem(LS_SYNC);
+  if(!code){
+    code = PREFIX+randomCode(6);
+    localStorage.setItem(LS_SYNC, code);
+  }
+  document.getElementById("syncCode").value = code;
+
+  if(isFirebaseReady()) attachSync(code);
+}
+
+function isFirebaseReady(){
+  return (window.firebase && firebase.apps && firebase.apps.length);
+}
+
+function copySyncCode(){
+  const i=document.getElementById("syncCode");
+  if(!i.value) return;
+  navigator.clipboard.writeText(i.value).then(()=>alert("Sync code copied"));
+}
+
+function newSyncCode(){
+  if(!confirm("Generate new sync code?")) return;
+
+  const code = PREFIX+randomCode(6);
+  localStorage.setItem(LS_SYNC,code);
+  document.getElementById("syncCode").value = code;
+
+  if(syncOff) syncOff();
+  if(isFirebaseReady()) attachSync(code);
+
+  alert("New sync code generated.");
+}
+
+function saveSyncCode(){
+  const i=document.getElementById("syncCode");
+  if(!i.value) return;
+
+  localStorage.setItem(LS_SYNC, i.value.trim());
+
+  if(syncOff) syncOff();
+  if(isFirebaseReady()) attachSync(i.value.trim());
+
+  alert("Sync code saved.");
+}
+
+function notifyLocalChanged(){ debouncedPush(); }
+
+function debouncedPush(){
+  if(!syncRef) return;
+
+  clearTimeout(writeTimer);
+  writeTimer = setTimeout(()=>{
+    syncRef.set({
+      days,
+      meds,
+      _meta:{by:TP_UID, at:Date.now()}
+    }).catch(console.warn);
+  }, 250);
+}
+
+function attachSync(code){
+  if(!isFirebaseReady()){
+    setSyncBadge("Local-only");
+    return;
+  }
+
+  if(syncOff) syncOff();
+
+  syncRef = firebase.database().ref("taskpulse/"+code);
+  setSyncBadge("Sync: "+code, "good");
+
+  syncRef.get().then(snap=>{
+    const val=snap.val();
+
+    if(val && (val.days || val.meds)){
+      days = mergeDays(days, val.days||{});
+      meds = mergeMeds(meds, val.meds||{});
+
+      baseSave(LS_KEY, days);
+      baseSave(LS_MEDS, meds);
+
+      renderAll();
+      renderMeds();
+    } else {
+      debouncedPush();
+    }
+  });
+
+  const handler = syncRef.on("value", snap=>{
+    const val=snap.val();
+    if(!val) return;
+
+    if(val._meta && val._meta.by===TP_UID) return;
+
+    if(val.days){
+      days = mergeDays(days, val.days);
+      baseSave(LS_KEY,days);
+    }
+    if(val.meds){
+      meds = mergeMeds(meds, val.meds);
+      baseSave(LS_MEDS, meds);
+    }
+
+    renderAll();
+    renderMeds();
+  });
+
+  syncOff = ()=>syncRef.off("value", handler);
+}
+
+/* Merge logic */
+function mergeDays(local, remote){
+  const out = {...local};
+  for(const d of Object.keys(remote)){
+    if(!out[d]) { out[d] = remote[d]; continue; }
+
+    const L=out[d], R=remote[d];
+    const stamp = arr => arr.reduce((m,t)=>Math.max(m,new Date(t.timeCompleted||t.createdAt||0).getTime()), 0);
+
+    out[d] = stamp(R)>stamp(L) ? R : L;
+  }
+  return out;
+}
+
+function mergeMeds(local, remote){
+  const out = {...local};
+  for(const day of Object.keys(remote)){
+    const r = remote[day] || {};
+    const l = out[day] || {day:'', night:''};
+
+    const pick = (a,b)=>{
+      const ta=a?Date.parse(a):0;
+      const tb=b?Date.parse(b):0;
+      return (tb>ta) ? b : a;
+    };
+
+    out[day] = { day:pick(l.day,r.day), night:pick(l.night,r.night) };
+  }
+  return out;
+}
+
+/* ============================================================
+   PREDICTIVE TASK SUGGESTIONS
+============================================================ */
+function tpCollectTaskStats(){
+  const stats=new Map();
+  for(const dk of Object.keys(days)){
+    for(const t of (days[dk]||[])){
+      const nm=(t.name||'').trim();
+      if(!nm) continue;
+
+      const key=nm.toLowerCase();
+      const last=new Date(t.createdAt||t.timeCompleted||t.updatedAt||t.date||new Date()).getTime();
+
+      if(!stats.has(key)) stats.set(key,{name:nm,count:0,last:0});
+      const s=stats.get(key);
+      s.count++;
+      s.last=Math.max(s.last,last);
+    }
+  }
+  return stats;
+}
+
+function tpRankedNames(stats){
+  return Array.from(stats.values())
+    .sort((a,b)=> (b.count - a.count) || (b.last - a.last))
+    .map(v=>v.name);
+}
+
+function tpGetSuggestions(prefix){
+  const ranked=tpRankedNames(tpCollectTaskStats());
+  const p=(prefix||'').trim().toLowerCase();
+
+  if(!p) return ranked.slice(0,10);
+
+  const pref = ranked.filter(n=>n.toLowerCase().startsWith(p));
+  if(pref.length>=10) return pref.slice(0,10);
+
+  const rest = ranked.filter(n=>!n.toLowerCase().startsWith(p)
+                                && n.toLowerCase().includes(p));
+
+  return [...pref, ...rest].slice(0,10);
+}
+
+function tpRenderDatalist(prefix){
+  const dl=document.getElementById("taskSuggestions");
+  if(!dl) return;
+
+  const opts = tpGetSuggestions(prefix);
+  dl.innerHTML = opts.map(n=>`<option value="${escapeHtml(n)}"></option>`).join('');
+}
+
+/* ============================================================
+   SERVICE WORKER
+============================================================ */
+if('serviceWorker' in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+
+</body>
+  </html>
