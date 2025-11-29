@@ -646,41 +646,56 @@ button.primary{
     <div id="tab-tasks" class="tabpage active">
       
       <!-- ===== Medication Card ===== -->
-      <section class="card meds-card" id="medsCard">
+     <section class="card meds-card" id="medsCard">
+  <div class="meds-head">
+    <div class="meds-head-title">Medication — Today</div>
+    <div class="meds-head-tag">TLE routine</div>
+  </div>
 
-        <div class="meds-head">
-          <div class="meds-head-title">Medication — Today</div>
-          <div class="meds-head-tag">TLE routine</div>
-        </div>
+  <div class="meds-row">
+    <button id="btnMedsDay" class="meds-btn" onclick="toggleMeds('day')" title="Log/undo Morning dose">
+      <span class="meds-btn-title">🌅 Morning Dose</span>
+      <span class="meds-btn-sub">Tap to log</span>
+    </button>
 
-        <div class="meds-row">
+    <button id="btnMedsNight" class="meds-btn" onclick="toggleMeds('night')" title="Log/undo Night dose">
+      <span class="meds-btn-title">🌙 Night Dose</span>
+      <span class="meds-btn-sub">Tap to log</span>
+    </button>
+  </div>
 
-          <!-- Morning -->
-          <button id="btnMedsDay"
-                  class="meds-btn"
-                  onclick="toggleMeds('day')"
-                  title="Log/undo Morning dose">
-            <span class="meds-btn-title">🌅 Morning Dose</span>
-            <span class="meds-btn-sub">Tap to log</span>
-          </button>
+  <!-- Small helper text (no timestamps here anymore) -->
+  <div class="muted" id="medsMeta">
+    Log both doses to keep your streak going.
+  </div>
 
-          <!-- Night -->
-          <button id="btnMedsNight"
-                  class="meds-btn"
-                  onclick="toggleMeds('night')"
-                  title="Log/undo Night dose">
-            <span class="meds-btn-title">🌙 Night Dose</span>
-            <span class="meds-btn-sub">Tap to log</span>
-          </button>
+  <!-- BIG countdown bar -->
+  <div id="medsCountdown" class="meds-countdown">
+    Next dose in —
+  </div>
+</section>
 
-        </div>
-
-        <!-- Countdown (auto-filled by JS) -->
-        <div id="medsCountdown" class="muted"></div>
-
-        <!-- Metadata -->
-        <div class="muted" id="medsMeta"></div>
-      </section>
+          .meds-countdown{
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#3c4bff,#7a4dff);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#fdfdff;
+  font-size:16px;
+  font-weight:600;
+  text-align:center;
+  box-shadow:0 8px 26px rgba(0,0,0,0.45);
+  letter-spacing:0.02em;
+  line-height:1.4;
+}
+@media (max-width:600px){
+  .meds-countdown{
+    font-size:17px;
+    padding:12px 16px;
+  }
+}
+          
 
       <!-- ===== Today's Tasks ===== -->
       <section class="card">
@@ -981,7 +996,19 @@ function toggleMeds(which){
   updateCountdownLoop();
   notifyLocalChanged();
 }
+// --- Make every tasks/meds save also push to Firebase ---
+const originalSave = save;
+save = function(k, v){
+  originalSave(k, v);
+  if (k === LS_KEY || k === LS_MEDS){
+    notifyLocalChanged();
+  }
+};
 
+
+
+
+      
 /* Render meds state */
 function renderMeds(){
   const m = medsFor(TODAY);
@@ -1006,12 +1033,21 @@ function renderMeds(){
   }
 
   // Meta row
-  if(meta){
-    const d = m.day   ? `Morning: ${fmtDateTime(m.day)}` : "Morning: —";
-    const n = m.night ? `Night: ${fmtDateTime(m.night)}` :  "Night: —";
-    meta.textContent = `${d}   •   ${n}`;
+if (meta){
+  const hasDay   = !!m.day;
+  const hasNight = !!m.night;
+
+  if (!hasDay && !hasNight){
+    meta.textContent = "Both doses still open for today.";
+  } else if (hasDay && !hasNight){
+    meta.textContent = "Morning logged · Night still open.";
+  } else if (!hasDay && hasNight){
+    meta.textContent = "Night logged · Morning missing (check).";
+  } else {
+    meta.textContent = "Great work — both doses logged.";
   }
 }
+
 
 /* SIMPLE MED REMINDER (“Morning not taken”) */
 function updateMedsReminder(){
@@ -1043,34 +1079,56 @@ function updateCountdownLoop(){
   updateCountdown();
 }
 
+      
 function updateCountdown(){
   const out = document.getElementById("medsCountdown");
-  if(!out) return;
+  if (!out) return;
 
-  const m = medsFor(TODAY);
-  if(!m.day){
-    out.textContent = "⏳ Morning dose pending…";
+  // Always base this on *today* right now
+  const todayIso = isoToday();
+  const m = medsFor(todayIso);
+
+  // Nothing logged yet → encourage morning dose
+  if (!m.day && !m.night){
+    out.textContent = "Next dose in —  Morning dose not logged yet";
     return;
   }
 
-  const dayLogged = new Date(m.day);
-  const nightDue = new Date(dayLogged.getTime() + 12 * 3600 * 1000);
-  const now = new Date();
-  let diff = Math.max(0, nightDue - now);
+  // Only night missing → night due, but still countdown
+  if (m.day && m.night){
+    // Both doses done for today → celebrate
+    out.textContent = "✅ All doses logged for today";
+    return;
+  }
 
-  if(diff === 0){
+  if (!m.day){
+    out.textContent = "Next dose in —  Morning dose not logged yet";
+    return;
+  }
+
+  // Morning logged, night still pending → 12h timer
+  const dayLogged = new Date(m.day);
+  const nightDue  = new Date(dayLogged.getTime() + 12 * 3600 * 1000);
+  const now       = new Date();
+
+  let diff = nightDue - now;
+
+  if (diff <= 0){
     out.textContent = "🌙 Night dose is due now";
     return;
   }
 
-  const h = Math.floor(diff/3600000);
-  diff %= 3600000;
-  const m2 = Math.floor(diff/60000);
-  const s  = Math.floor((diff%60000)/1000);
+  const h  = Math.floor(diff / 3600000);
+  diff    %= 3600000;
+  const m2 = Math.floor(diff / 60000);
+  const s  = Math.floor((diff % 60000) / 1000);
 
   out.textContent = `Next dose in ${h}h ${m2}m ${s}s`;
 }
 
+
+
+      
 /* ============================================================
    TASK ENGINE
 ============================================================ */
