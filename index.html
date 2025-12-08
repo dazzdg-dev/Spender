@@ -1311,16 +1311,26 @@ function isFirebaseReady(){
   return (window.firebase && firebase.apps && firebase.apps.length);
 }
 function ensureSyncCode(){
-  let code=localStorage.getItem(LS_SYNC);
-  if(!code || !code.trim()){
-    code=SYNC_PREFIX+randomCode(6);
-    localStorage.setItem(LS_SYNC,code);
+  let code = localStorage.getItem(LS_SYNC);
+  if (!code || !code.trim()) {
+    code = SYNC_PREFIX + randomCode(6);
+    localStorage.setItem(LS_SYNC, code);
   }
-  const inp=document.getElementById("syncCode");
-  if(inp) inp.value=code;
-  if(isFirebaseReady()) attachSync(code);
-  else setSyncBadge("Local-only");
+
+  const inp = document.getElementById('syncCode');
+  if (inp) inp.value = code;
+
+  // 🔍 DEBUG LINE
+  console.log(
+    "[Sync] Firebase ready?",
+    isFirebaseReady(),
+    window.firebase && firebase.apps && firebase.apps.length
+  );
+
+  if (isFirebaseReady()) attachSync(code);
 }
+
+
 function copySyncCode(){
   const i=document.getElementById("syncCode");
   if(!i||!i.value) return;
