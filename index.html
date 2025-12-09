@@ -670,36 +670,73 @@
     isFirebaseReady(),
     typeof firebase !== "undefined" && firebase.apps ? firebase.apps.length : 0
   );
+// ===== Utils (must be first so they're available everywhere) =====
+function isoToday() {
+  return new Date().toISOString().slice(0, 10);
+}
 
+function isoOffset(iso, days) {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
 
-function load(k,def){
-  try{
-    const raw=localStorage.getItem(k);
-    if(!raw) return def;
-    const v=JSON.parse(raw);
-    return (v===null || v===undefined)?def:v;
-  }catch(e){return def;}
+function load(key, def) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return def;
+    const parsed = JSON.parse(raw);
+    return parsed == null ? def : parsed;
+  } catch (e) {
+    console.warn('[TaskPulse] load failed', key, e);
+    return def;
+  }
 }
-function baseSave(k,v){
-  localStorage.setItem(k,JSON.stringify(v));
+
+function ensureDay(iso) {
+  if (!days[iso]) days[iso] = [];
+  return days[iso];
 }
-function fmtHumanDate(iso){
-  const d=new Date(iso+"T00:00:00");
-  return d.toLocaleDateString(undefined,{day:"2-digit",month:"2-digit",year:"numeric"});
+
+function fmtHumanDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 }
-function fmtDateTime(iso){
-  try{
-    const d=new Date(iso);
-    const date=d.toLocaleDateString(undefined,{day:"2-digit",month:"2-digit",year:"numeric"});
-    const time=d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+
+function fmtDateTime(iso) {
+  try {
+    const d = new Date(iso);
+    const date = d.toLocaleDateString(undefined, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    const time = d.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit'
+    });
     return `${date} · ${time}`;
-  }catch{return "";}
+  } catch (e) {
+    return '';
+  }
 }
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g,m=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
   }[m]));
 }
+
+
+
 function pad(n){ n=Math.floor(n); return n<10?"0"+n:String(n); }
 
 /* ---------- Keys & state ---------- */
