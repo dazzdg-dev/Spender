@@ -616,7 +616,7 @@
   </div>
 
   <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V9.1 · Powered by D Gounder
+    Task Pulse Smart V10 · Powered by D Gounder
   </footer>
 </div>
 
@@ -672,9 +672,6 @@
   );
 
 
-}
-
-  
 function load(k,def){
   try{
     const raw=localStorage.getItem(k);
@@ -1335,9 +1332,7 @@ function randomCode(len=6){
   for(let i=0;i<len;i++) out+=chars[Math.floor(Math.random()*chars.length)];
   return out;
 }
-function isFirebaseReady(){
-  return (window.firebase && firebase.apps && firebase.apps.length);
-}
+
 function ensureSyncCode(){
   let code = localStorage.getItem(LS_SYNC);
   if (!code || !code.trim()) {
