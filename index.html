@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Smart V.10</title>
+<title>Task Pulse Smart V.10.2</title>
 
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="icon-192.png" sizes="192x192" />
@@ -468,7 +468,7 @@
 <div id="splash">
   <div id="splashInner">
     <h2>Task Pulse Smart</h2>
-    <div class="sub">Focus · Sync · Achieve (V.10)</div>
+    <div class="sub">Focus · Sync · Achieve (V.10.2)</div>
     <div class="foot">Powered by Daryl G</div>
   </div>
 </div>
@@ -480,7 +480,7 @@
         <div class="logo-pill">TP</div>
         <div>
           <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily focus advisor · V.10</div>
+          <div class="brand-sub">Daily focus advisor · V.10.2</div>
         </div>
       </div>
       <div class="top-right">
@@ -616,14 +616,14 @@
   </div>
 
   <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V.10 · Powered by D Gounder
+    Task Pulse Smart V.10.2 · Powered by D Gounder
   </footer>
 </div>
 
 
-  <!-- Firebase V.10 compat – Task Pulse Smart -->
+  <!-- Firebase V.10.2 compat – Task Pulse Smart -->
 <!-- Firebase (optional) -->
-<!-- Firebase V.10 compat – Task Pulse Smart -->
+<!-- Firebase V.10.2 compat – Task Pulse Smart -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
@@ -1312,7 +1312,7 @@ function renderHistory(){
     dump[LS_LAST_OPEN]=localStorage.getItem(LS_LAST_OPEN)||isoToday();
     dump[LS_LAST_CARRY_COUNT]=localStorage.getItem(LS_LAST_CARRY_COUNT)||"0";
     dump[LS_FOCUS]=JSON.stringify(focusLane);
-    return {app:"taskpulse",version:"V.10",exportedAt:new Date().toISOString(),dump};
+    return {app:"taskpulse",version:"V.10.2",exportedAt:new Date().toISOString(),dump};
   }
   window.tpDownloadBackup=function(){
     try{
