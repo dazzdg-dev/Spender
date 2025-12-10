@@ -739,45 +739,78 @@ function escapeHtml(s) {
 
 function pad(n){ n=Math.floor(n); return n<10?"0"+n:String(n); }
 
-/* ---------- Keys & state ---------- */
-const LS_KEY="tp_days_v1";
-const LS_SYNC="tp_sync_code";
-const LS_TAB="tp_last_tab";
-const LS_LAST_OPEN="tp_last_open";
-const LS_LAST_CARRY_COUNT="tp_last_carry_count";
-const LS_MEDS="tp_meds_v1";
-const LS_FOCUS="tp_focus_lane";
+/* ========= Core state & utilities ========= */
+const LS_KEY  = 'tp_days_v1';
+const LS_SYNC = 'tp_sync_code';
+const LS_TAB  = 'tp_last_tab';
 
-const TODAY=isoToday();
-let days=load(LS_KEY,{});
-let meds=load(LS_MEDS,{});
-let viewing=TODAY;
-let focusLane=!!load(LS_FOCUS,false);
+const LS_LAST_OPEN        = 'tp_last_open';
+const LS_LAST_CARRY_COUNT = 'tp_last_carry_count';
+const LS_MEDS             = 'tp_meds_v1';
 
-let tpDirty=false;
-function save(k,v){
-  try{
-    baseSave(k,v);
-    tpDirty=false;
-  }catch(e){
-    console.warn("save failed, will retry",e);
-    tpDirty=true;
+/* Small helpers */
+function load(k, def) {
+  try {
+    return JSON.parse(localStorage.getItem(k) || 'null') ?? def;
+  } catch (e) {
+    console.warn('[TaskPulse] load failed for', k, e);
+    return def;
   }
 }
-setInterval(()=>{
-  if(!tpDirty) return;
-  try{
-    baseSave(LS_KEY,days);
-    baseSave(LS_MEDS,meds);
-    tpDirty=false;
-  }catch{}
-},4000);
-window.addEventListener("beforeunload",()=>{
-  try{
-    baseSave(LS_KEY,days);
-    baseSave(LS_MEDS,meds);
-  }catch{}
+
+function isoToday() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isoOffset(iso, days) {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/* Auto-save safety net */
+let days = load(LS_KEY, {});
+let meds = load(LS_MEDS, {});
+let viewing = isoToday();
+
+let tpDirty = false;
+
+// ✅ this is the helper your console is complaining about
+function baseSave(k, v) {
+  localStorage.setItem(k, JSON.stringify(v));
+}
+
+// “primary” save used everywhere in the app
+let save = function (k, v) {
+  try {
+    baseSave(k, v);
+    tpDirty = false;
+  } catch (e) {
+    console.warn('save failed, will retry', e);
+    tpDirty = true;
+  }
+};
+
+// background retry if quota / transient error
+setInterval(() => {
+  if (!tpDirty) return;
+  try {
+    baseSave(LS_KEY, days);
+    baseSave(LS_MEDS, meds);
+    tpDirty = false;
+  } catch (e) {
+    // still failing – keep dirty flag
+  }
+}, 4000);
+
+// safety flush on close
+window.addEventListener('beforeunload', () => {
+  try {
+    baseSave(LS_KEY, days);
+    baseSave(LS_MEDS, meds);
+  } catch (e) {}
 });
+
 
 function ensureDay(iso){
   if(!days[iso]) days[iso]=[];
@@ -1447,11 +1480,14 @@ function mergeMeds(localM,remoteM){
   }
   return out;
 }
-const prevSave=save;
-save=function(k,v){
-  prevSave(k,v);
-  if(k===LS_KEY || k===LS_MEDS) notifyLocalChanged();
+const prevSave = save;
+save = function (k, v) {
+  prevSave(k, v);
+  if (k === LS_KEY || k === LS_MEDS) {
+    notifyLocalChanged();
+  }
 };
+
 function attachSync(code){
   if(!isFirebaseReady()){
     setSyncBadge("Local-only");
