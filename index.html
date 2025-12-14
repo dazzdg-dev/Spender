@@ -570,6 +570,11 @@
       </section>
     </div>
 
+
+
+
+
+    
     <!-- HISTORY TAB -->
     <div id="tab-history" class="tabpage">
       <section class="card">
@@ -664,6 +669,17 @@ console.log(
   typeof firebase!=="undefined" && firebase.apps ? firebase.apps.length : 0
 );
 
+/* ---------Mood Monitor------ */
+
+tp_mood_log = {
+  "2025-03-10": {
+    mood: 2, // 0–4 scale
+    note: "Low energy, headache"
+  }
+}
+
+
+  
 /* ---------- Core constants & helpers ---------- */
 const LS_KEY  = "tp_days_v1";
 const LS_SYNC = "tp_sync_code";
@@ -940,6 +956,22 @@ function renderMeds(){
   startMedsTimer();
 }
 
+/*---------meds_inventory---------------*/
+  
+tp_meds_inventory = {
+  "2025-03-10T09:14": [
+{ med: "Epilim 500"},
+{ med: "Epilim 500"},
+{ med: "Epilim 200"}
+{ med: "Lamictin 200"},
+{ med: "Vimcosa 100"},
+{ med: "Cilift 20"},
+{ med: "Tegretol 200"},
+  ]
+}
+
+
+  
 /* ---------- Tasks ---------- */
 function addTask(){
   const input=document.getElementById("taskInput");
