@@ -235,11 +235,30 @@
     display:flex;align-items:center;gap:6px;
   }
   .meds-btn-sub{font-size:11px;color:#a7b8d9;}
-  .meds-btn.taken{
-    background:radial-gradient(circle at 15% 0,#22ffb180 0,#036455 45%,#020d13 90%);
-    border-color:#3cf7bd;
-    box-shadow:0 0 18px rgba(60,247,189,.6);
-  }
+/* TAKEN state — warm amber, not neon */
+.meds-btn.taken{
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(255,157,59,.16) 0%,
+      rgba(5,8,20,.92) 65%
+    );
+  border-color:#ffb25a;
+  box-shadow:
+    0 0 0 1px rgba(255,178,90,.28) inset,
+    0 0 14px rgba(255,178,90,.18);
+}
+
+/* Text clarity */
+.meds-btn.taken .meds-btn-title{
+  color:#ffffff;
+}
+
+.meds-btn.taken .meds-btn-sub{
+  color:#ffe2bd;
+  opacity:.95;
+}
+
 
   .meds-timer{
     margin-top:4px;
