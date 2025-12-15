@@ -249,6 +249,18 @@
     0 0 14px rgba(255,178,90,.18);
 }
 
+@keyframes medsPulseAmber{
+  0%   { box-shadow: 0 0 0 1px rgba(255,178,90,.25) inset, 0 0 0 rgba(255,178,90,0); }
+  40%  { box-shadow: 0 0 0 1px rgba(255,178,90,.35) inset, 0 0 18px rgba(255,178,90,.35); }
+  100% { box-shadow: 0 0 0 1px rgba(255,178,90,.28) inset, 0 0 14px rgba(255,178,90,.18); }
+}
+
+/*-------taken glow pulse--------*/
+ 
+.meds-btn.pulse-once{
+  animation: medsPulseAmber .45s ease-out 1;
+}
+  
 /* Text clarity */
 .meds-btn.taken .meds-btn-title{
   color:#ffffff;
@@ -527,6 +539,15 @@ const LS_LAST_CARRY_COUNT = "tp_last_carry_count";
 const LS_MEDS             = "tp_meds_v1";
 const LS_FOCUS            = "tp_focus_lane_v1";
 
+function latestDoseIsoForDay(iso){
+  const m = medsFor(iso);
+  const a = m.day ? Date.parse(m.day) : 0;
+  const b = m.night ? Date.parse(m.night) : 0;
+  if(!a && !b) return '';
+  return (b > a) ? m.night : m.day; // latest dose wins
+}
+
+  
 function pad(n){ n=Math.floor(n); return n<10?"0"+n:String(n); }
 function load(key, def){
   try{
@@ -654,6 +675,21 @@ function toggleMeds(which){
   }
   save(LS_MEDS,meds);
   renderMeds();
+
+  /*-----------toggle meds-----------------*/
+  const btn = document.getElementById(which === 'day' ? 'btnMedsDay' : 'btnMedsNight');
+if (btn && !m[which]) {} // (ignore)
+if (btn && medsFor(TODAY)[which]) {
+  btn.classList.add('pulse-once');
+  setTimeout(()=>btn.classList.remove('pulse-once'), 600);
+}
+
+  .meds.btn.taken{ /* alias -> taken */
+  /* keep empty or redirect with same rules if you want */
+}
+.meds.btn.taken{ }
+.meds.btn.taken{ }
+
   notifyLocalChanged();
 }
 
@@ -728,7 +764,7 @@ function renderMeds(){
 
   if(btnM){
     const taken=!!m.morning;
-    btnM.classList.toggle("taken",taken);
+        btnM.classList.toggle("taken",taken);
     btnM.querySelector(".meds-btn-sub").textContent =
       taken ? `Logged · ${fmtDateTime(m.morning)}` : "Tap to log";
   }
@@ -962,7 +998,12 @@ function renderAll(){
   const focusChk=document.getElementById("focusToggle");
   if(focusChk) focusChk.checked=focusLane;
 
+/*---------“Morning/Night” styling hooks + pulse class from JS--------------*/
+  
   renderMeds();
+btnDay.className = 'meds-btn' + (isTaken ? ' taken morning' : '');
+btnNight.className = 'meds-btn' + (isTaken ? ' taken night' : '');
+  
 }
 
 /* History */
