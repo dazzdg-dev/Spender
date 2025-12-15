@@ -539,13 +539,14 @@ const LS_LAST_CARRY_COUNT = "tp_last_carry_count";
 const LS_MEDS             = "tp_meds_v1";
 const LS_FOCUS            = "tp_focus_lane_v1";
 
-function latestDoseIsoForDay(iso){
+function latestDoseIso(iso){
   const m = medsFor(iso);
-  const a = m.day ? Date.parse(m.day) : 0;
-  const b = m.night ? Date.parse(m.night) : 0;
-  if(!a && !b) return '';
-  return (b > a) ? m.night : m.day; // latest dose wins
+  const a = m.morning ? Date.parse(m.morning) : 0;
+  const b = m.night   ? Date.parse(m.night)   : 0;
+  if(!a && !b) return "";
+  return (b > a) ? m.night : m.morning;
 }
+
 
   
 function pad(n){ n=Math.floor(n); return n<10?"0"+n:String(n); }
@@ -665,16 +666,31 @@ function showCarryBannerIfAny(){
 let medsTimerInterval=null;
 
 function toggleMeds(which){
-  const todayIso=isoToday();
-  const m=medsFor(todayIso);
-  if(m[which]){
+  const todayIso = isoToday();
+  const m = medsFor(todayIso);
+
+  const wasTaken = !!m[which];
+
+  if(wasTaken){
     if(!confirm("Unmark this dose as taken?")) return;
-    m[which]="";
+    m[which] = "";
   }else{
-    m[which]=new Date().toISOString();
+    m[which] = new Date().toISOString();
   }
-  save(LS_MEDS,meds);
+
+  save(LS_MEDS, meds);
+
+  // pulse only when we just logged it (not when unmarking)
+  const btn = document.getElementById(which === "morning" ? "btnMorn" : "btnNight");
+  if(btn && !wasTaken){
+    btn.classList.add("pulse-once");
+    setTimeout(()=>btn.classList.remove("pulse-once"), 600);
+  }
+
   renderMeds();
+  notifyLocalChanged();
+}
+
 function getNextDoseTarget(){
   const lastIso = latestDoseIsoForDay(TODAY);
   if(!lastIso) return null;
@@ -720,47 +736,58 @@ function computeMedsStreak(){
 }
 
 function computeNextDoseTarget(){
-  const todayIso=isoToday();
-  const mToday=medsFor(todayIso);
+  // Look at latest logged dose across TODAY and YESTERDAY
+  const today = isoToday();
+  const yest  = isoOffset(today, -1);
 
-  if(mToday.morning && !mToday.night){
-    const morn=new Date(mToday.morning);
-    return new Date(morn.getTime()+12*60*60*1000);
-  }
-  if(mToday.morning && mToday.night){
-    const morn=new Date(mToday.morning);
-    return new Date(morn.getTime()+24*60*60*1000);
-  }
-  return null;
+  const tIso = latestDoseIso(today);
+  const yIso = latestDoseIso(yest);
+
+  const t = tIso ? Date.parse(tIso) : 0;
+  const y = yIso ? Date.parse(yIso) : 0;
+
+  const last = Math.max(t, y);
+  if(!last) return null;
+
+  return new Date(last + 12*60*60*1000); // always 12h after the last logged dose
 }
 
+
 function startMedsTimer(){
-  const box=document.getElementById("medsTimer");
-  const valueEl=document.getElementById("medsTimerValue");
+  const box = document.getElementById("medsTimer");
+  const valueEl = document.getElementById("medsTimerValue");
   if(!box || !valueEl) return;
 
   if(medsTimerInterval) clearInterval(medsTimerInterval);
 
   function tick(){
-    const target=computeNextDoseTarget();
+    const target = computeNextDoseTarget();
+
     if(!target){
-      box.style.display="none";
-      valueEl.textContent="—";
+      box.style.display = "none";
+      valueEl.textContent = "—";
       return;
     }
-    const now=new Date();
-    let diff=target-now;
-    if(diff<0) diff=0;
-    const secTotal=Math.floor(diff/1000);
-    const h=Math.floor(secTotal/3600);
-    const m=Math.floor((secTotal%3600)/60);
-    const s=secTotal%60;
-    valueEl.textContent=`${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-    box.style.display="flex";
+
+    const now = new Date();
+    let diff = target - now;
+
+    // If overdue, show 00h 00m 00s (and keep it there until user logs a dose)
+    if(diff < 0) diff = 0;
+
+    const secTotal = Math.floor(diff/1000);
+    const h = Math.floor(secTotal/3600);
+    const m = Math.floor((secTotal%3600)/60);
+    const s = secTotal%60;
+
+    valueEl.textContent = `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+    box.style.display = "flex";
   }
+
   tick();
-  medsTimerInterval=setInterval(tick,1000);
+  medsTimerInterval = setInterval(tick, 1000);
 }
+
 
 function renderMeds(){
   const todayIso=isoToday();
