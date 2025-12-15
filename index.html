@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Task Pulse Smart V.10.4</title>
+<title>Task Pulse Smart V.10.5</title>
 
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="icon-192.png" sizes="192x192" />
@@ -339,7 +339,7 @@
 <div id="splash">
   <div id="splashInner">
     <h2>Task Pulse Smart</h2>
-    <div class="sub">Focus · Sync · Achieve (V.10.4)</div>
+    <div class="sub">Focus · Sync · Achieve (V.10.5)</div>
     <div class="foot">Powered by Daryl G</div>
   </div>
 </div>
@@ -351,7 +351,7 @@
         <div class="logo-pill">TP</div>
         <div>
           <div class="brand-title">Task Pulse Smart</div>
-          <div class="brand-sub">Daily focus advisor · V.10.4</div>
+          <div class="brand-sub">Daily focus advisor · V.10.5</div>
         </div>
       </div>
       <div class="top-right">
@@ -487,7 +487,7 @@
   </div>
 
   <footer style="margin-top:4px;text-align:center;font-size:11px;color:var(--muted);">
-    Task Pulse Smart V.10.4 · Powered by D Gounder
+    Task Pulse Smart V.10.5 · Powered by D Gounder
   </footer>
 </div>
 
@@ -1104,7 +1104,7 @@ function renderHistory(){
     dump[LS_LAST_OPEN]=localStorage.getItem(LS_LAST_OPEN)||isoToday();
     dump[LS_LAST_CARRY_COUNT]=localStorage.getItem(LS_LAST_CARRY_COUNT)||"0";
     dump[LS_FOCUS]=JSON.stringify(focusLane);
-    return {app:"taskpulse",version:"V.10.4",exportedAt:new Date().toISOString(),dump};
+    return {app:"taskpulse",version:"V.10.5",exportedAt:new Date().toISOString(),dump};
   }
   window.tpDownloadBackup=function(){
     try{
