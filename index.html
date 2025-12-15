@@ -692,7 +692,8 @@ function toggleMeds(which){
 }
 
 function getNextDoseTarget(){
-  const lastIso = latestDoseIso(TODAY);
+  const todayIso = isoToday();
+  const lastIso = latestDoseIso(todayIso);
   if(!lastIso) return null;
   return new Date(Date.parse(lastIso) + 12*60*60*1000);
 }
@@ -701,15 +702,7 @@ function getNextDoseTarget(){
 
   
   /*-----------toggle meds-----------------*/
-  const btn = document.getElementById(which === 'day' ? 'btnMedsDay' : 'btnMedsNight');
-if (btn && !m[which]) {} // (ignore)
-if (btn && medsFor(TODAY)[which]) {
-  btn.classList.add('pulse-once');
-  setTimeout(()=>btn.classList.remove('pulse-once'), 600);
-}
 
-  notifyLocalChanged();
-}
 
 function computeMedsStreak(){
   const keys=Object.keys(meds||{}).sort();
