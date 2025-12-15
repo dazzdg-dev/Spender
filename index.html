@@ -675,7 +675,15 @@ function toggleMeds(which){
   }
   save(LS_MEDS,meds);
   renderMeds();
+function getNextDoseTarget(){
+  const lastIso = latestDoseIsoForDay(TODAY);
+  if(!lastIso) return null;
+  return new Date(Date.parse(lastIso) + 12*60*60*1000);
+}
 
+
+
+  
   /*-----------toggle meds-----------------*/
   const btn = document.getElementById(which === 'day' ? 'btnMedsDay' : 'btnMedsNight');
 if (btn && !m[which]) {} // (ignore)
